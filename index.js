@@ -446,7 +446,7 @@ var displayFormula = function displayFormula(
   multiplier,
   precision,
   context,
-  value1,
+  valueKey,
   readingCurrent,
   readingLast,
   physical
@@ -456,13 +456,13 @@ var displayFormula = function displayFormula(
   //     formula,
   //     multiplier,
   //     context,
-  //     value1,
+  //     valueKey,
   //     readingCurrent,
   //     readingLast,
   //     physical,
   //   },
   // });
-  var returnValue = readingCurrent[value1];
+  var returnValue = readingCurrent[valueKey];
   var multiplierValue = 1;
   if (multiplier) { multiplierValue = multiplier; }
   var precisionValue = 0;
@@ -487,7 +487,7 @@ var displayFormula = function displayFormula(
       break;
     case 'pumpOutput':
       returnValue = pumpOutput(
-        readingCurrent[value1] / multiplierValue,
+        readingCurrent[valueKey] / multiplierValue,
         readingCurrent.date,
         readingLast.date
       );
@@ -501,13 +501,13 @@ var displayFormula = function displayFormula(
     case 'rolling' :
       returnValue = valueCalculator(
         formulaValueSecondary,
-        readingCurrent[value1] / multiplierValue,
+        readingCurrent[valueKey] / multiplierValue,
         context,
         precisionValue
       );
       returnValue += valueCalculator(
         formulaValueSecondary,
-        readingLast[value1] / multiplierValue,
+        readingLast[valueKey] / multiplierValue,
         context,
         precisionValue
       );
@@ -516,7 +516,7 @@ var displayFormula = function displayFormula(
     default:
       returnValue = valueCalculator(
         formula,
-        readingCurrent[value1] / multiplierValue,
+        readingCurrent[valueKey] / multiplierValue,
         context,
         precisionValue
       );
