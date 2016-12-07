@@ -381,6 +381,9 @@ function valueCalculator(
     case 'temperature':
       returnValue = fromC(value, context.tempConv, precision);
       break;
+    case 'temperatureF':
+      returnValue = fromC(value, 'f', precision);
+      break;
     case 'percentTo20V':
       returnValue = percentTo20V(value);
       break;
