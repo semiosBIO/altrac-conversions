@@ -1,0 +1,25 @@
+{
+  "name": "altrac-conversions",
+  "version": "1.0.0",
+  "description": "Conversions and formulas for altrac",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://hwestbrook@gitlab.com/hwestbrook/altrac-conversions.git"
+  },
+  "keywords": [
+    "conversions"
+  ],
+  "author": "Heath Westbrook",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/hwestbrook/altrac-conversions/issues"
+  },
+  "homepage": "https://gitlab.com/hwestbrook/altrac-conversions#README",
+  "dependencies": {
+    "moment": "^2.17.1"
+  }
+}
