@@ -517,7 +517,7 @@ var displayFormula = function displayFormula(
       returnValue = round(fuelLevel(
         readingCurrent[valueKey] / multiplierValue,
         fuelTankSize,
-        fuelSensorRange,
+        fuelSensorRange
       ));
       break;
     case 'millisecondsPastExpectedConnection':
