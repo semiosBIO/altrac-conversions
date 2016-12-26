@@ -221,9 +221,9 @@ var secondsToHHMMSS = function secondsToHHMMSS(totalSeconds) {
   // round seconds
   seconds = Math.round(seconds * 100) / 100;
 
-  result += hours > 0 ? `${hours} hours, ` : '';
-  result += minutes > 0 ? `${minutes} minutes, ` : '';
-  result += seconds > 0 ? `${seconds} seconds` : '';
+  result += hours > 0 ? hours + ' hours, ' : '';
+  result += minutes > 0 ? minutes + ' minutes, ' : '';
+  result += seconds > 0 ? seconds + ' seconds' : '';
 
   return result;
 };
@@ -343,7 +343,7 @@ var binLevel = function binLevel(
       numberFull += 0;
     }
   }
-  return `${numberFull}/${totalBins}`;
+  return numberFull + '/' + totalBins;
 };
 
 var chartDimensions = function chartDimensions() {
