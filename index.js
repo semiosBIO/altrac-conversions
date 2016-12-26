@@ -1,4 +1,4 @@
-// tools.js
+// index.js
 var moment = require('moment');
 
 var round = function round(n, d) {
@@ -116,6 +116,13 @@ var cToF = function cToF(c) {
 
 var fToC = function fToC(f) {
   return (f - 32) / 1.8;
+};
+
+var cellSignalToRssi = function cellSignalToRssi(signal) {
+  return signal >>> 8;
+};
+var cellSignalToQuality = function cellSignalToQuality(signal) {
+  return signal & 0xFF >>> 0;
 };
 
 var fromC = function fromC(c, tempConv, precision) {
@@ -435,6 +442,12 @@ function valueCalculator(
     case 'flowMeterState':
       returnValue = flowMeterState(value);
       break;
+    case 'cellSignalToRssi':
+      returnValue = cellSignalToRssi(value);
+      break;
+    case 'cellSignalToQuality':
+      returnValue = cellSignalToQuality(value);
+      break;
     default:
       returnValue = round(value);
   }
@@ -491,6 +504,21 @@ var displayFormula = function displayFormula(
         readingCurrent.date,
         readingLast.date
       );
+      break;
+    case 'fuelLevel':
+      var fuelTankSize = 3;
+      if (physical && physical.fuelTankSize) {
+        fuelTankSize = physical.fuelTankSize;
+      }
+      var fuelSensorRange = 6.56;
+      if (physical && physical.fuelSensorRange) {
+        fuelSensorRange = physical.fuelSensorRange;
+      }
+      returnValue = round(fuelLevel(
+        readingCurrent[valueKey] / multiplierValue,
+        fuelTankSize,
+        fuelSensorRange
+      ));
       break;
     case 'millisecondsPastExpectedConnection':
       returnValue = millisecondsPastExpectedConnection(
@@ -565,4 +593,6 @@ module.exports = {
   binLevel,
   chartDimensions,
   displayFormula,
+  cellSignalToRssi,
+  cellSignalToQuality
 };
