@@ -1,6 +1,6 @@
 {
   "name": "altrac-conversions",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Conversions and formulas for altrac",
   "main": "index.js",
   "scripts": {
