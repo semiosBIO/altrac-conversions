@@ -1,6 +1,4 @@
 // index.js
-var moment = require('moment');
-
 var round = function round(n, d) {
   var decimalPlaces;
 
@@ -157,10 +155,6 @@ var valveTimeToEpochMillis = function valveTimeToEpochMillis(valveTime) {
   return (Number(valveTime) & 0xFFFFFFF) * 60 * 1000;
 };
 
-var valveTimeToPretty = function valveTimeToPretty(valveTime) {
-  return moment(valveTimeToEpochMillis(valveTime)).format('M/D h:mmA');
-};
-
 var valveTimeToDate = function valveTimeToDate(valveTime) {
   return (new Date(valveTimeToEpochMillis(valveTime)));
 };
@@ -182,24 +176,6 @@ var nextValveTime = function nextValveTime(valveTimeArr) {
       }
     }
   }
-  return returnValue;
-};
-
-var nextValveTimeToPretty = function nextValveTimeToPretty(valveTimeArr) {
-  var nextTimes = nextValveTime(valveTimeArr);
-  var returnValue = ['---', '---'];
-
-  if (nextTimes[0] !== 0) {
-    returnValue[0] = valveTimeToPretty(nextTimes[0]);
-  }
-  if (nextTimes[1] !== 0) {
-    returnValue[1] = valveTimeToPretty(nextTimes[1]);
-  }
-  // console.log({ nextValveTimeToPretty: {
-  //   valveTimeArr,
-  //   nextTimes,
-  //   returnValue,
-  // } });
   return returnValue;
 };
 
@@ -574,10 +550,8 @@ module.exports = {
   toC: toC,
   valveTimeToEpoch: valveTimeToEpoch,
   valveTimeToEpochMillis: valveTimeToEpochMillis,
-  valveTimeToPretty: valveTimeToPretty,
   valveTimeToDate: valveTimeToDate,
   nextValveTime: nextValveTime,
-  nextValveTimeToPretty: nextValveTimeToPretty,
   nextValveTimeToEpochMillis: nextValveTimeToEpochMillis,
   toValveTime: toValveTime,
   secondsToHHMMSS: secondsToHHMMSS,

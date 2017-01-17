@@ -19,7 +19,5 @@
     "url": "https://gitlab.com/hwestbrook/altrac-conversions/issues"
   },
   "homepage": "https://gitlab.com/hwestbrook/altrac-conversions#README",
-  "dependencies": {
-    "moment": "^2.17.1"
-  }
+  "dependencies": {}
 }
