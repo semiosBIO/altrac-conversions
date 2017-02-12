@@ -211,8 +211,8 @@ var secondsToHHMMSS = function secondsToHHMMSS(totalSeconds) {
   return result;
 };
 
-var percentTo20V = function percentTo20V(p) {
-  return round(p * (1 / (1800 / (1800 + 10000))) * 3.3);
+var percentTo20V = function percentTo20V(p, precision) {
+  return round(p * (1 / (1800 / (1800 + 10000))) * 3.3, precision || 2);
 };
 
 var fourToTwenty = function fourToTwenty(p, min, max) {
@@ -368,7 +368,7 @@ function valueCalculator(
       returnValue = fromC(value, 'f', precision);
       break;
     case 'percentTo20V':
-      returnValue = percentTo20V(value);
+      returnValue = percentTo20V(value, precision);
       break;
     case 'percentToCentibar':
       returnValue = percentToCentibar(value);
