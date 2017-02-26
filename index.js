@@ -578,7 +578,7 @@ var displayFormula = function displayFormula(
       break;
     case 'rpmToState':
       returnValue = rpmToState(
-        value,
+        readingCurrent[valueKey] / multiplierValue,
         physical.offRpm,
         physical.highRpm
       );
