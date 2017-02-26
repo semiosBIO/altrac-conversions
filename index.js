@@ -290,6 +290,30 @@ var pumpOutput = function pumpOutput(gallonsPerPulse, currentTime, lastTime) {
   return Math.round(gallonsPerPulse / diffMinutes);
 };
 
+var rpmToState = function rpmToState(rpm, off, high) {
+  var returnValue = 'Off';
+  var offTest = 150;
+  if (off) {
+    offTest = off;
+  }
+  var highTest = 350;
+  if (high) {
+    highTest = high;
+  }
+  var rpmTest = 0;
+  if (rpm) {
+    rpmTest = rpm;
+  }
+  if (rpmTest < offTest) {
+    returnValue = 'Off';
+  } else if (rpmTest >= offTest && rpmTest < highTest) {
+    returnValue = 'Low';
+  } else {
+    returnValue = 'High';
+  }
+  return returnValue;
+}
+
 var binLevel = function binLevel(
   binLevelCurrent,
   binLevelLast,
@@ -496,6 +520,13 @@ var displayFormula = function displayFormula(
         fuelSensorRange
       ));
       break;
+    case 'rpmToState':
+      returnValue = rpmToState(
+        value,
+        physical.offRpm,
+        physical.highRpm
+      );
+      break;
     case 'millisecondsPastExpectedConnection':
       returnValue = millisecondsPastExpectedConnection(
         readingCurrent.date,
@@ -562,6 +593,7 @@ module.exports = {
   mToFt: mToFt,
   spaceCamel: spaceCamel,
   pumpState: pumpState,
+  rpmToState: rpmToState,
   flowMeterState: flowMeterState,
   pumpOutput: pumpOutput,
   binLevel: binLevel,
