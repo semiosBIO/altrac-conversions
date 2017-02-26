@@ -370,6 +370,14 @@ var chartDimensions = function chartDimensions() {
   });
 };
 
+var numberToBinary = function numberToBinary(value, bit) {
+  return (value & (Math.pow(2, bit)) >>> 0);
+};
+
+var numberToBinaryFE = function numberToBinaryFE(value, bit) {
+  return numberToBinary(value, bit) ? 'F' : 'E';
+};
+
 function valueCalculator(
   formula,
   value,
@@ -447,6 +455,54 @@ function valueCalculator(
       break;
     case 'cellSignalToQuality':
       returnValue = cellSignalToQuality(value);
+      break;
+    case 'numberToBinary0':
+      returnValue = numberToBinary(value, 0);
+      break;
+    case 'numberToBinary1':
+      returnValue = numberToBinary(value, 1);
+      break;
+    case 'numberToBinary2':
+      returnValue = numberToBinary(value, 2);
+      break;
+    case 'numberToBinary3':
+      returnValue = numberToBinary(value, 3);
+      break;
+    case 'numberToBinary4':
+      returnValue = numberToBinary(value, 4);
+      break;
+    case 'numberToBinary5':
+      returnValue = numberToBinary(value, 5);
+      break;
+    case 'numberToBinary6':
+      returnValue = numberToBinary(value, 6);
+      break;
+    case 'numberToBinary7':
+      returnValue = numberToBinary(value, 7);
+      break;
+    case 'numberToBinaryFE0':
+      returnValue = numberToBinaryFE(value, 0);
+      break;
+    case 'numberToBinaryFE1':
+      returnValue = numberToBinaryFE(value, 1);
+      break;
+    case 'numberToBinaryFE2':
+      returnValue = numberToBinaryFE(value, 2);
+      break;
+    case 'numberToBinaryFE3':
+      returnValue = numberToBinaryFE(value, 3);
+      break;
+    case 'numberToBinaryFE4':
+      returnValue = numberToBinaryFE(value, 4);
+      break;
+    case 'numberToBinaryFE5':
+      returnValue = numberToBinaryFE(value, 5);
+      break;
+    case 'numberToBinaryFE6':
+      returnValue = numberToBinaryFE(value, 6);
+      break;
+    case 'numberToBinaryFE7':
+      returnValue = numberToBinaryFE(value, 7);
       break;
     default:
       returnValue = round(value);
@@ -600,5 +656,7 @@ module.exports = {
   chartDimensions: chartDimensions,
   displayFormula: displayFormula,
   cellSignalToRssi: cellSignalToRssi,
-  cellSignalToQuality: cellSignalToQuality
+  cellSignalToQuality: cellSignalToQuality,
+  numberToBinary: numberToBinary,
+  numberToBinaryFE: numberToBinaryFE
 };
