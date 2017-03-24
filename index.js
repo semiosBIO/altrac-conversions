@@ -365,8 +365,10 @@ var chartDimensions = function chartDimensions() {
   }
   var chartHeight = chartWidth - 30;
   return ({
-    width: chartWidth,
-    height: chartHeight,
+    width: chartWidth + 'px',
+    height: chartHeight + 'px',
+    widthNumber: chartWidth,
+    heightNumber: chartHeight,
   });
 };
 
