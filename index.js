@@ -353,8 +353,8 @@ var binLevel = function binLevel(
   return numberFull + '/' + totalBins;
 };
 
-var chartDimensions = function chartDimensions() {
-  var windowWidth = $(window).width();
+var chartDimensions = function chartDimensions(windowWidth) {
+  var windowWidth = windowWidth;
   var chartWidth = 288;
   if (windowWidth >= 472) {
     chartWidth = 464;
