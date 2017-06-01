@@ -92,7 +92,7 @@ var analogToCentibar = function analogToCentibar(a) {
 };
 
 var metersPerSecondToMilesPerHour = function metersPerSecondToMilesPerHour(ms, precision) {
-  let precisionValue = 0;
+  var precisionValue = 0;
   if (precision && !isNaN(precision)) {
     precisionValue = Number(precision);
   }
@@ -100,7 +100,7 @@ var metersPerSecondToMilesPerHour = function metersPerSecondToMilesPerHour(ms, p
 };
 
 var millimetersToInches = function millimetersToInches(mm, precision) {
-  let precisionValue = 0;
+  var precisionValue = 0;
   if (precision && !isNaN(precision)) {
     precisionValue = Number(precision);
   }
@@ -108,7 +108,7 @@ var millimetersToInches = function millimetersToInches(mm, precision) {
 };
 
 var kilometersToMiles = function kilometersToMiles(km, precision) {
-  let precisionValue = 0;
+  var precisionValue = 0;
   if (precision && !isNaN(precision)) {
     precisionValue = Number(precision);
   }
@@ -116,7 +116,7 @@ var kilometersToMiles = function kilometersToMiles(km, precision) {
 };
 
 var kPaToInchesMercury = function kPaToInchesMercury(kpa, precision) {
-  let precisionValue = 0;
+  var precisionValue = 0;
   if (precision && !isNaN(precision)) {
     precisionValue = Number(precision);
   }
