@@ -507,7 +507,7 @@ function valueCalculator(
       returnValue = numberToBinaryFE(value, 7);
       break;
     default:
-      returnValue = round(value);
+      returnValue = round(value, precision);
   }
   return returnValue;
 }
