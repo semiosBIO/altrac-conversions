@@ -91,6 +91,38 @@ var analogToCentibar = function analogToCentibar(a) {
   return voltToCentibar(v);
 };
 
+var metersPerSecondToMilesPerHour = function metersPerSecondToMilesPerHour(ms, precision) {
+  let precisionValue = 0;
+  if (precision && !isNaN(precision)) {
+    precisionValue = Number(precision);
+  }
+  return round(ms * 2.23694, precisionValue);
+};
+
+var millimetersToInches = function millimetersToInches(mm, precision) {
+  let precisionValue = 0;
+  if (precision && !isNaN(precision)) {
+    precisionValue = Number(precision);
+  }
+  return round(mm * 0.0393701, precisionValue);
+};
+
+var kilometersToMiles = function kilometersToMiles(km, precision) {
+  let precisionValue = 0;
+  if (precision && !isNaN(precision)) {
+    precisionValue = Number(precision);
+  }
+  return round(km * 0.621371, precisionValue);
+};
+
+var kPaToInchesMercury = function kPaToInchesMercury(kpa, precision) {
+  let precisionValue = 0;
+  if (precision && !isNaN(precision)) {
+    precisionValue = Number(precision);
+  }
+  return round(kpa * 0.2953, precisionValue);
+};
+
 var numberMap = function numberMap(value, inMin, inMax, outMin, outMax) {
   return (((value - inMin) * (outMax - outMin)) / (inMax - inMin)) + outMin;
 };
@@ -380,6 +412,51 @@ var numberToBinaryFE = function numberToBinaryFE(value, bit) {
   return numberToBinary(value, bit) ? 'F' : 'E';
 };
 
+var windDirection = function windDirection(wd) {
+  if (wd > 360 || wd < 0) {
+    return 'ERR';
+  }
+  var dir = 'ERR';
+  if (wd < 0 || wd > 360) {
+    alert('Enter a degree between 0 and 360 degrees.');
+  } else if (wd >= 0 && wd <= 11.25) {
+    dir = 'N';
+  } else if (wd > 348.75 && wd <= 360) {
+    dir = 'N';
+  } else if (wd > 11.25 && wd <= 33.75) {
+    dir = 'NNE';
+  } else if (wd > 33.75 && wd <= 56.25) {
+    dir = 'NE';
+  } else if (wd > 56.25 && wd <= 78.75) {
+    dir = 'ENE';
+  } else if (wd > 78.75 && wd <= 101.25) {
+    dir = 'E';
+  } else if (wd > 101.25 && wd <= 123.75) {
+    dir = 'ESE';
+  } else if (wd > 123.75 && wd <= 146.25) {
+    dir = 'SE';
+  } else if (wd > 146.25 && wd <= 168.75) {
+    dir = 'SSE';
+  } else if (wd > 168.75 && wd <= 191.25) {
+    dir = 'S';
+  } else if (wd > 191.25 && wd <= 213.75) {
+    dir = 'SSW';
+  } else if (wd > 213.75 && wd <= 236.25) {
+    dir = 'SW';
+  } else if (wd > 236.25 && wd <= 258.75) {
+    dir = 'WSW';
+  } else if (wd > 258.75 && wd <= 281.25) {
+    dir = 'W';
+  } else if (wd > 281.25 && wd <= 303.75) {
+    dir = 'WNW';
+  } else if (wd > 303.75 && wd <= 326.25) {
+    dir = 'NW';
+  } else if (wd > 326.25 && wd <= 348.75) {
+    dir = 'NNW';
+  }
+  return dir;
+};
+
 function valueCalculator(
   formula,
   value,
@@ -409,6 +486,21 @@ function valueCalculator(
       break;
     case 'percentToVWC':
       returnValue = percentToVWC(value);
+      break;
+    case 'metersPerSecondToMilesPerHour':
+      returnValue = metersPerSecondToMilesPerHour(value, precision);
+      break;
+    case 'windDirection':
+      returnValue = windDirection(value);
+      break;
+    case 'millimetersToInches':
+      returnValue = millimetersToInches(value);
+      break;
+    case 'kilometersToMiles':
+      returnValue = kilometersToMiles(value);
+      break;
+    case 'kPaToInchesMercury':
+      returnValue = kPaToInchesMercury(value);
       break;
     case 'analogToCentibar':
       returnValue = analogToCentibar(value);
@@ -646,6 +738,11 @@ module.exports = {
   secondsToHHMMSS: secondsToHHMMSS,
   percentTo20V: percentTo20V,
   fourToTwenty: fourToTwenty,
+  metersPerSecondToMilesPerHour: metersPerSecondToMilesPerHour,
+  millimetersToInches: millimetersToInches,
+  kilometersToMiles: kilometersToMiles,
+  kPaToInchesMercury: kPaToInchesMercury,
+  windDirection: windDirection,
   fuelLevel: fuelLevel,
   ftToM: ftToM,
   mToFt: mToFt,
