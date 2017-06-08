@@ -494,13 +494,13 @@ function valueCalculator(
       returnValue = windDirection(value);
       break;
     case 'millimetersToInches':
-      returnValue = millimetersToInches(value);
+      returnValue = millimetersToInches(value, precision);
       break;
     case 'kilometersToMiles':
-      returnValue = kilometersToMiles(value);
+      returnValue = kilometersToMiles(value, precision);
       break;
     case 'kPaToInchesMercury':
-      returnValue = kPaToInchesMercury(value);
+      returnValue = kPaToInchesMercury(value, precision);
       break;
     case 'analogToCentibar':
       returnValue = analogToCentibar(value);
