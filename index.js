@@ -248,8 +248,16 @@ var percentTo20V = function percentTo20V(p, precision) {
 };
 
 var fourToTwenty = function fourToTwenty(p, min, max) {
+  var minNumber = 0;
+  var maxNumber = 100;
+  if (!isNaN(max)) {
+    minNumber = Number(min);
+  }
+  if (!isNaN(max)) {
+    maxNumber = Number(max);
+  }
   return round(
-    (((((p * 3.34) / 100) * 1000) - 4) * (max - min)) / (20 - 4)
+    (((((p * 3.34) / 100) * 1000) - 4) * (maxNumber - minNumber)) / (20 - 4)
   );
 };
 
@@ -669,6 +677,13 @@ var displayFormula = function displayFormula(
         fuelTankSize,
         fuelSensorRange
       ));
+      break;
+    case 'fourToTwenty':
+      returnValue = fourToTwenty(
+        readingCurrent[valueKey] / multiplierValue,
+        physical.min,
+        physical.max
+      );
       break;
     case 'rpmToState':
       returnValue = rpmToState(
