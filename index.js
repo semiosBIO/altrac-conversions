@@ -257,8 +257,8 @@ var fourToTwenty = function fourToTwenty(p, min, max) {
     maxNumber = Number(max);
   }
   var returnValue = (((((p * 3.34) / 100) * 1000) - 4) * (maxNumber - minNumber)) / (20 - 4);
-  if (returnValue < 0) { return 'LO_ER'; }
-  if (returnValue > maxNumber) { return 'HI_ER'; }
+  if (returnValue < 0) { return 'ERL'; }
+  if (returnValue > maxNumber) { return 'ERH'; }
   return round(returnValue);
 };
 
