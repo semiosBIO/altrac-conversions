@@ -250,15 +250,15 @@ var percentTo20V = function percentTo20V(p, precision) {
 var fourToTwenty = function fourToTwenty(p, min, max) {
   var minNumber = 0;
   var maxNumber = 100;
-  if (!isNaN(max)) {
+  if (!isNaN(min)) {
     minNumber = Number(min);
   }
   if (!isNaN(max)) {
     maxNumber = Number(max);
   }
-  return round(
-    (((((p * 3.34) / 100) * 1000) - 4) * (maxNumber - minNumber)) / (20 - 4)
-  );
+  var returnValue = (((((p * 3.34) / 100) * 1000) - 4) * (maxNumber - minNumber)) / (20 - 4);
+  if (returnValue < 0) { return 0; }
+  return round(returnValue);
 };
 
 var fuelLevel = function fuelLevel(percent, size, maxSize) {
