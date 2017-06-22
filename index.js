@@ -257,8 +257,15 @@ var fourToTwenty = function fourToTwenty(p, min, max) {
     maxNumber = Number(max);
   }
   var returnValue = (((((p * 3.34) / 100) * 1000) - 4) * (maxNumber - minNumber)) / (20 - 4);
-  if (returnValue < 0) { return 'ERL'; }
-  if (returnValue > maxNumber) { return 'ERH'; }
+  var mA = (((p * 3.34) / 100) * 1000);
+  var map = ((mA - 4) * (maxNumber - minNumber)) / (20 - 4);
+  if (mA > 3.5 && returnValue < 0) {
+    return 0;
+  } else if (returnValue < 0) {
+    return 'ERL';
+  } else if (returnValue > maxNumber) {
+    return 'ERH';
+  }
   return round(returnValue);
 };
 
