@@ -210,7 +210,6 @@ var nextValveTime = function nextValveTime(valveTimeArr) {
       }
     }
   }
-  console.log(returnValue);
   return returnValue;
 };
 
