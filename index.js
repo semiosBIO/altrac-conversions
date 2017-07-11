@@ -192,19 +192,22 @@ var valveTimeToDate = function valveTimeToDate(valveTime) {
 };
 
 var nextValveTime = function nextValveTime(valveTimeArr) {
-  var returnValue = [0, 0];
+  var returnValue = [];
+  var j = 0;
   if (valveTimeArr) {
-    for (var i = 0; i < valveTimeArr.length; i += 1) {
+    for (var i = 0; i < valveTimeArr.length; ) {
       if (
         valveTimeToEpochMillis(valveTimeArr[i]) < (new Date().getTime()) &&
         valveTimeToEpochMillis(valveTimeArr[i + 1]) < (new Date().getTime())
       ) {
         // nothing to do here
-        i += 1;
+        i += 2;
       } else {
-        returnValue[0] = valveTimeArr[i];
-        returnValue[1] = valveTimeArr[i += 1];
-        break;
+        if (valveTimeArr[i] < returnValue[0]) {
+          returnValue[0] = valveTimeArr[i];
+          returnValue[1] = valveTimeArr[i + 1];  
+          i += 2;
+        }
       }
     }
   }
