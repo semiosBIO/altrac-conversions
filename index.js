@@ -414,6 +414,10 @@ var chartDimensions = function chartDimensions(windowWidth) {
     chartWidth = 346;
   }
   var chartHeight = chartWidth - 30;
+
+  chartWidth -= 20;
+  chartHeight -= 20;
+
   return ({
     width: chartWidth + 'px',
     height: chartHeight + 'px',
