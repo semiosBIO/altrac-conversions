@@ -434,6 +434,14 @@ var numberToBinaryFE = function numberToBinaryFE(value, bit) {
   return numberToBinary(value, bit) ? 'F' : 'E';
 };
 
+var gallonsToAcreFeet = function gallonsToAcreFeet(value, precision){
+  var returnValue = 0;
+  if (!isNaN(value) && Number(value) > 0) {
+    returnValue = round((Number(value) / 325851), precision);
+  }
+  return returnValue;
+};
+
 var windDirection = function windDirection(wd) {
   if (wd > 360 || wd < 0) {
     return 'ERR';
@@ -562,6 +570,9 @@ function valueCalculator(
       break;
     case 'pumpState':
       returnValue = pumpState(value);
+      break;
+    case 'gallonsToAcreFeet':
+      returnValue = gallonsToAcreFeet(value, precision);
       break;
     case 'flowMeterState':
       returnValue = flowMeterState(value);
@@ -748,6 +759,7 @@ module.exports = {
   percentToDigitalInverse: percentToDigitalInverse,
   analogToDigitalInverse: analogToDigitalInverse,
   voltToCentibar: voltToCentibar,
+  gallonsToAcreFeet: gallonsToAcreFeet,
   percentToCentibar: percentToCentibar,
   analogToCentibar: analogToCentibar,
   numberMap: numberMap,
