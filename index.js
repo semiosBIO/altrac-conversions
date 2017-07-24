@@ -264,7 +264,7 @@ var fourToTwenty = function fourToTwenty(p, min, max) {
   if (mA > 3.5 && returnValue < 0) {
     return 0;
   } else if (returnValue < 0) {
-    return 'ERL';
+    return 'OFF';
   } else if (returnValue > maxNumber) {
     return 'ERH';
   }
