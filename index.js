@@ -717,7 +717,7 @@ var displayFormula = function displayFormula(
         physical.min || 0,
         physical.max || 100,
         physical.zero || 0,
-        phsical.precision || 0
+        physical.precision || 0
       );
       break;
     case 'rpmToState':
