@@ -249,26 +249,34 @@ var percentTo20V = function percentTo20V(p, precision) {
   return round(p * (1 / (1800 / (1800 + 10000))) * 3.3, precision || 2);
 };
 
-var fourToTwenty = function fourToTwenty(p, min, max) {
+var fourToTwenty = function fourToTwenty(p, min, max, zero, precision) {
   var minNumber = 0;
   var maxNumber = 100;
+  var zeroNumber = 0;
+  var precisionNumber = 0;
   if (!isNaN(min)) {
     minNumber = Number(min);
   }
   if (!isNaN(max)) {
     maxNumber = Number(max);
   }
+  if (!isNaN(zero)) {
+    zeroNumber = Number(zero);
+  }
+  if (!isNaN(precision)) {
+    precisionNumber = Number(precision);
+  }
   var returnValue = (((((p * 3.34) / 100) * 1000) - 4) * (maxNumber - minNumber)) / (20 - 4);
   var mA = (((p * 3.34) / 100) * 1000);
   var map = ((mA - 4) * (maxNumber - minNumber)) / (20 - 4);
-  if (mA > 3.5 && returnValue < 0) {
+  if (mA > 3.5 && returnValue < zeroNumber) {
     return 0;
-  } else if (returnValue < 0) {
+  } else if (returnValue < zeroNumber) {
     return 'OFF';
   } else if (returnValue > maxNumber) {
     return 'ERH';
   }
-  return round(returnValue);
+  return round(returnValue, precisionNumber);
 };
 
 var fuelLevel = function fuelLevel(percent, size, maxSize) {
@@ -706,8 +714,10 @@ var displayFormula = function displayFormula(
     case 'fourToTwenty':
       returnValue = fourToTwenty(
         readingCurrent[valueKey] / multiplierValue,
-        physical.min,
-        physical.max
+        physical.min || 0,
+        physical.max || 100,
+        physical.zero || 0,
+        phsical.precision || 0
       );
       break;
     case 'rpmToState':
