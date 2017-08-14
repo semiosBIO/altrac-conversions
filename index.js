@@ -346,7 +346,7 @@ var pumpOutput = function pumpOutput(readingCurrent, readingLast, currentTime, l
   if (readingCurrent - readingLast < 0 && readingCurrent - readingLast >= -60000) {
     return 0;
   } else if (readingCurrent - readingLast < -60000) {
-    diff += 65535;
+    diff = (readingCurrent - readingLast + 65535) / multiplierValue;
   }
   var diff = (readingCurrent - readingLast) / multiplierValue;
   var current = new Date(currentTime).getTime();
