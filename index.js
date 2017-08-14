@@ -343,6 +343,12 @@ var flowMeterState = function flowMeterState(value) {
 
 var pumpOutput = function pumpOutput(readingCurrent, readingLast, currentTime, lastTime, multiplierValue) {
   var diff = (readingCurrent - readingLast) / multiplierValue;
+  if (readingCurrent - readingLast < 0 && readingCurrent - readingLast >= -60000) {
+    return 0;
+  } else if (readingCurrent - readingLast < -60000) {
+    diff += 65535;
+  }
+  var diff = (readingCurrent - readingLast) / multiplierValue;
   var current = new Date(currentTime).getTime();
   var previous = new Date(lastTime).getTime();
   var diffMinutes = (current - previous) / 1000 / 60;
