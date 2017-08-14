@@ -341,11 +341,12 @@ var flowMeterState = function flowMeterState(value) {
   return 'STP';
 };
 
-var pumpOutput = function pumpOutput(gallonsPerPulse, currentTime, lastTime) {
+var pumpOutput = function pumpOutput(readingCurrent, readingLast, currentTime, lastTime, multiplierValue) {
+  var diff = (readingCurrent - readingLast) / multiplierValue;
   var current = new Date(currentTime).getTime();
   var previous = new Date(lastTime).getTime();
   var diffMinutes = (current - previous) / 1000 / 60;
-  return Math.round(gallonsPerPulse / diffMinutes);
+  return Math.round(diff / diffMinutes);
 };
 
 var rpmToState = function rpmToState(rpm, off, high) {
@@ -691,9 +692,11 @@ var displayFormula = function displayFormula(
       break;
     case 'pumpOutput':
       returnValue = pumpOutput(
-        readingCurrent[valueKey] / multiplierValue,
+        readingCurrent[valueKey],
+        readingLast[valueKey],
         readingCurrent.date,
-        readingLast.date
+        readingLast.date,
+        multiplierValue
       );
       break;
     case 'fuelLevel':
