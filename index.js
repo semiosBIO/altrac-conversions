@@ -355,7 +355,7 @@ var pumpOutput = function pumpOutput(readingCurrent, readingLast, currentTime, l
 };
 
 var rpmToState = function rpmToState(rpm, off, high) {
-  var returnValue = 'Off';
+  var returnValue = 'OFF';
   var offTest = 150;
   if (off) {
     offTest = off;
@@ -369,11 +369,11 @@ var rpmToState = function rpmToState(rpm, off, high) {
     rpmTest = rpm;
   }
   if (rpmTest < offTest) {
-    returnValue = 'Off';
+    returnValue = 'OFF';
   } else if (rpmTest >= offTest && rpmTest < highTest) {
-    returnValue = 'Low';
+    returnValue = 'LOW';
   } else {
-    returnValue = 'High';
+    returnValue = 'HIGH';
   }
   return returnValue;
 }
