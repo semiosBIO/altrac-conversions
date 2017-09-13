@@ -21,6 +21,10 @@ var round = function round(n, d) {
   return Math.round(n * decimalPlaces) / decimalPlaces;
 };
 
+var isNumber = function isNumber(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+};
+
 var voltToVWC = function voltToVWC(v) {
   /*
     0 to 1.1V VWC= 10*V-1  
@@ -348,8 +352,8 @@ var pumpOutput = function pumpOutput(readingCurrent, readingLast, currentTime, l
   } else if (readingCurrent - readingLast < -60000) {
     diff = (readingCurrent - readingLast + 65535) / multiplierValue;
   }
-  var current = new Date(currentTime).getTime();
-  var previous = new Date(lastTime).getTime();
+  var current = new Date(isNumber(currentTime) ? currentTime * 1000 : currentTime).getTime();
+  var previous = new Date(isNumber(lastTime) ? lastTime * 1000 : lastTime).getTime();
   var diffMinutes = (current - previous) / 1000 / 60;
   return Math.round(diff / diffMinutes);
 };
@@ -699,8 +703,8 @@ var displayFormula = function displayFormula(
       returnValue = pumpOutput(
         readingCurrent[valueKey],
         readingLast[valueKey],
-        readingCurrent.date,
-        readingLast.date,
+        readingCurrent[132] || readingCurrent.date,
+        readingLast[132] || readingLast.date,
         multiplierValue
       );
       break;
