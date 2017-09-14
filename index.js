@@ -355,7 +355,8 @@ var pumpOutput = function pumpOutput(readingCurrent, readingLast, currentTime, l
   var current = new Date(isNumber(currentTime) ? currentTime * 1000 : currentTime).getTime();
   var previous = new Date(isNumber(lastTime) ? lastTime * 1000 : lastTime).getTime();
   var diffMinutes = (current - previous) / 1000 / 60;
-  return Math.round(diff / diffMinutes);
+  var output = Math.round(diff / diffMinutes);
+  return isNaN(output) ? 0 : output;
 };
 
 var rpmToState = function rpmToState(rpm, off, high) {
