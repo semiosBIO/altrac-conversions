@@ -774,6 +774,7 @@ var displayFormula = function displayFormula(
 
 module.exports = {
   round: round,
+  isNumber: isNumber,
   voltToVWC: voltToVWC,
   percentToVWC: percentToVWC,
   analogToVWC: analogToVWC,
