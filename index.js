@@ -1001,5 +1001,10 @@ module.exports = {
   cellSignalToRssi: cellSignalToRssi,
   cellSignalToQuality: cellSignalToQuality,
   numberToBinary: numberToBinary,
-  numberToBinaryFE: numberToBinaryFE
+  numberToBinaryFE: numberToBinaryFE,
+  windMachineChangeStatus: windMachineChangeStatus,
+  windMachineCommunicationStatus: windMachineCommunicationStatus,
+  windMachineEngineState: windMachineEngineState,
+  windMachineMPC20ShutdownStatus: windMachineMPC20ShutdownStatus,
+  windMachineMPC20WarningStatus: windMachineMPC20WarningStatus
 };
