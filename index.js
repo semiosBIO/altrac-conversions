@@ -441,7 +441,7 @@ var windMachineChangeStatus = function windMachineChangeStatus(cs) {
       returnValue = 'No A/S';
       break;
     default:
-      returnValue = data[i];
+      returnValue = cs;
   }
   return returnValue;
 }
@@ -462,7 +462,7 @@ var windMachineCommunicationStatus = function windMachineCommunicationStatus(cs)
       returnValue = 'Connected';
       break;
     default:
-      returnValue = data[i];
+      returnValue = cs;
   }
   return returnValue;
 }
@@ -522,7 +522,7 @@ var windMachineEngineState = function windMachineEngineState(cs) {
       returnValue = 'Wait To Start';
       break;
     default:
-      returnValue = data[i];
+      returnValue = cs;
   }
   return returnValue;
 }
