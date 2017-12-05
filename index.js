@@ -422,6 +422,185 @@ var binLevel = function binLevel(
   return numberFull + '/' + totalBins;
 };
 
+var windMachineChangeStatus = function windMachineChangeStatus(cs) {
+  var returnValue = '';
+  switch (cs) {
+    case 0:
+      returnValue = 'No Change';
+      break;
+    case 1:
+      returnValue = 'A/S New';
+      break;
+    case 2:
+      returnValue = 'EP New';
+      break;
+    case 254:
+      returnValue = 'Error';
+      break;
+    case 255:
+      returnValue = 'No A/S';
+      break;
+    default:
+      returnValue = data[i];
+  }
+  return returnValue;
+}
+
+var windMachineCommunicationStatus = function windMachineCommunicationStatus(cs) {
+  var returnValue = '';
+  switch (cs) {
+    case -2:
+      returnValue = 'Comm Error';
+      break;
+    case -1:
+      returnValue = 'Not Connected';
+      break;
+    case 0:
+      returnValue = 'No Attempt';
+      break;
+    case 1:
+      returnValue = 'Connected';
+      break;
+    default:
+      returnValue = data[i];
+  }
+  return returnValue;
+}
+
+var windMachineEngineState = function windMachineEngineState(cs) {
+  var returnValue = '';
+  switch (cs) {
+    case 0:
+      returnValue = 'ECU Delay';
+      break;
+    case 1:
+      returnValue = 'Engine Stopped';
+      break;
+    case 2:
+      returnValue = 'Controller Standby';
+      break;
+    case 3:
+      returnValue = 'Prestart 1';
+      break;
+    case 4:
+      returnValue = 'Checksafe';
+      break;
+    case 5:
+      returnValue = 'Prestart 2';
+      break;
+    case 6:
+      returnValue = 'Crank on';
+      break;
+    case 7:
+      returnValue = 'Crank Rest';
+      break;
+    case 8:
+      returnValue = 'False Start';
+      break;
+    case 9:
+      returnValue = 'Warmup';
+      break;
+    case 10:
+      returnValue = 'Line Fill 1';
+      break;
+    case 11:
+      returnValue = 'Line Fill 2';
+      break;
+    case 12:
+      returnValue = 'Running';
+      break;
+    case 13:
+      returnValue = 'Cooldown';
+      break;
+    case 14:
+      returnValue = 'Stopping';
+      break;
+    case 15:
+      returnValue = 'Spindown';
+      break;
+    case 16:
+      returnValue = 'Wait To Start';
+      break;
+    default:
+      returnValue = data[i];
+  }
+  return returnValue;
+}
+
+var windMachineMPC20ShutdownStatus = function windMachineMPC20ShutdownStatus(sd) {
+  var returnArray = [];
+  if (sd & Math.pow(2, 0)) { returnArray.push('Overspeed SD'); }
+  if (sd & Math.pow(2, 1)) { returnArray.push('Underspeed SD'); }
+  if (sd & Math.pow(2, 2)) { returnArray.push('Overcrank SD'); }
+  if (sd & Math.pow(2, 3)) { returnArray.push('Low Oil Pressure SD'); }
+  if (sd & Math.pow(2, 4)) { returnArray.push('High Engine Temp SD'); }
+  if (sd & Math.pow(2, 5)) { returnArray.push('Low Fuel SD'); }
+  if (sd & Math.pow(2, 6)) { returnArray.push('Low Discharge Pressure SD'); }
+  if (sd & Math.pow(2, 7)) { returnArray.push('High Discharge Pressure SD'); }
+  if (sd & Math.pow(2, 8)) { returnArray.push('Speed Signal Lost SD'); }
+  if (sd & Math.pow(2, 9)) { returnArray.push('Low Lube Level SD'); }
+  if (sd & Math.pow(2, 10)) { returnArray.push('Fuel Leak SD'); }
+  if (sd & Math.pow(2, 11)) { returnArray.push('Fuel Filter Restriction SD'); }
+  if (sd & Math.pow(2, 12)) { returnArray.push('Air Damper Closed SD no'); }
+  if (sd & Math.pow(2, 13)) { returnArray.push('Air Filter Restriction SD'); }
+  if (sd & Math.pow(2, 14)) { returnArray.push('Oil Filter Restriction SD'); }
+  if (sd & Math.pow(2, 15)) { returnArray.push('Remote Stop SD'); }
+  if (sd & Math.pow(2, 16)) { returnArray.push('Coolant Level SD'); }
+  if (sd & Math.pow(2, 17)) { returnArray.push('High Level SD'); }
+  if (sd & Math.pow(2, 18)) { returnArray.push('Low Level SD'); }
+  if (sd & Math.pow(2, 19)) { returnArray.push('High Flow SD'); }
+  if (sd & Math.pow(2, 20)) { returnArray.push('Low Flow SD'); }
+  if (sd & Math.pow(2, 21)) { returnArray.push('High Pump Oil Temp SD'); }
+  if (sd & Math.pow(2, 22)) { returnArray.push('High Pump Housing Temp SD'); }
+  if (sd & Math.pow(2, 23)) { returnArray.push('Water in Fuel SD'); }
+  if (sd & Math.pow(2, 24)) { returnArray.push('Low Suction SD'); }
+  if (sd & Math.pow(2, 25)) { returnArray.push('High Suction SD'); }
+  if (sd & Math.pow(2, 26)) { returnArray.push('High Engine Oil Pressure SD'); }
+  if (sd & Math.pow(2, 27)) { returnArray.push('High Engine Oil Temp SD'); }
+  if (sd & Math.pow(2, 28)) { returnArray.push('Low Gear Box Pressure SD'); }
+  if (sd & Math.pow(2, 29)) { returnArray.push('High Gear Box Pressure SD'); }
+  if (sd & Math.pow(2, 30)) { returnArray.push('Battery Charger Fail SD'); }
+  if (sd & Math.pow(2, 31)) { returnArray.push('Red Lamp Status'); }
+  return returnArray;
+}
+
+var windMachineMPC20WarningStatus = function windMachineMPC20WarningStatus(ws) {
+  var returnArray = [];
+  if (wd & Math.pow(2, 0)) { returnArray.push('Low Fuel Warn'); }
+  if (wd & Math.pow(2, 1)) { returnArray.push('Fuel Leak Warn'); }
+  if (wd & Math.pow(2, 2)) { returnArray.push('Fuel Filter Restriction Warn'); }
+  if (wd & Math.pow(2, 3)) { returnArray.push('Low Lube Level W arn'); }
+  if (wd & Math.pow(2, 4)) { returnArray.push('Coolant Level Warn'); }
+  if (wd & Math.pow(2, 5)) { returnArray.push('Water in Fuel Warn'); }
+  if (wd & Math.pow(2, 6)) { returnArray.push('No Flow Warn'); }
+  if (wd & Math.pow(2, 7)) { returnArray.push('High Engine Oil Temp Warn'); }
+  if (wd & Math.pow(2, 8)) { returnArray.push('Low Oil Pressure Warn'); }
+  if (wd & Math.pow(2, 9)) { returnArray.push('High Engine Temp Warn'); }
+  if (wd & Math.pow(2, 10)) { returnArray.push('High Discharge Pressure Warn'); }
+  if (wd & Math.pow(2, 11)) { returnArray.push('Low Discharge Pressure Warn'); }
+  if (wd & Math.pow(2, 12)) { returnArray.push('High Suction Warn'); }
+  if (wd & Math.pow(2, 13)) { returnArray.push('Low Suction Warn'); }
+  if (wd & Math.pow(2, 14)) { returnArray.push('High Level Warn'); }
+  if (wd & Math.pow(2, 15)) { returnArray.push('Low Level Warn'); }
+  if (wd & Math.pow(2, 16)) { returnArray.push('High Flow Warn'); }
+  if (wd & Math.pow(2, 17)) { returnArray.push('Low Flow Warn'); }
+  if (wd & Math.pow(2, 18)) { returnArray.push('High Pump Oil Temp Warn'); }
+  if (wd & Math.pow(2, 19)) { returnArray.push('High Pump Housing Temp Warn'); }
+  if (wd & Math.pow(2, 20)) { returnArray.push('Low Gear Box Pressure Warn'); }
+  if (wd & Math.pow(2, 21)) { returnArray.push('High Gear Box Pressure Warn'); }
+  if (wd & Math.pow(2, 22)) { returnArray.push('Air Damper Closed Warn'); }
+  if (wd & Math.pow(2, 23)) { returnArray.push('Air Filter Restriction Warn'); }
+  if (wd & Math.pow(2, 24)) { returnArray.push('Oil Filter Restriction Warn'); }
+  if (wd & Math.pow(2, 25)) { returnArray.push('Low Engine Temp Warn'); }
+  if (wd & Math.pow(2, 26)) { returnArray.push('High Engine Oil Pressure Warn'); }
+  if (wd & Math.pow(2, 27)) { returnArray.push('Battery Charger Fail Warn'); }
+  if (wd & Math.pow(2, 28)) { returnArray.push('Run To Destruct Warn'); }
+  if (wd & Math.pow(2, 29)) { returnArray.push('Battery High Warn'); }
+  if (wd & Math.pow(2, 30)) { returnArray.push('Battery Low Warn'); }
+  if (wd & Math.pow(2, 31)) { returnArray.push('Amber Lamp Status'); }
+  return returnArray;
+}
+
 var chartDimensions = function chartDimensions(windowWidth) {
   var windowWidth = windowWidth;
   var chartWidth = 288;
