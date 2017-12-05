@@ -564,7 +564,7 @@ var windMachineMPC20ShutdownStatus = function windMachineMPC20ShutdownStatus(sd)
   return returnArray;
 }
 
-var windMachineMPC20WarningStatus = function windMachineMPC20WarningStatus(ws) {
+var windMachineMPC20WarningStatus = function windMachineMPC20WarningStatus(wd) {
   var returnArray = [];
   if (wd & Math.pow(2, 0)) { returnArray.push('Low Fuel Warn'); }
   if (wd & Math.pow(2, 1)) { returnArray.push('Fuel Leak Warn'); }
