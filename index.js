@@ -383,6 +383,13 @@ var rpmToState = function rpmToState(rpm, off, high) {
   return returnValue;
 }
 
+var rpmOrchardRite(rpm) {
+  var returnValue = Math.round((rpm / -170.1244909 + 8.572735138) * rpm);
+  if (returnValue < 0) { return 0; }
+  if (returnValue > 3000) { return 3000; }
+  return returnValue;
+}
+
 var binLevel = function binLevel(
   binLevelCurrent,
   binLevelLast,
@@ -769,6 +776,9 @@ function valueCalculator(
     case 'pumpState':
       returnValue = pumpState(value);
       break;
+    case 'rpmOrchardRite':
+      returnValue = rpmOrchardRite(value);
+      break;
     case 'gallonsToAcreFeet':
       returnValue = gallonsToAcreFeet(value, precision);
       break;
@@ -993,6 +1003,7 @@ module.exports = {
   spaceCamel: spaceCamel,
   pumpState: pumpState,
   rpmToState: rpmToState,
+  rpmOrchardRite: rpmOrchardRite,
   flowMeterState: flowMeterState,
   pumpOutput: pumpOutput,
   binLevel: binLevel,
