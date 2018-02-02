@@ -383,7 +383,7 @@ var rpmToState = function rpmToState(rpm, off, high) {
   return returnValue;
 }
 
-var rpmOrchardRite(rpm) {
+var rpmOrchardRite = function rpmOrchardRite(rpm) {
   var returnValue = Math.round((rpm / -170.1244909 + 8.572735138) * rpm);
   if (returnValue < 0) { return 0; }
   if (returnValue > 3000) { return 3000; }
