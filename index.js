@@ -383,11 +383,20 @@ var rpmToState = function rpmToState(rpm, off, high) {
   return returnValue;
 }
 
-var rpmOrchardRite = function rpmOrchardRite(rpm) {
+var rpmOrchardRiteAutometer9117 = function rpmOrchardRiteAutometer9117(rpm) {
   var returnValue = Math.round((rpm / -170.1244909 + 8.572735138) * rpm);
   if (returnValue < 0) { return 0; }
   if (returnValue > 3000) { return 3000; }
   return returnValue;
+}
+
+var lineFit = function lineFit(val, m, b, precision, max, min) {
+  var maxValue = max ? max : 4294967295;
+  var minValue = min ? min : 0;
+  var returnValue = (val * m + b);
+  returnValue = round(returnValue, precision ? precision : 0);
+  if (returnValue < minValue) { return minValue; }
+  if (returnValue > maxValue) { return maxValue; }
 }
 
 var binLevel = function binLevel(
@@ -776,8 +785,8 @@ function valueCalculator(
     case 'pumpState':
       returnValue = pumpState(value);
       break;
-    case 'rpmOrchardRite':
-      returnValue = rpmOrchardRite(value);
+    case 'rpmOrchardRiteAutometer9117':
+      returnValue = rpmOrchardRiteAutometer9117(value);
       break;
     case 'gallonsToAcreFeet':
       returnValue = gallonsToAcreFeet(value, precision);
@@ -1003,7 +1012,7 @@ module.exports = {
   spaceCamel: spaceCamel,
   pumpState: pumpState,
   rpmToState: rpmToState,
-  rpmOrchardRite: rpmOrchardRite,
+  rpmOrchardRiteAutometer9117: rpmOrchardRiteAutometer9117,
   flowMeterState: flowMeterState,
   pumpOutput: pumpOutput,
   binLevel: binLevel,
