@@ -384,12 +384,17 @@ var rpmToState = function rpmToState(rpm, off, high) {
 }
 
 var engineStateCalculator = function engineStateCalculator(
-  rpm = 0,
-  intention = 0,
-  timestamp = ((new Date()).getTime() / 1000),
-  offRpm = 750,
-  highRpm = 1600
+  rpm,
+  intention,
+  timestamp,
+  offRpm,
+  highRpm
 ) {
+  if (!rpm) rpm = 0;
+  if (!intention) intention = 0;
+  if (!timestamp) timestamp = ((new Date()).getTime() / 1000);
+  if (!offRpm) offRpm = 750;
+  if (!highRpm) highRpm = 1600;
   var returnValue = 0;
   const timeDiff = ((new Date()).getTime() / 1000) - timestamp;
   if (intention) {
