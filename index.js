@@ -383,6 +383,38 @@ var rpmToState = function rpmToState(rpm, off, high) {
   return returnValue;
 }
 
+var engineStateCalculator = function engineStateCalculator(
+  rpm = 0,
+  intention = 0,
+  timestamp = ((new Date()).getTime() / 1000),
+  offRpm = 750,
+  highRpm = 1600
+) {
+  var returnValue = 0;
+  const timeDiff = ((new Date()).getTime() / 1000) - timestamp;
+  if (intention) {
+    if (rpm < offRpm) {
+      if (timeDiff >= 120) {
+        returnValue = 8; // STATE_FALSE_START
+      } else {
+        returnValue = 6; // STATE_CRANK_ON
+      }
+    } else if (rpm >= offRpm && rpm <= highRpm) {
+      returnValue = 9; // STATE_WARMUP_DELAY
+    } else {
+      returnValue = 12; // STATE_RUNNING_LOADED
+    }
+  } else {
+    if (rpm < offRpm) {
+      returnValue = 1; // STATE_ENGINE_STOPPED
+    } else if (rpm >= offRpm && rpm <= highRpm) {
+      returnValue = 9; // STATE_WARMUP_DELAY
+    } else {
+      returnValue = 13; // STATE_COOLDOWN_DELAY
+    }
+  }
+}
+
 var rpmOrchardRiteAutometer9117 = function rpmOrchardRiteAutometer9117(rpm) {
   var returnValue = Math.round((rpm / -170.1244909 + 8.572735138) * rpm);
   if (returnValue < 0) { return 0; }
@@ -1012,6 +1044,7 @@ module.exports = {
   spaceCamel: spaceCamel,
   pumpState: pumpState,
   rpmToState: rpmToState,
+  engineStateCalculator: engineStateCalculator,
   rpmOrchardRiteAutometer9117: rpmOrchardRiteAutometer9117,
   flowMeterState: flowMeterState,
   pumpOutput: pumpOutput,
