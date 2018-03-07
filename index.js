@@ -413,6 +413,7 @@ var engineStateCalculator = function engineStateCalculator(
       returnValue = 13; // STATE_COOLDOWN_DELAY
     }
   }
+  return returnValue;
 }
 
 var rpmOrchardRiteAutometer9117 = function rpmOrchardRiteAutometer9117(rpm) {
