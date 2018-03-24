@@ -445,12 +445,16 @@ var binLevel = function binLevel(
   numberOfBins
 ) {
   var fullness = 0;
-  if (binLevelCurrent === binLevelLast) {
-    fullness = binLevelCurrent;
-  } else if (binLevelCurrent < binLevelLast) {
+  if (!debounce) {
     fullness = binLevelCurrent;
   } else {
-    fullness = binLevelLast;
+    if (binLevelCurrent === binLevelLast) {
+      fullness = binLevelCurrent;
+    } else if (binLevelCurrent < binLevelLast) {
+      fullness = binLevelCurrent;
+    } else {
+      fullness = binLevelLast;
+    }
   }
 
   var iterations = 4;
