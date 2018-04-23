@@ -992,7 +992,7 @@ var displayFormula = function displayFormula(
     case 'dewPoint':
       returnValue = dewPoint(
         readingCurrent['128'],
-        readingCurrent['142' / 10],
+        readingCurrent['142'] / multiplierValue,
         precisionValue
       );
       break;
