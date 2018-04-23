@@ -812,6 +812,9 @@ function valueCalculator(
     case 'percentToDigitalString':
       returnValue = (percentToDigital(value) === 1) ? 'ON' : 'OFF';
       break;
+    case 'percentToDigitalStringFullEmpty':
+      returnValue = (percentToDigital(value) === 1) ? 'FULL' : 'EMPTY';
+      break;
     case 'lowPercentToDigital':
       returnValue = percentToDigital(value + 0.3);
       break;
