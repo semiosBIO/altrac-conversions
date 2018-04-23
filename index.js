@@ -318,7 +318,7 @@ var spaceCamel = function spaceCamel(s) {
 };
 
 var dewPoint = function dewPoint(t, rh, precision) {
-  var h = (log10(rf) - 2) / 0.4343 + (17.62 * t)/(243.12 + t);
+  var h = (Math.log10(rf) - 2) / 0.4343 + (17.62 * t)/(243.12 + t);
   var dp = 243.12 * h / (17.62 - h); // this is the dew point in Celsius
   return round(dp, precision ? precision : 2);
 };
