@@ -317,10 +317,10 @@ var spaceCamel = function spaceCamel(s) {
   return s.replace(/([A-Z])/g, ' $1').replace(/^./, function(str) { return str.toUpperCase(); });
 };
 
-var dewPoint = function dewPoint(t, rh, precision) {
+var dewPoint = function dewPoint(t, rh) {
   var h = (Math.log10(rh) - 2) / 0.4343 + (17.62 * t)/(243.12 + t);
   var dp = 243.12 * h / (17.62 - h); // this is the dew point in Celsius
-  return round(dp, precision ? precision : 2);
+  return dp;
 };
 
 var pumpState = function pumpState(state) {
@@ -992,9 +992,9 @@ var displayFormula = function displayFormula(
     case 'dewPoint':
       returnValue = dewPoint(
         readingCurrent['128'],
-        readingCurrent['142'] / multiplierValue,
-        precisionValue
+        readingCurrent['142'] / multiplierValue
       );
+      returnValue = fromC(returnValue, context.tempConv, precisionValue);
       break;
     case 'millisecondsPastExpectedConnection':
       returnValue = millisecondsPastExpectedConnection(
