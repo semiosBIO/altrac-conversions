@@ -195,6 +195,28 @@ var valveTimeToDate = function valveTimeToDate(valveTime) {
   return (new Date(valveTimeToEpochMillis(valveTime)));
 };
 
+var lastValveTime = function lastValveTime(valveTimeArr) {
+  var returnValue = [0, 0];
+  if (valveTimeArr) {
+    for (var i = 0; i < valveTimeArr.length; i += 2) {
+      if (
+        valveTimeToEpochMillis(valveTimeArr[i]) < (new Date().getTime()) &&
+        valveTimeToEpochMillis(valveTimeArr[i + 1]) < (new Date().getTime())
+      ) {
+        if (valveTimeArr[i] > returnValue[0] || returnValue[0] === 0) {
+          returnValue[0] = valveTimeArr[i];
+          returnValue[1] = valveTimeArr[i + 1];
+        } else {
+          // do nothing
+        }
+      } else {
+        // do nothing
+      }
+    }
+  }
+  return returnValue;
+};
+
 var nextValveTime = function nextValveTime(valveTimeArr) {
   var returnValue = [0, 0];
   if (valveTimeArr) {
@@ -219,6 +241,14 @@ var nextValveTime = function nextValveTime(valveTimeArr) {
 
 var nextValveTimeToEpochMillis = function nextValveTimeToEpochMillis(valveTimeArr) {
   var nextTimes = nextValveTime(valveTimeArr);
+  var returnValue = [0, 0];
+  returnValue[0] = valveTimeToEpochMillis(nextTimes[0]);
+  returnValue[1] = valveTimeToEpochMillis(nextTimes[1]);
+  return returnValue;
+};
+
+var lastValveTimeToEpochMillis = function lastValveTimeToEpochMillis(valveTimeArr) {
+  var nextTimes = lastValveTime(valveTimeArr);
   var returnValue = [0, 0];
   returnValue[0] = valveTimeToEpochMillis(nextTimes[0]);
   returnValue[1] = valveTimeToEpochMillis(nextTimes[1]);
@@ -1055,6 +1085,8 @@ module.exports = {
   valveTimeToDate: valveTimeToDate,
   nextValveTime: nextValveTime,
   nextValveTimeToEpochMillis: nextValveTimeToEpochMillis,
+  lastValveTime: lastValveTime,
+  lastValveTimeToEpochMillis: lastValveTimeToEpochMillis,
   toValveTime: toValveTime,
   secondsToHHMMSS: secondsToHHMMSS,
   percentTo20V: percentTo20V,
