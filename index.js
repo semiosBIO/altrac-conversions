@@ -279,8 +279,14 @@ var secondsToHHMMSS = function secondsToHHMMSS(totalSeconds) {
   return result;
 };
 
-var percentTo20V = function percentTo20V(p, precision) {
-  return round(p * (1 / (1800 / (1800 + 10000))) * 3.3, precision || 2);
+var percentTo20V = function percentTo20V(
+  p,
+  precision,
+  resistor1 = 1800,
+  resistor2 = 10000,
+  voltageReference = 3.3,
+) {
+  return round(p * (1 / (resistor1 / (resistor1 + resistor2))) * voltageReference, precision || 2);
 };
 
 var fourToTwenty = function fourToTwenty(p, min, max, zero, precision) {
@@ -800,9 +806,6 @@ function valueCalculator(
     case 'temperatureF':
       returnValue = fromC(value, 'f', precision);
       break;
-    case 'percentTo20V':
-      returnValue = percentTo20V(value, precision);
-      break;
     case 'percentToCentibar':
       returnValue = percentToCentibar(value);
       break;
@@ -1017,6 +1020,15 @@ var displayFormula = function displayFormula(
         readingCurrent[valueKey] / multiplierValue,
         physical.offRpm,
         physical.highRpm
+      );
+      break;
+    case 'percentTo20V':
+      returnValue = percentTo20V(
+        readingCurrent[valueKey] / multiplierValue,
+        precision,
+        physical.batteryExternalCalibrationResistor1 || 1800,
+        physical.batteryExternalCalibrationResistor2 || 10000,
+        physical.batteryExternalCalibrationVoltageReference || 3.3
       );
       break;
     case 'dewPoint':
