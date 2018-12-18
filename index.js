@@ -960,6 +960,11 @@ var displayFormula = function displayFormula(
   //   },
   // });
   var returnValue = readingCurrent[valueKey];
+  if (
+    returnValue === 4294967295
+    || returnValue === 65535
+    || returnValue === -32768
+  ) { return 'ERR'; }
   var multiplierValue = 1;
   if (multiplier) { multiplierValue = multiplier; }
   var precisionValue = 0;
