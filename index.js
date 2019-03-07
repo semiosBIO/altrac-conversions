@@ -806,6 +806,9 @@ function valueCalculator(
     case 'temperatureF':
       returnValue = fromC(value, 'f', precision);
       break;
+    case 'temperatureC':
+      returnValue = fromC(value, 'c', precision);
+      break;
     case 'percentToCentibar':
       returnValue = percentToCentibar(value);
       break;
