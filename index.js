@@ -976,15 +976,22 @@ var displayFormula = function displayFormula(
     formulaValue = 'rolling';
     formulaValueSecondary = formula.substr(0, formula.length - ('Rolling').length);
   }
+  var physicalValue = {};
+  if (
+    physical
+    && typeof physical === 'object'
+  ) {
+    physicalValue = physical;
+  }
 
   switch (formulaValue) {
     case 'binLevel':
       returnValue = binLevel(
         readingCurrent['131'],
         readingLast['131'],
-        physical.debounce,
-        physical.powered,
-        physical.bins
+        physicalValue.debounce,
+        physicalValue.powered,
+        physicalValue.bins
       );
       break;
     case 'pumpOutput':
@@ -998,12 +1005,12 @@ var displayFormula = function displayFormula(
       break;
     case 'fuelLevel':
       var fuelTankSize = 3;
-      if (physical && physical.fuelTankSize) {
-        fuelTankSize = physical.fuelTankSize;
+      if (physicalValue && physicalValue.fuelTankSize) {
+        fuelTankSize = physicalValue.fuelTankSize;
       }
       var fuelSensorRange = 6.56;
-      if (physical && physical.fuelSensorRange) {
-        fuelSensorRange = physical.fuelSensorRange;
+      if (physicalValue && physicalValue.fuelSensorRange) {
+        fuelSensorRange = physicalValue.fuelSensorRange;
       }
       returnValue = round(fuelLevel(
         readingCurrent[valueKey] / multiplierValue,
@@ -1014,26 +1021,26 @@ var displayFormula = function displayFormula(
     case 'fourToTwenty':
       returnValue = fourToTwenty(
         readingCurrent[valueKey] / multiplierValue,
-        physical.min || 0,
-        physical.max || 100,
-        physical.zero || 0,
-        physical.precision || 0
+        physicalValue.min || 0,
+        physicalValue.max || 100,
+        physicalValue.zero || 0,
+        physicalValue.precision || 0
       );
       break;
     case 'rpmToState':
       returnValue = rpmToState(
         readingCurrent[valueKey] / multiplierValue,
-        physical.offRpm,
-        physical.highRpm
+        physicalValue.offRpm,
+        physicalValue.highRpm
       );
       break;
     case 'percentTo20V':
       returnValue = percentTo20V(
         readingCurrent[valueKey] / multiplierValue,
         precision,
-        physical.batteryExternalCalibrationResistor1 || 1800,
-        physical.batteryExternalCalibrationResistor2 || 10000,
-        physical.batteryExternalCalibrationVoltageReference || 3.3
+        physicalValue.batteryExternalCalibrationResistor1 || 1800,
+        physicalValue.batteryExternalCalibrationResistor2 || 10000,
+        physicalValue.batteryExternalCalibrationVoltageReference || 3.3
       );
       break;
     case 'dewPoint':
