@@ -282,10 +282,13 @@ var secondsToHHMMSS = function secondsToHHMMSS(totalSeconds) {
 var percentTo20V = function percentTo20V(
   p,
   precision,
-  resistor1 = 1800,
-  resistor2 = 10000,
-  voltageReference = 3.3,
+  resistor1,
+  resistor2,
+  voltageReference
 ) {
+  resistor1 = typeof resistor1 !== 'undefined' ? resistor1 : 1800;
+  resistor2 = typeof resistor2 !== 'undefined' ? resistor2 : 10000;
+  voltageReference = typeof voltageReference !== 'undefined' ? voltageReference : 3.3;
   return round(p * (1 / (resistor1 / (resistor1 + resistor2))) * voltageReference, precision || 2);
 };
 
