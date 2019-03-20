@@ -1014,7 +1014,7 @@ var displayFormula = function displayFormula(
       if (physicalValue && physicalValue.fuelTankSize) {
         fuelTankSize = physicalValue.fuelTankSize;
       }
-      var fuelSensorRange = 1;
+      var fuelSensorRange = 5.0;
       if (physicalValue && physicalValue.fuelSensorRange) {
         fuelSensorRange = physicalValue.fuelSensorRange;
       }
