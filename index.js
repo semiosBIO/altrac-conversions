@@ -1010,11 +1010,11 @@ var displayFormula = function displayFormula(
       );
       break;
     case 'fuelLevel':
-      var fuelTankSize = 5.557;
+      var fuelTankSize = 5.0;
       if (physicalValue && physicalValue.fuelTankSize) {
         fuelTankSize = physicalValue.fuelTankSize;
       }
-      var fuelSensorRange = 5.0;
+      var fuelSensorRange = 5.557;
       if (physicalValue && physicalValue.fuelSensorRange) {
         fuelSensorRange = physicalValue.fuelSensorRange;
       }
