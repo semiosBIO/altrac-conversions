@@ -707,14 +707,14 @@ var windMachineMPC20WarningStatus = function windMachineMPC20WarningStatus(wd) {
 var chartDimensions = function chartDimensions(windowWidth) {
   var windowWidth = windowWidth;
   var chartWidth = 288;
-  if (windowWidth >= 472) {
-    chartWidth = 464;
-  } else if (windowWidth >= 415) {
-    chartWidth = windowWidth - 8;
+  var chartHeight = 288 - 30;
+  if (windowWidth >= 600) {
+    chartWidth = 614;
+    chartHeight = 470;
   } else if (windowWidth >= 375) {
-    chartWidth = 346;
+    chartWidth = 350;
+    chartHeight = 320;
   }
-  var chartHeight = chartWidth - 30;
 
   chartWidth -= 20;
   chartHeight -= 20;
