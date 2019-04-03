@@ -1052,7 +1052,7 @@ var displayFormula = function displayFormula(
     case 'dewPoint':
       returnValue = dewPoint(
         readingCurrent['128'],
-        readingCurrent['142'] / multiplierValue
+        readingCurrent[valueKey] / multiplierValue
       );
       returnValue = fromC(returnValue, context.tempConv, precisionValue);
       break;
