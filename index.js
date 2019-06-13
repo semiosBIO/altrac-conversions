@@ -1,4 +1,5 @@
 // index.js
+/* eslint-disable */
 var round = function round(n, d) {
   var decimalPlaces;
 
@@ -184,6 +185,9 @@ var toC = function toC(v, tempConv, precision) {
   return round(returnValue, precision);
 };
 
+var valveTimeToValveNumber = function valveTimeToValveNumber(valveTime) {
+  return (Number(valveTime) >> 28 & 0x7 >>> 0);
+};
 var valveTimeToEpoch = function valveTimeToEpoch(valveTime) {
   return (Number(valveTime) & 0xFFFFFFF) * 60;
 };
@@ -195,15 +199,25 @@ var valveTimeToDate = function valveTimeToDate(valveTime) {
   return (new Date(valveTimeToEpochMillis(valveTime)));
 };
 
-var lastValveTime = function lastValveTime(valveTimeArr) {
+var lastValveTime = function lastValveTime(valveTimeArr, valveNumber) {
+  var valveNumberC = 1;
+  if (valveNumber && valveNumber >= 0 && valveNumber <= 8) {
+    valveNumberC = valveNumber;
+  }
   var returnValue = [0, 0];
   if (valveTimeArr) {
     for (var i = 0; i < valveTimeArr.length; i += 2) {
       if (
-        valveTimeToEpochMillis(valveTimeArr[i]) < (new Date().getTime()) &&
-        valveTimeToEpochMillis(valveTimeArr[i + 1]) < (new Date().getTime())
+        valveTimeToValveNumber(valveTimeArr[i]) === valveNumberC
+        && valveTimeToValveNumber(valveTimeArr[i + 1]) === valveNumberC
+        && valveTimeToEpochMillis(valveTimeArr[i]) < (new Date().getTime())
+        && valveTimeToEpochMillis(valveTimeArr[i + 1]) < (new Date().getTime())
       ) {
-        if (valveTimeArr[i] > returnValue[0] || returnValue[0] === 0) {
+        if (
+          valveTimeToValveNumber(valveTimeArr[i]) === valveNumberC
+          && valveTimeToValveNumber(valveTimeArr[i + 1]) === valveNumberC
+          && (valveTimeArr[i] > returnValue[0] || returnValue[0] === 0)
+        ) {
           returnValue[0] = valveTimeArr[i];
           returnValue[1] = valveTimeArr[i + 1];
         } else {
@@ -217,17 +231,25 @@ var lastValveTime = function lastValveTime(valveTimeArr) {
   return returnValue;
 };
 
-var nextValveTime = function nextValveTime(valveTimeArr) {
+var nextValveTime = function nextValveTime(valveTimeArr, valveNumber) {
+  var valveNumberC = 1;
+  if (valveNumber && valveNumber >= 0 && valveNumber <= 8) {
+    valveNumberC = valveNumber;
+  }
   var returnValue = [0, 0];
   if (valveTimeArr) {
     for (var i = 0; i < valveTimeArr.length; i += 2) {
       if (
-        valveTimeToEpochMillis(valveTimeArr[i]) < (new Date().getTime()) &&
-        valveTimeToEpochMillis(valveTimeArr[i + 1]) < (new Date().getTime())
+        valveTimeToEpochMillis(valveTimeArr[i]) < (new Date().getTime())
+        && valveTimeToEpochMillis(valveTimeArr[i + 1]) < (new Date().getTime())
       ) {
         // nothing to do here
       } else {
-        if (valveTimeArr[i] < returnValue[0] || returnValue[0] === 0) {
+        if (
+          valveTimeToValveNumber(valveTimeArr[i]) === valveNumberC
+          && valveTimeToValveNumber(valveTimeArr[i + 1]) === valveNumberC
+          && (valveTimeArr[i] < returnValue[0]|| returnValue[0] === 0)
+        ) {
           returnValue[0] = valveTimeArr[i];
           returnValue[1] = valveTimeArr[i + 1];
         } else {
@@ -239,16 +261,16 @@ var nextValveTime = function nextValveTime(valveTimeArr) {
   return returnValue;
 };
 
-var nextValveTimeToEpochMillis = function nextValveTimeToEpochMillis(valveTimeArr) {
-  var nextTimes = nextValveTime(valveTimeArr);
+var nextValveTimeToEpochMillis = function nextValveTimeToEpochMillis(valveTimeArr, valveNumber) {
+  var nextTimes = nextValveTime(valveTimeArr, valveNumber);
   var returnValue = [0, 0];
   returnValue[0] = valveTimeToEpochMillis(nextTimes[0]);
   returnValue[1] = valveTimeToEpochMillis(nextTimes[1]);
   return returnValue;
 };
 
-var lastValveTimeToEpochMillis = function lastValveTimeToEpochMillis(valveTimeArr) {
-  var nextTimes = lastValveTime(valveTimeArr);
+var lastValveTimeToEpochMillis = function lastValveTimeToEpochMillis(valveTimeArr, valveNumber) {
+  var nextTimes = lastValveTime(valveTimeArr, valveNumber);
   var returnValue = [0, 0];
   returnValue[0] = valveTimeToEpochMillis(nextTimes[0]);
   returnValue[1] = valveTimeToEpochMillis(nextTimes[1]);
@@ -1171,6 +1193,7 @@ module.exports = {
   cellSignalToQuality: cellSignalToQuality,
   numberToBinary: numberToBinary,
   numberToBinaryFE: numberToBinaryFE,
+  numberToBinaryOnOff: numberToBinaryOnOff,
   windMachineChangeStatus: windMachineChangeStatus,
   windMachineCommunicationStatus: windMachineCommunicationStatus,
   windMachineEngineState: windMachineEngineState,
