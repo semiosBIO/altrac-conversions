@@ -735,6 +735,10 @@ var numberToBinaryFE = function numberToBinaryFE(value, bit) {
   return numberToBinary(value, bit) ? 'F' : 'E';
 };
 
+var numberToBinaryOnOff = function numberToBinaryOnOff(value, bit) {
+  return numberToBinary(value, bit) ? 'ON' : 'OFF';
+};
+
 var gallonsToAcreFeet = function gallonsToAcreFeet(value, precision){
   var returnValue = 0;
   if (!isNaN(value) && Number(value) > 0) {
@@ -937,6 +941,30 @@ function valueCalculator(
       break;
     case 'numberToBinaryFE7':
       returnValue = numberToBinaryFE(value, 7);
+      break;
+    case 'numberToBinaryOnOff0':
+      returnValue = numberToBinaryOnOff(value, 0);
+      break;
+    case 'numberToBinaryOnOff1':
+      returnValue = numberToBinaryOnOff(value, 1);
+      break;
+    case 'numberToBinaryOnOff2':
+      returnValue = numberToBinaryOnOff(value, 2);
+      break;
+    case 'numberToBinaryOnOff3':
+      returnValue = numberToBinaryOnOff(value, 3);
+      break;
+    case 'numberToBinaryOnOff4':
+      returnValue = numberToBinaryOnOff(value, 4);
+      break;
+    case 'numberToBinaryOnOff5':
+      returnValue = numberToBinaryOnOff(value, 5);
+      break;
+    case 'numberToBinaryOnOff6':
+      returnValue = numberToBinaryOnOff(value, 6);
+      break;
+    case 'numberToBinaryOnOff7':
+      returnValue = numberToBinaryOnOff(value, 7);
       break;
     default:
       returnValue = round(value, precision);
