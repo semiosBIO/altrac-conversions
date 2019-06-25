@@ -1020,6 +1020,7 @@ var displayFormula = function displayFormula(
     returnValue === 4294967295
     || returnValue === 65535
     || returnValue === -32768
+    || !isNumber(returnValue)
   ) { return 'ERR'; }
   var multiplierValue = 1;
   if (multiplier) { multiplierValue = multiplier; }
