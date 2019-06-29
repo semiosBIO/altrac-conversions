@@ -1161,6 +1161,7 @@ module.exports = {
   fromC: fromC,
   fromCMultiplier: fromCMultiplier,
   toC: toC,
+  valveTimeToValveNumber: valveTimeToValveNumber,
   valveTimeToEpoch: valveTimeToEpoch,
   valveTimeToEpochMillis: valveTimeToEpochMillis,
   valveTimeToDate: valveTimeToDate,
