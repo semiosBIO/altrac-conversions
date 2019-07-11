@@ -1052,11 +1052,15 @@ var displayFormula = function displayFormula(
       );
       break;
     case 'pumpOutput':
+      var flowTime = 132;
+      if (physicalValue.flowTimestampKey) {
+        flowTime = physicalValue.flowTimestampKey;
+      }
       returnValue = pumpOutput(
         readingCurrent[valueKey],
         readingLast[valueKey],
-        readingCurrent[132] || readingCurrent.date,
-        readingLast[132] || readingLast.date,
+        readingCurrent[flowTime] || readingCurrent.date,
+        readingLast[flowTime] || readingLast.date,
         multiplierValue
       );
       break;
