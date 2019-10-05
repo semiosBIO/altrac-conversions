@@ -769,6 +769,47 @@ var gallonsToAcreFeet = function gallonsToAcreFeet(value, precision){
   return returnValue;
 };
 
+var moistureSensor = function moistureSensor(reading, physical, multiplier, precision) {
+  var total = 0;
+  var denominator = 0;
+  for (var i = 1; i <= 16; i++) {
+    if(isNumber(reading[i])) {
+      const value = Number(reading[i]) / multiplier;
+      if(value > 10 && value < 99) {
+        total += value;
+        denominator += 1;
+      }
+    }
+  }
+  if (denominator === 0) return 'ERR';
+  const average = total / denominator;
+
+  var goalMax = 0;
+  var goalMin = 0;
+  if(
+    physical
+    && physical.moistureSensorSettings
+    && physical.moistureSensorSettings.moistureCombined
+    && isNumber(physical.moistureSensorSettings.moistureCombined.goalMax)
+    && Number(physical.moistureSensorSettings.moistureCombined.goalMax) > 0
+    && isNumber(physical.moistureSensorSettings.moistureCombined.goalMin)
+    && Number(physical.moistureSensorSettings.moistureCombined.goalMin) > 0
+    && Number(physical.moistureSensorSettings.moistureCombined.goalMax) > Number(physical.moistureSensorSettings.moistureCombined.goalMin)
+  ) {
+    goalMax = Number(physical.moistureSensorSettings.moistureCombined.goalMax);
+    goalMin = Number(physical.moistureSensorSettings.moistureCombined.goalMin);
+  } else {
+    return 'NO\nSET';
+  }
+
+  var returnValue = round(((average - goalMin) / (goalMax - goalMin)) * 100, precision);
+
+  if(returnValue > 100) return 'WET';
+  if(returnValue < 0) return 'DRY';
+
+  return `${returnValue}%`;
+}
+
 var windDirection = function windDirection(wd) {
   if (wd > 360 || wd < 0) {
     return 'ERR';
@@ -1110,6 +1151,14 @@ var displayFormula = function displayFormula(
         readingCurrent[valueKey] / multiplierValue
       );
       returnValue = fromC(returnValue, context.tempConv, precisionValue);
+      break;
+    case 'moistureSensor':
+      returnValue = moistureSensor(
+        readingCurrent,
+        physicalValue,
+        multiplierValue,
+        precisionValue
+      );
       break;
     case 'millisecondsPastExpectedConnection':
       returnValue = millisecondsPastExpectedConnection(
