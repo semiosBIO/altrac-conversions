@@ -28,7 +28,7 @@ var isNumber = function isNumber(n) {
 
 var voltToVWC = function voltToVWC(v) {
   /*
-    0 to 1.1V VWC= 10*V-1  
+    0 to 1.1V VWC= 10*V-1
     1.1V to 1.3V  VWC= 25*V- 17.5
     1.3V  to 1.82V  VWC= 48.08*V- 47.5
     1.82V to 2.2V VWC= 26.32*V- 7.89
@@ -769,35 +769,58 @@ var gallonsToAcreFeet = function gallonsToAcreFeet(value, precision){
   return returnValue;
 };
 
-var moistureSensor = function moistureSensor(reading, physical, multiplier, precision) {
+/**
+ * Generates the display value for a collection of moisture sensor readings.
+ * @param {*} reading
+ * @param {*} physical
+ * @param {*} multiplier
+ * @param {*} precision
+ * @param {*} valueKey
+ */
+var moistureSensor = function moistureSensor(reading, physical, multiplier, precision, valueKey) {
   var total = 0;
   var denominator = 0;
-  for (var i = 1; i <= 16; i++) {
-    if(isNumber(reading[i])) {
-      const value = Number(reading[i]) / multiplier;
-      if(value > 10 && value < 99) {
+  var keyList;
+
+  if (valueKey && Array.isArray(valueKey) && valueKey.length) {
+    keyList = valueKey;
+  } else {
+    keyList = [];
+    for (var i = 1; i <= 16; i++) keyList.push(i);
+  }
+
+  for (var key of keyList) {
+    const rawValue = reading[key];
+    if (isNumber(rawValue)) {
+      const value = Number(rawValue) / multiplier;
+      if (value > 10 && value < 99) {
         total += value;
         denominator += 1;
       }
     }
   }
+
   if (denominator === 0) return 'ERR';
+
   const average = total / denominator;
 
-  var goalMax = 0;
-  var goalMin = 0;
-  if(
-    physical
-    && physical.moistureSensorSettings
-    && physical.moistureSensorSettings.moistureCombined
-    && isNumber(physical.moistureSensorSettings.moistureCombined.goalMax)
-    && Number(physical.moistureSensorSettings.moistureCombined.goalMax) > 0
-    && isNumber(physical.moistureSensorSettings.moistureCombined.goalMin)
-    && Number(physical.moistureSensorSettings.moistureCombined.goalMin) > 0
-    && Number(physical.moistureSensorSettings.moistureCombined.goalMax) > Number(physical.moistureSensorSettings.moistureCombined.goalMin)
+  let {
+    moistureSensorSettings: {
+      moistureCombined: {
+        goalMax = 0,
+        goalMin = 0,
+      } = {},
+    } = {},
+  } = physical || {};
+
+  if (isNumber(goalMax)
+    && Number(goalMax) > 0
+    && isNumber(goalMin)
+    && Number(goalMin) > 0
+    && Number(goalMax) > Number(goalMin)
   ) {
-    goalMax = Number(physical.moistureSensorSettings.moistureCombined.goalMax);
-    goalMin = Number(physical.moistureSensorSettings.moistureCombined.goalMin);
+    goalMax = Number(goalMax);
+    goalMin = Number(goalMin);
   } else {
     return 'NO\nSET';
   }
@@ -808,6 +831,145 @@ var moistureSensor = function moistureSensor(reading, physical, multiplier, prec
   if(returnValue < 0) return 'DRY';
 
   return `${returnValue}%`;
+}
+
+/**
+ * Generates the average of a collection of moisture sensor readings.
+ * @param {*} reading
+ * @param {*} physical
+ * @param {*} multiplier
+ * @param {*} precision
+ * @param {*} valueKey
+ */
+var soilMoistureSensorAverage = function soilMoistureSensorAverage(reading, physical, multiplier, precision, valueKey) {
+  var total = 0;
+  var denominator = 0;
+  var keyList;
+
+  if (valueKey && Array.isArray(valueKey)) {
+    keyList = valueKey;
+  } else {
+    keyList = [];
+    for (var i = 1; i <= 16; i++) keyList.push(i);
+  }
+
+  for (var key of keyList) {
+    const rawValue = reading[key];
+    if (isNumber(rawValue)) {
+      const value = Number(rawValue) / multiplier;
+      if (value > 10 && value < 99) {
+        total += value;
+        denominator += 1;
+      }
+    }
+  }
+
+  if (denominator === 0) return undefined;
+
+  const average = total / denominator;
+
+  let {
+    moistureSensorSettings: {
+      moistureCombined: {
+        goalMax = 0,
+        goalMin = 0,
+      } = {},
+    } = {},
+  } = physical || {};
+
+  if (isNumber(goalMax)
+    && Number(goalMax) > 0
+    && isNumber(goalMin)
+    && Number(goalMin) > 0
+    && Number(goalMax) > Number(goalMin)
+  ) {
+    goalMax = Number(goalMax);
+    goalMin = Number(goalMin);
+  } else {
+    return undefined;
+  }
+
+  var returnValue = round(((average - goalMin) / (goalMax - goalMin)) * 100, precision);
+
+  return returnValue;
+}
+
+/**
+ * Generates the average of a collection of salinity sensor readings.
+ * @param {*} reading
+ * @param {*} physical
+ * @param {*} multiplier
+ * @param {*} precision
+ * @param {*} valueKey
+ */
+var soilSalinitySensorAverage = function soilSalinitySensorAverage(reading, physical, multiplier, precision, valueKey) {
+  let total = 0;
+  let denominator = 0;
+  var keyList;
+
+  if (valueKey && Array.isArray(valueKey)) {
+    keyList = valueKey;
+  } else {
+    keyList = [];
+    for (var i = 1; i <= 16; i++) keyList.push(i);
+  }
+
+  for (var key of keyList) {
+    const rawValue = reading[key];
+    if(isNumber(rawValue)) {
+      const value = Number(rawValue) / multiplier;
+      if(value >= 0 && value < 20) {
+        total += value;
+        denominator += 1;
+      }
+    }
+  }
+
+  if (denominator === 0) return undefined;
+
+  const average = round(total / denominator, precision);
+
+  return average;
+}
+
+/**
+ * Generates the average of a collection of soil temperature readings.
+ * @param {*} reading
+ * @param {*} physical
+ * @param {*} multiplier
+ * @param {*} precision
+ * @param {*} tempConv
+ */
+var soilTemperatureSensorAverage = function soilTemperatureSensorAverage(reading, physical, multiplier, precision, valueKey, tempConv) {
+  let total = 0;
+  let denominator = 0;
+  var keyList;
+
+  if (valueKey && Array.isArray(valueKey)) {
+    keyList = valueKey;
+  } else {
+    keyList = [];
+    for (var i = 1; i <= 16; i++) keyList.push(i);
+  }
+
+  for (var key of keyList) {
+    const rawValue = reading[key];
+    if(isNumber(rawValue)) {
+      const value = Number(rawValue) / multiplier;
+      if(value >= -50 && value < 100) {
+        total += value;
+        denominator += 1;
+      }
+    }
+  }
+
+  if (denominator === 0) return undefined;
+
+  const average = total / denominator;
+
+  const returnResult = round((tempConv === 'f' ? cToF(average) : average), precision);
+
+  return returnResult;
 }
 
 var windDirection = function windDirection(wd) {
@@ -1157,7 +1319,46 @@ var displayFormula = function displayFormula(
         readingCurrent,
         physicalValue,
         multiplierValue,
-        precisionValue
+        precisionValue,
+        valueKey
+      );
+      break;
+    case 'soilMoistureSensorAverage':
+      returnValue = soilMoistureSensorAverage(
+        readingCurrent,
+        physicalValue,
+        multiplierValue,
+        precisionValue,
+        valueKey
+      );
+      break;
+    case 'soilSalinitySensorAverage':
+      returnValue = soilSalinitySensorAverage(
+        readingCurrent,
+        physicalValue,
+        multiplierValue,
+        precisionValue,
+        valueKey
+      );
+      break;
+    case 'soilTemperatureSensorAverageC':
+      returnValue = soilTemperatureSensorAverage(
+        readingCurrent,
+        physicalValue,
+        multiplierValue,
+        precisionValue,
+        valueKey,
+        'c'
+      );
+      break;
+    case 'soilTemperatureSensorAverageF':
+      returnValue = soilTemperatureSensorAverage(
+        readingCurrent,
+        physicalValue,
+        multiplierValue,
+        precisionValue,
+        valueKey,
+        'f'
       );
       break;
     case 'millisecondsPastExpectedConnection':
@@ -1246,9 +1447,13 @@ module.exports = {
   displayFormula: displayFormula,
   cellSignalToRssi: cellSignalToRssi,
   cellSignalToQuality: cellSignalToQuality,
+  moistureSensor,
   numberToBinary: numberToBinary,
   numberToBinaryFE: numberToBinaryFE,
   numberToBinaryOnOff: numberToBinaryOnOff,
+  soilMoistureSensorAverage,
+  soilSalinitySensorAverage,
+  soilTemperatureSensorAverage,
   windMachineChangeStatus: windMachineChangeStatus,
   windMachineCommunicationStatus: windMachineCommunicationStatus,
   windMachineEngineState: windMachineEngineState,
