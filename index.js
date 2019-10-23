@@ -793,7 +793,7 @@ var moistureSensor = function moistureSensor(reading, physical, multiplier, prec
     && isNumber(physical.moistureSensorSettings.moistureCombined.goalMax)
     && Number(physical.moistureSensorSettings.moistureCombined.goalMax) > 0
     && isNumber(physical.moistureSensorSettings.moistureCombined.goalMin)
-    && Number(physical.moistureSensorSettings.moistureCombined.goalMin) > 0
+    && Number(physical.moistureSensorSettings.moistureCombined.goalMin) >= 0
     && Number(physical.moistureSensorSettings.moistureCombined.goalMax) > Number(physical.moistureSensorSettings.moistureCombined.goalMin)
   ) {
     goalMax = Number(physical.moistureSensorSettings.moistureCombined.goalMax);
