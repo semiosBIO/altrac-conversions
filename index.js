@@ -799,7 +799,7 @@ var moistureSensor = function moistureSensor(reading, physical, multiplier, prec
     goalMax = Number(physical.moistureSensorSettings.moistureCombined.goalMax);
     goalMin = Number(physical.moistureSensorSettings.moistureCombined.goalMin);
   } else {
-    return 'NO\nSET';
+    return 'NOT\nSET';
   }
 
   var returnValue = round(((average - goalMin) / (goalMax - goalMin)) * 100, precision);
