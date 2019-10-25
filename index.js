@@ -463,7 +463,7 @@ var engineStateCalculator = function engineStateCalculator(
   if (!offRpm) offRpm = 750;
   if (!highRpm) highRpm = 1600;
   var returnValue = 0;
-  const timeDiff = ((new Date()).getTime() / 1000) - timestamp;
+  var timeDiff = ((new Date()).getTime() / 1000) - timestamp;
   if (intention) {
     if (rpm < offRpm) {
       if (timeDiff >= 120) {
@@ -790,9 +790,9 @@ var moistureSensor = function moistureSensor(reading, physical, multiplier, prec
   }
 
   for (var key of keyList) {
-    const rawValue = reading[key];
+    var rawValue = reading[key];
     if (isNumber(rawValue)) {
-      const value = Number(rawValue) / multiplier;
+      var value = Number(rawValue) / multiplier;
       if (value > 10 && value < 99) {
         total += value;
         denominator += 1;
@@ -802,16 +802,12 @@ var moistureSensor = function moistureSensor(reading, physical, multiplier, prec
 
   if (denominator === 0) return 'ERR';
 
-  const average = total / denominator;
+  var average = total / denominator;
 
-  let {
-    moistureSensorSettings: {
-      moistureCombined: {
-        goalMax = 0,
-        goalMin = 0,
-      } = {},
-    } = {},
-  } = physical || {};
+  var moistureSensorSettings = physical.moistureSensorSettings || {};
+  var moistureCombined = moistureSensorSettings.moistureCombined || {};
+  var goalMax = moistureCombined.goalMax || 0;
+  var goalMin = moistureCombined.goalMin || 0;
 
   if (isNumber(goalMax)
     && Number(goalMax) > 0
@@ -822,7 +818,7 @@ var moistureSensor = function moistureSensor(reading, physical, multiplier, prec
     goalMax = Number(goalMax);
     goalMin = Number(goalMin);
   } else {
-    return 'NO\nSET';
+    return 'NOT\nSET';
   }
 
   var returnValue = round(((average - goalMin) / (goalMax - goalMin)) * 100, precision);
@@ -830,7 +826,7 @@ var moistureSensor = function moistureSensor(reading, physical, multiplier, prec
   if(returnValue > 100) return 'WET';
   if(returnValue < 0) return 'DRY';
 
-  return `${returnValue}%`;
+  return returnValue + '%';
 }
 
 /**
@@ -854,9 +850,9 @@ var soilMoistureSensorAverage = function soilMoistureSensorAverage(reading, phys
   }
 
   for (var key of keyList) {
-    const rawValue = reading[key];
+    var rawValue = reading[key];
     if (isNumber(rawValue)) {
-      const value = Number(rawValue) / multiplier;
+      var value = Number(rawValue) / multiplier;
       if (value > 10 && value < 99) {
         total += value;
         denominator += 1;
@@ -866,16 +862,12 @@ var soilMoistureSensorAverage = function soilMoistureSensorAverage(reading, phys
 
   if (denominator === 0) return undefined;
 
-  const average = total / denominator;
+  var average = total / denominator;
 
-  let {
-    moistureSensorSettings: {
-      moistureCombined: {
-        goalMax = 0,
-        goalMin = 0,
-      } = {},
-    } = {},
-  } = physical || {};
+  var moistureSensorSettings = physical.moistureSensorSettings || {};
+  var moistureCombined = moistureSensorSettings.moistureCombined || {};
+  var goalMax = moistureCombined.goalMax || 0;
+  var goalMin = moistureCombined.goalMin || 0;
 
   if (isNumber(goalMax)
     && Number(goalMax) > 0
@@ -903,8 +895,8 @@ var soilMoistureSensorAverage = function soilMoistureSensorAverage(reading, phys
  * @param {*} valueKey
  */
 var soilSalinitySensorAverage = function soilSalinitySensorAverage(reading, physical, multiplier, precision, valueKey) {
-  let total = 0;
-  let denominator = 0;
+  var total = 0;
+  var denominator = 0;
   var keyList;
 
   if (valueKey && Array.isArray(valueKey)) {
@@ -915,9 +907,9 @@ var soilSalinitySensorAverage = function soilSalinitySensorAverage(reading, phys
   }
 
   for (var key of keyList) {
-    const rawValue = reading[key];
+    var rawValue = reading[key];
     if(isNumber(rawValue)) {
-      const value = Number(rawValue) / multiplier;
+      var value = Number(rawValue) / multiplier;
       if(value >= 0 && value < 20) {
         total += value;
         denominator += 1;
@@ -927,7 +919,7 @@ var soilSalinitySensorAverage = function soilSalinitySensorAverage(reading, phys
 
   if (denominator === 0) return undefined;
 
-  const average = round(total / denominator, precision);
+  var average = round(total / denominator, precision);
 
   return average;
 }
@@ -941,8 +933,8 @@ var soilSalinitySensorAverage = function soilSalinitySensorAverage(reading, phys
  * @param {*} tempConv
  */
 var soilTemperatureSensorAverage = function soilTemperatureSensorAverage(reading, physical, multiplier, precision, valueKey, tempConv) {
-  let total = 0;
-  let denominator = 0;
+  var total = 0;
+  var denominator = 0;
   var keyList;
 
   if (valueKey && Array.isArray(valueKey)) {
@@ -953,9 +945,9 @@ var soilTemperatureSensorAverage = function soilTemperatureSensorAverage(reading
   }
 
   for (var key of keyList) {
-    const rawValue = reading[key];
+    var rawValue = reading[key];
     if(isNumber(rawValue)) {
-      const value = Number(rawValue) / multiplier;
+      var value = Number(rawValue) / multiplier;
       if(value >= -50 && value < 100) {
         total += value;
         denominator += 1;
@@ -965,9 +957,9 @@ var soilTemperatureSensorAverage = function soilTemperatureSensorAverage(reading
 
   if (denominator === 0) return undefined;
 
-  const average = total / denominator;
+  var average = total / denominator;
 
-  const returnResult = round((tempConv === 'f' ? cToF(average) : average), precision);
+  var returnResult = round((tempConv === 'f' ? cToF(average) : average), precision);
 
   return returnResult;
 }
