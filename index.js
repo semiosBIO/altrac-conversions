@@ -1224,10 +1224,13 @@ var displayFormula = function displayFormula(
 
   var formulaValue = formula;
   var formulaValueSecondary = '';
-  if (formula.substr(formula.length - ('Rolling').length) === 'Rolling') {
+
+  if (formula
+    && formula.substr(formula.length - ('Rolling').length) === 'Rolling') {
     formulaValue = 'rolling';
     formulaValueSecondary = formula.substr(0, formula.length - ('Rolling').length);
   }
+
   var physicalValue = {};
   if (
     physical
