@@ -1199,24 +1199,38 @@ var displayFormula = function displayFormula(
   readingLast,
   physical
 ) {
-  // console.log({
-  //   displayFormula_inputs: {
-  //     formula,
-  //     multiplier,
-  //     context,
-  //     valueKey,
-  //     readingCurrent,
-  //     readingLast,
-  //     physical,
-  //   },
-  // });
-  var returnValue = readingCurrent[valueKey];
-  if (
-    returnValue === 4294967295
-    || returnValue === 65535
-    || returnValue === -32768
-    || !isNumber(returnValue)
-  ) { return 'ERR'; }
+  const ERROR = 'ERR';
+  const isInvalidReading = x => (
+    x === 4294967295
+    || x === 65535
+    || x === -32768
+    || !isNumber(x)
+  );
+  var returnValue;
+  var valueKeyObject
+
+  try {
+    valueKeyObject = JSON.parse(valueKey);
+  }
+  catch (e) {
+    return ERROR;
+  }
+
+  switch(typeof valueKeyObject) {
+    case 'number':
+      returnValue = readingCurrent[valueKey];
+      if (isInvalidReading(returnValue)) return ERROR;
+      break;
+
+    case 'object':
+      if (!Array.isArray(valueKeyObject)) return ERROR;
+      break;
+
+    default:
+      return ERROR;
+      break;
+  }
+
   var multiplierValue = 1;
   if (multiplier) { multiplierValue = multiplier; }
   var precisionValue = 0;
@@ -1315,7 +1329,7 @@ var displayFormula = function displayFormula(
         physicalValue,
         multiplierValue,
         precisionValue,
-        valueKey
+        valueKey,
       );
       break;
     case 'soilMoistureSensorAverage':
@@ -1324,8 +1338,8 @@ var displayFormula = function displayFormula(
         physicalValue,
         multiplierValue,
         precisionValue,
-        valueKey
-      );
+        valueKeyObject,
+      ) || ERROR;
       break;
     case 'soilSalinitySensorAverage':
       returnValue = soilSalinitySensorAverage(
@@ -1333,8 +1347,8 @@ var displayFormula = function displayFormula(
         physicalValue,
         multiplierValue,
         precisionValue,
-        valueKey
-      );
+        valueKeyObject,
+      ) || ERROR;
       break;
     case 'soilTemperatureSensorAverageC':
       returnValue = soilTemperatureSensorAverage(
@@ -1342,9 +1356,9 @@ var displayFormula = function displayFormula(
         physicalValue,
         multiplierValue,
         precisionValue,
-        valueKey,
+        valueKeyObject,
         'c'
-      );
+      ) || ERROR;
       break;
     case 'soilTemperatureSensorAverageF':
       returnValue = soilTemperatureSensorAverage(
@@ -1352,9 +1366,9 @@ var displayFormula = function displayFormula(
         physicalValue,
         multiplierValue,
         precisionValue,
-        valueKey,
+        valueKeyObject,
         'f'
-      );
+      ) || ERROR;
       break;
     case 'millisecondsPastExpectedConnection':
       returnValue = millisecondsPastExpectedConnection(
