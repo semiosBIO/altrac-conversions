@@ -13,12 +13,12 @@ const conversions = require(CWD('../altrac-conversions'));
 describe('displayFormula function', () => {
   describe('valueKey', () => {
 
-    it("Should generate an error for non-numeric valueKey" , () => {
+    it("Should generate an error for an invalid valueKey" , () => {
       const formula = undefined;
       const multiplier = 1;
       const precision = 2;
       const context = {};
-      const valueKey = 'x131';
+      const valueKey = 'x';
       const readingCurrent = {};
       const readingLast = {};
       const physical = {};
@@ -70,7 +70,7 @@ describe('displayFormula function', () => {
       const multiplier = 1;
       const precision = 2;
       const context = {};
-      const valueKey = '[1, 2, 3, 4]';
+      const valueKey = [1, 2, 3, 4];
       const readingCurrent = { '1': 16, '2': 16, '3': 16, '4': 16 };
       const readingLast = {};
       const physical = {
@@ -93,7 +93,7 @@ describe('displayFormula function', () => {
         physical
       );
 
-      const expectedResult = 50;
+      const expectedResult = 16;
 
       assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
     });

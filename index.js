@@ -862,28 +862,8 @@ var soilMoistureSensorAverage = function soilMoistureSensorAverage(reading, phys
 
   if (denominator === 0) return undefined;
 
-  var average = total / denominator;
-
-  var moistureSensorSettings = physical.moistureSensorSettings || {};
-  var moistureCombined = moistureSensorSettings.moistureCombined || {};
-  var goalMax = moistureCombined.goalMax || 0;
-  var goalMin = moistureCombined.goalMin || 0;
-
-  if (isNumber(goalMax)
-    && Number(goalMax) > 0
-    && isNumber(goalMin)
-    && Number(goalMin) > 0
-    && Number(goalMax) > Number(goalMin)
-  ) {
-    goalMax = Number(goalMax);
-    goalMin = Number(goalMin);
-  } else {
-    return undefined;
-  }
-
-  var returnValue = round(((average - goalMin) / (goalMax - goalMin)) * 100, precision);
-
-  return returnValue;
+  var average = round(total / denominator);
+  return average;
 }
 
 /**
@@ -1207,23 +1187,21 @@ var displayFormula = function displayFormula(
     || !isNumber(x)
   );
   var returnValue;
-  var valueKeyObject
 
-  try {
-    valueKeyObject = JSON.parse(valueKey);
-  }
-  catch (e) {
-    return ERROR;
+  if (typeof valueKey === 'string'
+    && valueKey.startsWith('[')) {
+    valueKey = JSON.parse(valueKey);
   }
 
-  switch(typeof valueKeyObject) {
+  switch(typeof valueKey) {
     case 'number':
+    case 'string':
       returnValue = readingCurrent[valueKey];
       if (isInvalidReading(returnValue)) return ERROR;
       break;
 
     case 'object':
-      if (!Array.isArray(valueKeyObject)) return ERROR;
+      if (!Array.isArray(valueKey)) return ERROR;
       break;
 
     default:
@@ -1338,7 +1316,7 @@ var displayFormula = function displayFormula(
         physicalValue,
         multiplierValue,
         precisionValue,
-        valueKeyObject,
+        valueKey,
       ) || ERROR;
       break;
     case 'soilSalinitySensorAverage':
@@ -1347,7 +1325,7 @@ var displayFormula = function displayFormula(
         physicalValue,
         multiplierValue,
         precisionValue,
-        valueKeyObject,
+        valueKey,
       ) || ERROR;
       break;
     case 'soilTemperatureSensorAverageC':
@@ -1356,7 +1334,7 @@ var displayFormula = function displayFormula(
         physicalValue,
         multiplierValue,
         precisionValue,
-        valueKeyObject,
+        valueKey,
         'c'
       ) || ERROR;
       break;
@@ -1366,7 +1344,7 @@ var displayFormula = function displayFormula(
         physicalValue,
         multiplierValue,
         precisionValue,
-        valueKeyObject,
+        valueKey,
         'f'
       ) || ERROR;
       break;

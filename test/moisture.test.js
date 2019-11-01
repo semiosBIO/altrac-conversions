@@ -198,7 +198,7 @@ describe('moisture functions', () => {
       const readings = {};
       valueKey.forEach(key => readings[key] = "3218");
 
-      const expectedResult = 41;
+      const expectedResult = 32;
       const result = conversions.soilMoistureSensorAverage(readings, physical, multiplier, precision, valueKey);
       assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
     });
@@ -216,7 +216,7 @@ describe('moisture functions', () => {
       };
       const valueKey = ["1", "4", "7", "10", "13", "16"];
       const readings = moistureSensorReadings;
-      const expectedResult = 89;
+      const expectedResult = 47;
       const result = conversions.soilMoistureSensorAverage(readings, physical, multiplier, precision, valueKey);
       assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
     });
