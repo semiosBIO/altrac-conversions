@@ -862,28 +862,8 @@ var soilMoistureSensorAverage = function soilMoistureSensorAverage(reading, phys
 
   if (denominator === 0) return undefined;
 
-  var average = total / denominator;
-
-  var moistureSensorSettings = physical.moistureSensorSettings || {};
-  var moistureCombined = moistureSensorSettings.moistureCombined || {};
-  var goalMax = moistureCombined.goalMax || 0;
-  var goalMin = moistureCombined.goalMin || 0;
-
-  if (isNumber(goalMax)
-    && Number(goalMax) > 0
-    && isNumber(goalMin)
-    && Number(goalMin) > 0
-    && Number(goalMax) > Number(goalMin)
-  ) {
-    goalMax = Number(goalMax);
-    goalMin = Number(goalMin);
-  } else {
-    return undefined;
-  }
-
-  var returnValue = round(((average - goalMin) / (goalMax - goalMin)) * 100, precision);
-
-  return returnValue;
+  var average = round(total / denominator);
+  return average;
 }
 
 /**
@@ -1199,24 +1179,36 @@ var displayFormula = function displayFormula(
   readingLast,
   physical
 ) {
-  // console.log({
-  //   displayFormula_inputs: {
-  //     formula,
-  //     multiplier,
-  //     context,
-  //     valueKey,
-  //     readingCurrent,
-  //     readingLast,
-  //     physical,
-  //   },
-  // });
-  var returnValue = readingCurrent[valueKey];
-  if (
-    returnValue === 4294967295
-    || returnValue === 65535
-    || returnValue === -32768
-    || !isNumber(returnValue)
-  ) { return 'ERR'; }
+  const ERROR = 'ERR';
+  const isInvalidReading = x => (
+    x === 4294967295
+    || x === 65535
+    || x === -32768
+    || !isNumber(x)
+  );
+  var returnValue;
+
+  if (typeof valueKey === 'string'
+    && valueKey.startsWith('[')) {
+    valueKey = JSON.parse(valueKey);
+  }
+
+  switch(typeof valueKey) {
+    case 'number':
+    case 'string':
+      returnValue = readingCurrent[valueKey];
+      if (isInvalidReading(returnValue)) return ERROR;
+      break;
+
+    case 'object':
+      if (!Array.isArray(valueKey)) return ERROR;
+      break;
+
+    default:
+      return ERROR;
+      break;
+  }
+
   var multiplierValue = 1;
   if (multiplier) { multiplierValue = multiplier; }
   var precisionValue = 0;
@@ -1224,10 +1216,13 @@ var displayFormula = function displayFormula(
 
   var formulaValue = formula;
   var formulaValueSecondary = '';
-  if (formula.substr(formula.length - ('Rolling').length) === 'Rolling') {
+
+  if (formula
+    && formula.substr(formula.length - ('Rolling').length) === 'Rolling') {
     formulaValue = 'rolling';
     formulaValueSecondary = formula.substr(0, formula.length - ('Rolling').length);
   }
+
   var physicalValue = {};
   if (
     physical
@@ -1322,7 +1317,7 @@ var displayFormula = function displayFormula(
         multiplierValue,
         precisionValue,
         valueKey
-      );
+      ) || ERROR;
       break;
     case 'soilSalinitySensorAverage':
       returnValue = soilSalinitySensorAverage(
@@ -1331,7 +1326,7 @@ var displayFormula = function displayFormula(
         multiplierValue,
         precisionValue,
         valueKey
-      );
+      ) || ERROR;
       break;
     case 'soilTemperatureSensorAverageC':
       returnValue = soilTemperatureSensorAverage(
@@ -1341,7 +1336,7 @@ var displayFormula = function displayFormula(
         precisionValue,
         valueKey,
         'c'
-      );
+      ) || ERROR;
       break;
     case 'soilTemperatureSensorAverageF':
       returnValue = soilTemperatureSensorAverage(
@@ -1351,7 +1346,7 @@ var displayFormula = function displayFormula(
         precisionValue,
         valueKey,
         'f'
-      );
+      ) || ERROR;
       break;
     case 'millisecondsPastExpectedConnection':
       returnValue = millisecondsPastExpectedConnection(
