@@ -1307,7 +1307,7 @@ var displayFormula = function displayFormula(
         physicalValue,
         multiplierValue,
         precisionValue,
-        valueKey,
+        valueKey
       );
       break;
     case 'soilMoistureSensorAverage':
@@ -1316,7 +1316,7 @@ var displayFormula = function displayFormula(
         physicalValue,
         multiplierValue,
         precisionValue,
-        valueKey,
+        valueKey
       ) || ERROR;
       break;
     case 'soilSalinitySensorAverage':
@@ -1325,7 +1325,7 @@ var displayFormula = function displayFormula(
         physicalValue,
         multiplierValue,
         precisionValue,
-        valueKey,
+        valueKey
       ) || ERROR;
       break;
     case 'soilTemperatureSensorAverageC':
