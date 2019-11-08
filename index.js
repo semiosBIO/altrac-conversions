@@ -1179,13 +1179,15 @@ var displayFormula = function displayFormula(
   readingLast,
   physical
 ) {
-  const ERROR = 'ERR';
-  const isInvalidReading = x => (
-    x === 4294967295
-    || x === 65535
-    || x === -32768
-    || !isNumber(x)
-  );
+  var ERROR = 'ERR';
+  var isInvalidReading = function (x) {
+    return (
+      x === 4294967295
+      || x === 65535
+      || x === -32768
+      || !isNumber(x)
+    );
+  };
   var returnValue;
 
   if (typeof valueKey === 'string'
