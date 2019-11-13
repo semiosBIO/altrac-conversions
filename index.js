@@ -1265,11 +1265,33 @@ var displayFormula = function displayFormula(
       if (physicalValue && physicalValue.fuelSensorRange) {
         fuelSensorRange = physicalValue.fuelSensorRange;
       }
-      returnValue = round(fuelLevel(
-        readingCurrent[valueKey] / multiplierValue,
-        fuelTankSize,
-        fuelSensorRange
-      ));
+      // 0.25V is based on the Rochester R3D-LP + 5V from ISBD
+      // 0.25V = 5% * 5V
+      var fuelSensorMinV = 0.25; // based on the Rochester R3D-LP Gauge
+      if (physicalValue && physicalValue.fuelSensorMinV) {
+        fuelSensorMinV = physicalValue.fuelSensorMinV;
+      }
+      // 4.6V is based on the Rochester R3D-LP + 5V + Experience with Zirkle
+      // Rochester says 80% of in voltage is max, so 5V * 80% = 4V
+      // But @ Zirkle, some gauges show 4.6V, and look like they are working
+      var fuelSensorMaxV = 4.6; // based on the Rochester R3D-LP Gauge
+      if (physicalValue && physicalValue.fuelSensorMaxV) {
+        fuelSensorMaxV = physicalValue.fuelSensorMaxV;
+      }
+      var fuelSensorVCal = 5.557;
+      if (physicalValue && physicalValue.fuelSensorVCal) {
+        fuelSensorVCal = physicalValue.fuelSensorVCal;
+      }
+
+      if ((readingCurrent[valueKey]) * fuelSensorVCal > fuelSensorMaxV) { returnValue = 'Error High'; }
+      else if ((readingCurrent[valueKey]) * fuelSensorVCal < fuelSensorMinV) { returnValue = 'Not Connected'; }
+      else {
+        returnValue = round(fuelLevel(
+          readingCurrent[valueKey] / multiplierValue,
+          fuelTankSize,
+          fuelSensorRange
+        ));
+      }
       break;
     case 'fourToTwenty':
       returnValue = fourToTwenty(
