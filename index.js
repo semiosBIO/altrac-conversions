@@ -805,7 +805,7 @@ var moistureSensor = function moistureSensor(reading, physical, multiplier, prec
   var average = total / denominator;
 
   if ((new Date()).getTime() - Date.parse(reading['1Date']) > (21600000)) { // 6 hours
-    return 'ERR';
+    return 'NC';
   }
 
   var moistureSensorSettings = physical.moistureSensorSettings || {};
