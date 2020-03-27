@@ -1404,67 +1404,429 @@ var displayFormula = function displayFormula(
   return returnValue;
 };
 
+/**
+ * Pads a value with 0.
+ * @param {int} value to be padded.
+ * @param {int} size 
+ * @returns number as string padded with leading zeros up to size.
+ */
+const pad = (value, size) => {
+  let s = String(value);
+  while (s.length < (size || 2)) { s = `0${s}`; }
+  return s;
+};
+
+/**
+ * @param {int} hr 
+ * @param {int} min 
+ * @returns 'hh:mm'
+ */
+const formatTime = (hr, min) => {
+  return `${pad(hr)}:${pad(min)}`;
+}
+
+const scheduleStartDecode = value => value >> 16 >>> 0;
+const scheduleStopDecode = value => value & 0xFFFF >>> 0;
+const scheduleEncode = (start, stop) => (((start << 16) >>> 0) | ((stop & 0xFFFF) >>> 0));
+
+/**
+ * @param {int} value in minutes from start of week.
+ * @returns event time as binary representation.
+ */
+const scheduleRing = (value) => {
+  const LIMIT = 10080;
+  let result = value;
+
+  if (result >= LIMIT) {
+    result -= LIMIT;
+  } else if (result < 0) {
+    result += LIMIT;
+  }
+
+  if (result < 0 || result >= LIMIT) {
+    throw new Error(`Input value invalid: ${value}`);
+  }
+
+  return (result & 0xFFFF);
+};
+
+/**
+ * Join 2 scheduled events if they overlap.
+ * @param {int} nStart - minutes from start of week
+ * @param {int} nStop - minutes from start of week
+ * @param {int} oStart - minutes from start of week
+ * @param {int} oStop - minutes from start of week
+ * @returns new event object or undefined if no overlap
+ */
+const scheduleRingUnion = (nStart, nStop, oStart, oStop) => {
+  const MINUTES_MAXIMUM = 7 * 24 * 60;
+  const isInvalid = value => value < 0 || value > MINUTES_MAXIMUM;
+
+  if (isInvalid(nStart)) throw new Error(`Invalid nStart: ${nStart}`);
+  if (isInvalid(nStop )) throw new Error(`Invalid nStop: ${nStop}`);
+  if (isInvalid(oStart)) throw new Error(`Invalid oStart: ${oStart}`);
+  if (isInvalid(oStop )) throw new Error(`Invalid oStop: ${oStop}`);
+
+  if (nStart > nStop) nStop += MINUTES_MAXIMUM;
+  if (oStart > oStop) oStop += MINUTES_MAXIMUM;
+
+  const shiftRelative = (stop, value) => (stop - MINUTES_MAXIMUM) > value ? value + MINUTES_MAXIMUM : value;
+
+  oStart = shiftRelative(nStop, oStart);
+  oStop  = shiftRelative(nStop, oStop);
+  nStart = shiftRelative(oStop, nStart);
+  nStop  = shiftRelative(oStop, nStop);
+
+  const isBetween = (value, low, high) => value >= low && value <= high;
+
+  let result;
+
+  if (isBetween(nStart, oStart, oStop)
+   || isBetween(oStart, nStart, nStop)) {
+    result = {
+      start: scheduleRing(Math.min(nStart, oStart)),
+      stop:  scheduleRing(Math.max(nStop,  oStop)),
+    };
+  }
+
+  return result;
+};
+
+/**
+ * Insert a new scheduled event into an array of schedule Events.
+ * @param {Array[Event]} scheduleEvents 
+ * @param {int} dayStart 
+ * @param {int} hourStart 
+ * @param {int} minStart 
+ * @param {int} dayStop 
+ * @param {int} hourStop 
+ * @param {int} minStop 
+ * @param {int} utcDifferenceMinutes 
+ */
+const insertTime = (
+  scheduleEvents,
+  dayStart, hourStart, minStart,
+  dayStop, hourStop, minStop,
+  utcDifferenceMinutes,
+) => {
+  if (!Array.isArray(scheduleEvents)) throw new Error('Invalid scheduleEvents array');
+
+  const isOutOfRange = (x, low, high) => (x < low || x > high);
+  const isInvalid = (x, high) => isOutOfRange(x, 0, high);
+
+  if (isInvalid(dayStart,   6)) throw new Error(`Invalid dayStart: ${dayStart}`);
+  if (isInvalid(dayStop,    6)) throw new Error(`Invalid dayStop: ${dayStop}`);
+  if (isInvalid(hourStart, 23)) throw new Error(`Invalid hourStart: ${hourStart}`);
+  if (isInvalid(hourStop,  23)) throw new Error(`Invalid hourStop: ${hourStop}`);
+  if (isInvalid(minStart,  59)) throw new Error(`Invalid minStart: ${minStart}`);
+  if (isInvalid(minStop,   59)) throw new Error(`Invalid minStop: ${minStop}`);
+
+  if (isOutOfRange(utcDifferenceMinutes, -840, 720)) throw new Error(`Invalid utcDifferenceMinutes: ${utcDifferenceMinutes}`);
+
+  // create our start minutes value
+  let start = dayStart * 24 * 60;
+  start += hourStart * 60;
+  start += minStart;
+
+  // create our stop minutes value
+  let stop = dayStop * 24 * 60;
+  stop += hourStop * 60;
+  stop += minStop;
+
+  // adjust for UTC
+  start += utcDifferenceMinutes;
+  stop += utcDifferenceMinutes;
+
+  // limit to between 0 and HIGH_LIMIT
+  start = scheduleRing(start);
+  stop = scheduleRing(stop);
+
+  // create array for the new schedule
+  const result = [];
+
+  if (scheduleEvents.length < 1) {
+    // no previous scheduleEvents, so nothing to de-dupe
+    result.push(scheduleEncode(start, stop));
+  } else {
+    // the rest of this is to de-dupe intervals
+    let newStart = start;
+    let newStop = stop;
+
+    // loop through old schedule and figure out where to put new value
+    scheduleEvents.map((schedEvent) => {
+      let oldStart = scheduleStartDecode(schedEvent);
+      let oldStop = scheduleStopDecode(schedEvent);
+      let intervalCombined = false;
+
+      // check if the intervals overlap
+      const ringUnion = scheduleRingUnion(newStart, newStop, oldStart, oldStop);
+
+      if (ringUnion) {
+        const { start, stop } = ringUnion;
+        newStart = start;
+        newStop = stop;
+        intervalCombined = true;
+      }
+
+      if (!intervalCombined) {
+        // if there was no overlap, insert our old values into the array
+        oldStart = scheduleRing(oldStart);
+        oldStop = scheduleRing(oldStop);
+        result.push(scheduleEncode(oldStart, oldStop));
+      }
+    });
+
+    // don't do this until the end or we will get dupe values
+    newStart = scheduleRing(newStart);
+    newStop = scheduleRing(newStop);
+    result.push(scheduleEncode(newStart, newStop));
+  }
+
+  // sort for consistency
+  result.sort((a, b) => (a - b));
+  return result;
+};
+
+ /**
+  * Insert a new scheduled event into an array of schedule Events.
+  * @param {int} scheduleEvents 
+  * @param {int} dayStart 
+  * @param {int} hourStart 
+  * @param {int} minStart 
+  * @param {int} duration - minutes
+  * @param {int} utcDifferenceMinutes - UTC offset
+  */
+const insertTimeDuration = (
+  scheduleEvents,
+  dayStart, hourStart, minStart,
+  duration,
+  utcDifferenceMinutes,
+) => {
+  // create our start minutes value
+  let start = dayStart * 24 * 60;
+  start += hourStart * 60;
+  start += minStart;
+
+  let stop = start + duration;
+
+  // 0 for UTC offset, due to this doubling up on offset.
+  const decoded = decodeTime(scheduleEncode(start, stop), 0);
+
+  return insertTime(
+    scheduleEvents,
+    decoded.start.day, decoded.start.hr, decoded.start.min,
+    decoded.stop.day, decoded.stop.hr, decoded.stop.min,
+    utcDifferenceMinutes,
+  );
+};
+
+/**
+ * Convert schedule Event to time object.
+ * @param {Event} schedEvent 
+ * @param {int} offset 
+ * @param {int} key 
+ * @returns {Time}
+ */
+const decodeTime = (schedEvent, offset, key = 0) => {
+  const ONE_WEEK = 7 * 24 * 60;
+  let start = scheduleRing(scheduleStartDecode(schedEvent) - offset);
+  let stop  = scheduleRing(scheduleStopDecode(schedEvent)  - offset);
+  let positiveStop = stop;
+
+  if (start > stop) positiveStop = stop + ONE_WEEK;
+
+  const DAY = date => Math.floor(date / (24 * 60));
+  const HOUR = date => Math.floor(date / 60) - (DAY(date) * 24);
+  const MINUTE = date => date % 60;
+
+  const dayStart = DAY(start);
+  const hrStart = HOUR(start);
+  const minStart = MINUTE(start);
+
+  const dayStop = DAY(stop);
+  const hrStop = HOUR(stop);
+  const minStop = MINUTE(stop);
+
+  // put our basic calculated values in place
+  const timesDecoded = {
+    start: {
+      day: dayStart,
+      hr: hrStart,
+      min: minStart,
+      human: '',
+    },
+    stop: {
+      day: dayStop,
+      hr: hrStop,
+      min: minStop,
+      human: '',
+    },
+    duration: {
+      hrs: Math.round((positiveStop - start) / 60),
+      mins: positiveStop - start,
+      size: (positiveStop - start) > (4 * 60) ? 1 : 0,
+      cross: false,
+      crossWeek: false,
+    },
+    human: '',
+  };
+
+  if (Number(key) || Number(key) === 0) timesDecoded.key = Number(key);
+
+  // determine if it crosses an end of day
+  timesDecoded.duration.cross = dayStart !== dayStop && dayStart <= dayStop;
+  timesDecoded.duration.crossWeek = dayStart > dayStop;
+
+  // write out our human readable values
+  const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const HUMAN = x => `${daysOfWeek[x.day]} ${x.hr > 12 ? x.hr - 12 : x.hr}:${pad(x.min)} ${x.hr >= 12 ? 'PM' : 'AM'}`;
+  const humanStart = HUMAN(timesDecoded.start);
+  const humanStop = HUMAN(timesDecoded.stop);
+  timesDecoded.start.human = humanStart;
+  timesDecoded.stop.human = humanStop;
+  timesDecoded.human = `Start: ${humanStart}, Stop: ${humanStop} (${schedEvent})`;
+
+  // calculate if a scheduled item lasts 7 days, as this item is wonky
+  const sevenDay = (dayStart === dayStop && hrStart > hrStop);
+
+  // calculate number of days we are running for
+  if (dayStart <= dayStop && !sevenDay) {
+    timesDecoded.duration.days = dayStop - dayStart;
+  } else {
+    timesDecoded.duration.days = (dayStop + 7) - dayStart;
+    // cross is always true if start > stop or we have 7 day run
+    timesDecoded.duration.cross = true;
+  }
+
+  return timesDecoded;
+};
+
+/**
+ * @param {Array[Event]} schedule 
+ * @param {int} offset - UTC offset
+ * @returns {Event[]}
+ */
+const decodeScheduleUI = (schedule, offset = 0) => {
+  if (schedule && Array.isArray(schedule) && schedule.length) {
+    const result = schedule.reduce((answers, event, i) => {
+      const answer = decodeTime(event, offset, i);
+
+      const {
+        duration: {
+          days: durationDays,
+        },
+        start: {
+          day: dayStart,
+          hr: hrStart,
+        },
+        stop: {
+          day: dayStop,
+        },
+      } = answer;
+
+      if (dayStart <= dayStop && durationDays !== 7) {
+        answers.push(answer);
+      } else {
+        // if a multi-day run, we need to split for our UI
+        const answer2 = { ...answer };
+        const SATURDAY = 6;
+        const SUNDAY = 0;
+
+        answer.stop.day = SATURDAY;
+        answer.duration.days = SATURDAY - dayStart;
+
+        answer2.start.day = SUNDAY;
+        answer2.duration.days = answer2.stop.day;
+
+        if (dayStart === SATURDAY) {
+          answer.duration.size = (24 - hrStart) >= 4 ? 1 : 0;
+          answer.duration.cross = false;
+        }
+
+        if (dayStop === SUNDAY) {
+          answer2.duration.size = answer2.stop.hr >= 4 ? 1 : 0;
+          answer2.duration.cross = false;
+        }
+
+        answers.push(answer, answer2);
+      }
+
+      return answers;
+    }, []);
+
+    return result;
+  }
+};
+
 module.exports = {
-  round: round,
-  isNumber: isNumber,
-  voltToVWC: voltToVWC,
-  percentToVWC: percentToVWC,
-  analogToVWC: analogToVWC,
-  percentToDigital: percentToDigital,
-  analogToDigital: analogToDigital,
-  percentToDigitalInverse: percentToDigitalInverse,
-  analogToDigitalInverse: analogToDigitalInverse,
-  voltToCentibar: voltToCentibar,
-  gallonsToAcreFeet: gallonsToAcreFeet,
-  percentToCentibar: percentToCentibar,
   analogToCentibar: analogToCentibar,
-  numberMap: numberMap,
-  valveStatus: valveStatus,
-  valveStatusString: valveStatusString,
-  cToF: cToF,
-  fToC: fToC,
-  fromC: fromC,
-  fromCMultiplier: fromCMultiplier,
-  toC: toC,
-  valveTimeToValveNumber: valveTimeToValveNumber,
-  valveTimeToEpoch: valveTimeToEpoch,
-  valveTimeToEpochMillis: valveTimeToEpochMillis,
-  valveTimeToDate: valveTimeToDate,
-  nextValveTime: nextValveTime,
-  nextValveTimeToEpochMillis: nextValveTimeToEpochMillis,
-  lastValveTime: lastValveTime,
-  lastValveTimeToEpochMillis: lastValveTimeToEpochMillis,
-  toValveTime: toValveTime,
-  secondsToHHMMSS: secondsToHHMMSS,
-  percentTo20V: percentTo20V,
-  fourToTwenty: fourToTwenty,
-  metersPerSecondToMilesPerHour: metersPerSecondToMilesPerHour,
-  millimetersToInches: millimetersToInches,
-  kilometersToMiles: kilometersToMiles,
-  kPaToInchesMercury: kPaToInchesMercury,
-  windDirection: windDirection,
-  fuelLevel: fuelLevel,
-  ftToM: ftToM,
-  mToFt: mToFt,
-  spaceCamel: spaceCamel,
-  pumpState: pumpState,
-  rpmToState: rpmToState,
-  engineStateCalculator: engineStateCalculator,
-  rpmOrchardRiteAutometer9117: rpmOrchardRiteAutometer9117,
-  flowMeterState: flowMeterState,
-  pumpOutput: pumpOutput,
+  analogToDigital: analogToDigital,
+  analogToDigitalInverse: analogToDigitalInverse,
+  analogToVWC: analogToVWC,
   binLevel: binLevel,
-  chartDimensions: chartDimensions,
-  displayFormula: displayFormula,
+  cToF: cToF,
   cellSignalToRssi: cellSignalToRssi,
   cellSignalToQuality: cellSignalToQuality,
+  chartDimensions: chartDimensions,
+  decodeScheduleUI,
+  decodeTime,
+  displayFormula: displayFormula,
+  engineStateCalculator: engineStateCalculator,
+  flowMeterState: flowMeterState,
+  formatTime,
+  fourToTwenty: fourToTwenty,
+  fromC: fromC,
+  fromCMultiplier: fromCMultiplier,
+  fToC: fToC,
+  ftToM: ftToM,
+  fuelLevel: fuelLevel,
+  gallonsToAcreFeet: gallonsToAcreFeet,
+  insertTime,
+  insertTimeDuration,
+  isNumber: isNumber,
+  kilometersToMiles: kilometersToMiles,
+  kPaToInchesMercury: kPaToInchesMercury,
+  lastValveTime: lastValveTime,
+  lastValveTimeToEpochMillis: lastValveTimeToEpochMillis,
+  metersPerSecondToMilesPerHour: metersPerSecondToMilesPerHour,
+  millimetersToInches: millimetersToInches,
   moistureSensor,
+  mToFt: mToFt,
+  nextValveTime: nextValveTime,
+  nextValveTimeToEpochMillis: nextValveTimeToEpochMillis,
+  numberMap: numberMap,
   numberToBinary: numberToBinary,
   numberToBinaryFE: numberToBinaryFE,
   numberToBinaryOnOff: numberToBinaryOnOff,
+  pad,
+  percentTo20V: percentTo20V,
+  percentToCentibar: percentToCentibar,
+  percentToDigital: percentToDigital,
+  percentToDigitalInverse: percentToDigitalInverse,
+  percentToVWC: percentToVWC,
+  pumpOutput: pumpOutput,
+  pumpState: pumpState,
+  round: round,
+  rpmOrchardRiteAutometer9117: rpmOrchardRiteAutometer9117,
+  rpmToState: rpmToState,
+  scheduleRing,
+  scheduleRingUnion,
+  secondsToHHMMSS: secondsToHHMMSS,
   soilMoistureSensorAverage,
   soilSalinitySensorAverage,
   soilTemperatureSensorAverage,
+  spaceCamel: spaceCamel,
+  toC: toC,
+  toValveTime: toValveTime,
+  valveStatus: valveStatus,
+  valveStatusString: valveStatusString,
+  valveTimeToDate: valveTimeToDate,
+  valveTimeToEpoch: valveTimeToEpoch,
+  valveTimeToEpochMillis: valveTimeToEpochMillis,
+  valveTimeToValveNumber: valveTimeToValveNumber,
+  voltToCentibar: voltToCentibar,
+  voltToVWC: voltToVWC,
+  windDirection: windDirection,
   windMachineChangeStatus: windMachineChangeStatus,
   windMachineCommunicationStatus: windMachineCommunicationStatus,
   windMachineEngineState: windMachineEngineState,
