@@ -1412,7 +1412,7 @@ var displayFormula = function displayFormula(
  * Pads a value with 0.
  * @param {int} value to be padded.
  * @param {int} size 
- * @returns number as string padded with leading zeros up to size.
+ * @returns {string} padded with leading zeros up to size.
  */
 const pad = (value, size) => {
   let s = String(value);
@@ -1423,7 +1423,7 @@ const pad = (value, size) => {
 /**
  * @param {int} hr 
  * @param {int} min 
- * @returns 'hh:mm'
+ * @returns {string} 'hh:mm'
  */
 const formatTime = (hr, min) => {
   return `${pad(hr)}:${pad(min)}`;
@@ -1460,7 +1460,7 @@ const scheduleRing = (value) => {
  * @param {int} nStop - minutes from start of week
  * @param {int} oStart - minutes from start of week
  * @param {int} oStop - minutes from start of week
- * @returns new event object or undefined if no overlap
+ * @returns {Event} - undefined if no overlap
  */
 const scheduleRingUnion = (nStart, nStop, oStart, oStop) => {
   const MINUTES_MAXIMUM = 7 * 24 * 60;
@@ -1498,7 +1498,7 @@ const scheduleRingUnion = (nStart, nStop, oStart, oStop) => {
 
 /**
  * Insert a new scheduled event into an array of schedule Events.
- * @param {Array[Event]} scheduleEvents 
+ * @param {Array.<Event>} scheduleEvents 
  * @param {int} dayStart 
  * @param {int} hourStart 
  * @param {int} minStart 
@@ -1706,9 +1706,9 @@ const decodeTime = (schedEvent, offset, key = 0) => {
 };
 
 /**
- * @param {Array[Event]} schedule 
+ * @param {Array.<Event>} schedule 
  * @param {int} offset - UTC offset
- * @returns {Event[]}
+ * @returns {Array.<Event>}
  */
 const decodeScheduleUI = (schedule, offset = 0) => {
   if (schedule && Array.isArray(schedule) && schedule.length) {
