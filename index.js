@@ -1414,8 +1414,8 @@ var displayFormula = function displayFormula(
  * @param {int} size 
  * @returns {string} padded with leading zeros up to size.
  */
-const pad = (value, size) => {
-  let s = String(value);
+var pad = function(value, size) {
+  var s = String(value);
   while (s.length < (size || 2)) { s = `0${s}`; }
   return s;
 };
@@ -1425,21 +1425,21 @@ const pad = (value, size) => {
  * @param {int} min 
  * @returns {string} 'hh:mm'
  */
-const formatTime = (hr, min) => {
+var formatTime = function(hr, min) {
   return `${pad(hr)}:${pad(min)}`;
 }
 
-const scheduleStartDecode = value => value >> 16 >>> 0;
-const scheduleStopDecode = value => value & 0xFFFF >>> 0;
-const scheduleEncode = (start, stop) => (((start << 16) >>> 0) | ((stop & 0xFFFF) >>> 0));
+var scheduleStartDecode = function(value) { return value >> 16 >>> 0; }
+var scheduleStopDecode = function(value) { return value & 0xFFFF >>> 0; }
+var scheduleEncode = function(start, stop) { return ((start << 16) >>> 0) | ((stop & 0xFFFF) >>> 0); }
 
 /**
  * @param {int} value in minutes from start of week.
  * @returns event time as binary representation.
  */
-const scheduleRing = (value) => {
-  const LIMIT = 10080;
-  let result = value;
+var scheduleRing = function(value) {
+  var LIMIT = 10080;
+  var result = value;
 
   if (result >= LIMIT) {
     result -= LIMIT;
@@ -1463,8 +1463,8 @@ const scheduleRing = (value) => {
  * @returns {Event} - undefined if no overlap
  */
 const scheduleRingUnion = (nStart, nStop, oStart, oStop) => {
-  const MINUTES_MAXIMUM = 7 * 24 * 60;
-  const isInvalid = value => value < 0 || value > MINUTES_MAXIMUM;
+  var MINUTES_MAXIMUM = 7 * 24 * 60;
+  var isInvalid = function(value) { return value < 0 || value > MINUTES_MAXIMUM; }
 
   if (isInvalid(nStart)) throw new Error(`Invalid nStart: ${nStart}`);
   if (isInvalid(nStop )) throw new Error(`Invalid nStop: ${nStop}`);
@@ -1474,16 +1474,16 @@ const scheduleRingUnion = (nStart, nStop, oStart, oStop) => {
   if (nStart > nStop) nStop += MINUTES_MAXIMUM;
   if (oStart > oStop) oStop += MINUTES_MAXIMUM;
 
-  const shiftRelative = (stop, value) => (stop - MINUTES_MAXIMUM) > value ? value + MINUTES_MAXIMUM : value;
+  var shiftRelative = function(stop, value) { return (stop - MINUTES_MAXIMUM) > value ? value + MINUTES_MAXIMUM : value; }
 
   oStart = shiftRelative(nStop, oStart);
   oStop  = shiftRelative(nStop, oStop);
   nStart = shiftRelative(oStop, nStart);
   nStop  = shiftRelative(oStop, nStop);
 
-  const isBetween = (value, low, high) => value >= low && value <= high;
+  var isBetween = function(value, low, high) { return ((value >= low) && (value <= high)); }
 
-  let result;
+  var result;
 
   if (isBetween(nStart, oStart, oStop)
    || isBetween(oStart, nStart, nStop)) {
@@ -1507,12 +1507,12 @@ const scheduleRingUnion = (nStart, nStop, oStart, oStop) => {
  * @param {int} minStop 
  * @param {int} utcDifferenceMinutes 
  */
-const insertTime = (
+var insertTime = function(
   scheduleEvents,
   dayStart, hourStart, minStart,
   dayStop, hourStop, minStop,
   utcDifferenceMinutes,
-) => {
+) {
   if (!Array.isArray(scheduleEvents)) throw new Error('Invalid scheduleEvents array');
 
   const isOutOfRange = (x, low, high) => (x < low || x > high);
@@ -1528,12 +1528,12 @@ const insertTime = (
   if (isOutOfRange(utcDifferenceMinutes, -840, 720)) throw new Error(`Invalid utcDifferenceMinutes: ${utcDifferenceMinutes}`);
 
   // create our start minutes value
-  let start = dayStart * 24 * 60;
+  var start = dayStart * 24 * 60;
   start += hourStart * 60;
   start += minStart;
 
   // create our stop minutes value
-  let stop = dayStop * 24 * 60;
+  var stop = dayStop * 24 * 60;
   stop += hourStop * 60;
   stop += minStop;
 
@@ -1553,14 +1553,14 @@ const insertTime = (
     result.push(scheduleEncode(start, stop));
   } else {
     // the rest of this is to de-dupe intervals
-    let newStart = start;
-    let newStop = stop;
+    var newStart = start;
+    var newStop = stop;
 
     // loop through old schedule and figure out where to put new value
     scheduleEvents.map((schedEvent) => {
-      let oldStart = scheduleStartDecode(schedEvent);
-      let oldStop = scheduleStopDecode(schedEvent);
-      let intervalCombined = false;
+      var oldStart = scheduleStartDecode(schedEvent);
+      var oldStop = scheduleStopDecode(schedEvent);
+      var intervalCombined = false;
 
       // check if the intervals overlap
       const ringUnion = scheduleRingUnion(newStart, newStop, oldStart, oldStop);
@@ -1600,18 +1600,18 @@ const insertTime = (
   * @param {int} duration - minutes
   * @param {int} utcDifferenceMinutes - UTC offset
   */
-const insertTimeDuration = (
+var insertTimeDuration = function(
   scheduleEvents,
   dayStart, hourStart, minStart,
   duration,
   utcDifferenceMinutes,
-) => {
+) {
   // create our start minutes value
-  let start = dayStart * 24 * 60;
+  var start = dayStart * 24 * 60;
   start += hourStart * 60;
   start += minStart;
 
-  let stop = start + duration;
+  var stop = start + duration;
 
   // 0 for UTC offset, due to this doubling up on offset.
   const decoded = decodeTime(scheduleEncode(start, stop), 0);
@@ -1631,28 +1631,28 @@ const insertTimeDuration = (
  * @param {int} key 
  * @returns {Time}
  */
-const decodeTime = (schedEvent, offset, key = 0) => {
-  const ONE_WEEK = 7 * 24 * 60;
-  let start = scheduleRing(scheduleStartDecode(schedEvent) - offset);
-  let stop  = scheduleRing(scheduleStopDecode(schedEvent)  - offset);
-  let positiveStop = stop;
+var decodeTime = function(schedEvent, offset, key = 0) {
+  var ONE_WEEK = 7 * 24 * 60;
+  var start = scheduleRing(scheduleStartDecode(schedEvent) - offset);
+  var stop  = scheduleRing(scheduleStopDecode(schedEvent)  - offset);
+  var positiveStop = stop;
 
   if (start > stop) positiveStop = stop + ONE_WEEK;
 
-  const DAY = date => Math.floor(date / (24 * 60));
-  const HOUR = date => Math.floor(date / 60) - (DAY(date) * 24);
-  const MINUTE = date => date % 60;
+  var DAY = function(date) { return  Math.floor(date / (24 * 60)); }
+  var HOUR = function(date) { return Math.floor(date / 60) - (DAY(date) * 24); }
+  var MINUTE = function(date) { return date % 60; }
 
-  const dayStart = DAY(start);
-  const hrStart = HOUR(start);
-  const minStart = MINUTE(start);
+  var dayStart = DAY(start);
+  var hrStart = HOUR(start);
+  var minStart = MINUTE(start);
 
-  const dayStop = DAY(stop);
-  const hrStop = HOUR(stop);
-  const minStop = MINUTE(stop);
+  var dayStop = DAY(stop);
+  var hrStop = HOUR(stop);
+  var minStop = MINUTE(stop);
 
   // put our basic calculated values in place
-  const timesDecoded = {
+  var timesDecoded = {
     start: {
       day: dayStart,
       hr: hrStart,
@@ -1682,16 +1682,16 @@ const decodeTime = (schedEvent, offset, key = 0) => {
   timesDecoded.duration.crossWeek = dayStart > dayStop;
 
   // write out our human readable values
-  const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const HUMAN = x => `${daysOfWeek[x.day]} ${x.hr > 12 ? x.hr - 12 : x.hr}:${pad(x.min)} ${x.hr >= 12 ? 'PM' : 'AM'}`;
-  const humanStart = HUMAN(timesDecoded.start);
-  const humanStop = HUMAN(timesDecoded.stop);
+  var daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  var HUMAN = function(x) { return daysOfWeek[x.day] + ' ' + (x.hr > 12 ? x.hr - 12 : x.hr) + ':' + pad(x.min) + (x.hr >= 12 ? ' PM' : ' AM'); }
+  var humanStart = HUMAN(timesDecoded.start);
+  var humanStop = HUMAN(timesDecoded.stop);
   timesDecoded.start.human = humanStart;
   timesDecoded.stop.human = humanStop;
-  timesDecoded.human = `Start: ${humanStart}, Stop: ${humanStop} (${schedEvent})`;
+  timesDecoded.human = 'Start: ' + humanStart + ', Stop: ' + humanStop + ' (' + schedEvent + ')';
 
   // calculate if a scheduled item lasts 7 days, as this item is wonky
-  const sevenDay = (dayStart === dayStop && hrStart > hrStop);
+  var sevenDay = (dayStart === dayStop && hrStart > hrStop);
 
   // calculate number of days we are running for
   if (dayStart <= dayStop && !sevenDay) {
@@ -1710,10 +1710,12 @@ const decodeTime = (schedEvent, offset, key = 0) => {
  * @param {int} offset - UTC offset
  * @returns {Array.<Event>}
  */
-const decodeScheduleUI = (schedule, offset = 0) => {
+var decodeScheduleUI = function(schedule, offset = 0) {
   if (schedule && Array.isArray(schedule) && schedule.length) {
-    const result = schedule.reduce((answers, event, i) => {
-      const answer = decodeTime(event, offset, i);
+    var answers = [];
+    for (var i = 0; i < schedule.length; i++) {
+      var event = schedule[i];
+      var answer = decodeTime(event, offset, i);
 
       const {
         duration: {
@@ -1732,9 +1734,9 @@ const decodeScheduleUI = (schedule, offset = 0) => {
         answers.push(answer);
       } else {
         // if a multi-day run, we need to split for our UI
-        const answer2 = { ...answer };
-        const SATURDAY = 6;
-        const SUNDAY = 0;
+        var answer2 = JSON.parse(JSON.stringify(answer));
+        var SATURDAY = 6;
+        var SUNDAY = 0;
 
         answer.stop.day = SATURDAY;
         answer.duration.days = SATURDAY - dayStart;
@@ -1754,11 +1756,9 @@ const decodeScheduleUI = (schedule, offset = 0) => {
 
         answers.push(answer, answer2);
       }
+    }
 
-      return answers;
-    }, []);
-
-    return result;
+    return answers;
   }
 };
 
