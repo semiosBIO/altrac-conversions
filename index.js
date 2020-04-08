@@ -1631,7 +1631,11 @@ var insertTimeDuration = function(
  * @param {int} key 
  * @returns {Time}
  */
-var decodeTime = function(schedEvent, offset, key = 0) {
+var decodeTime = function(schedEvent, offset, _key) {
+  var key = 0;
+  if (_key) {
+    key = _key;
+  }
   var ONE_WEEK = 7 * 24 * 60;
   var start = scheduleRing(scheduleStartDecode(schedEvent) - offset);
   var stop  = scheduleRing(scheduleStopDecode(schedEvent)  - offset);
@@ -1710,7 +1714,11 @@ var decodeTime = function(schedEvent, offset, key = 0) {
  * @param {int} offset - UTC offset
  * @returns {Array.<Event>}
  */
-var decodeScheduleUI = function(schedule, offset = 0) {
+var decodeScheduleUI = function(schedule, _offset) {
+  var offset = 0;
+  if (_offset) {
+    offset = _offset;
+  }
   if (schedule && Array.isArray(schedule) && schedule.length) {
     var answers = [];
     for (var i = 0; i < schedule.length; i++) {
