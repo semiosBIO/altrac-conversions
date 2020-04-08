@@ -827,10 +827,7 @@ var moistureSensor = function moistureSensor(reading, physical, multiplier, prec
 
   var returnValue = round(((average - goalMin) / (goalMax - goalMin)) * 100, precision);
 
-  if(returnValue > 100) return 'WET';
-  if(returnValue < 0) return 'DRY';
-
-  return returnValue + '%';
+  return returnValue;
 }
 
 /**
