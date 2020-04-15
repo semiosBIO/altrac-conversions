@@ -109,14 +109,14 @@ describe('moisture functions', () => {
       const readings = {};
       valueKey.forEach(key => readings[key] = "3218");
 
-      const expectedResult = '41%';
+      const expectedResult = 41;
 
       const result = conversions.moistureSensor(readings, physical, multiplier, precision, valueKey);
 
       assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
     });
 
-    it("Should generate 'DRY' for low readings" , () => {
+    it("Should generate negative values for low readings" , () => {
       const multiplier = 100;
       const precision = 0;
       const physical = {
@@ -132,14 +132,14 @@ describe('moisture functions', () => {
       const readings = {};
       valueKey.forEach(key => readings[key] = "1100");
 
-      const expectedResult = 'DRY';
+      const expectedResult = -30;
 
       const result = conversions.moistureSensor(readings, physical, multiplier, precision, valueKey);
 
       assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
     });
 
-    it("Should generate 'WET' for high readings" , () => {
+    it("Should generate values above 100 for high readings" , () => {
       const multiplier = 100;
       const precision = 0;
       const physical = {
@@ -155,7 +155,7 @@ describe('moisture functions', () => {
       const readings = {};
       valueKey.forEach(key => readings[key] = "9800");
 
-      const expectedResult = 'WET';
+      const expectedResult = 260;
       const result = conversions.moistureSensor(readings, physical, multiplier, precision, valueKey);
       assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
     });
