@@ -419,6 +419,9 @@ var pumpOutput = function pumpOutput(readingCurrent, readingLast, currentTime, l
   } else if (readingCurrent - readingLast < -60000) {
     diff = (readingCurrent - readingLast + 65535) / multiplierValue;
   }
+  if (currentTime === lastTime) {
+    return 0;
+  }
   var current = new Date(isNumber(currentTime) ? currentTime * 1000 : currentTime).getTime();
   var previous = new Date(isNumber(lastTime) ? lastTime * 1000 : lastTime).getTime();
   var diffMinutes = (current - previous) / 1000 / 60;
