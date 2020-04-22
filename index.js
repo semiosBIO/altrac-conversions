@@ -419,6 +419,9 @@ var pumpOutput = function pumpOutput(readingCurrent, readingLast, currentTime, l
   } else if (readingCurrent - readingLast < -60000) {
     diff = (readingCurrent - readingLast + 65535) / multiplierValue;
   }
+  if (currentTime === lastTime) {
+    return 0;
+  }
   var current = new Date(isNumber(currentTime) ? currentTime * 1000 : currentTime).getTime();
   var previous = new Date(isNumber(lastTime) ? lastTime * 1000 : lastTime).getTime();
   var diffMinutes = (current - previous) / 1000 / 60;
@@ -843,10 +846,7 @@ var moistureSensor = function moistureSensor(reading, physical, multiplier, prec
 
   var returnValue = round(((average - goalMin) / (goalMax - goalMin)) * 100, precision);
 
-  if(returnValue > 100) return 'WET';
-  if(returnValue < 0) return 'DRY';
-
-  return returnValue + '%';
+  return returnValue;
 }
 
 /**
@@ -1663,7 +1663,11 @@ var insertTimeDuration = function(
  * @param {int} key 
  * @returns {Time}
  */
-var decodeTime = function(schedEvent, offset, key = 0) {
+var decodeTime = function(schedEvent, offset, _key) {
+  var key = 0;
+  if (_key) {
+    key = _key;
+  }
   var ONE_WEEK = 7 * 24 * 60;
   var start = scheduleRing(scheduleStartDecode(schedEvent) - offset);
   var stop  = scheduleRing(scheduleStopDecode(schedEvent)  - offset);
@@ -1742,7 +1746,11 @@ var decodeTime = function(schedEvent, offset, key = 0) {
  * @param {int} offset - UTC offset
  * @returns {Array.<Event>}
  */
-var decodeScheduleUI = function(schedule, offset = 0) {
+var decodeScheduleUI = function(schedule, _offset) {
+  var offset = 0;
+  if (_offset) {
+    offset = _offset;
+  }
   if (schedule && Array.isArray(schedule) && schedule.length) {
     var answers = [];
     for (var i = 0; i < schedule.length; i++) {
