@@ -761,6 +761,22 @@ var numberToBinaryOnOff = function numberToBinaryOnOff(value, bit) {
   return numberToBinary(value, bit) ? 'ON' : 'OFF';
 };
 
+/**
+ * @param {number} mA value > 0
+ * @returns true when value > 5 else false
+ */
+var mAToBoolean = function mAToBoolean(mA) {
+  return (isNumber(mA) &&  Number(mA) > 5);
+};
+
+/**
+ * @param {any} value - 1/0, true/false, 'string'/'', thing/undefined
+ * @returns true when value is truthy.
+ */
+var toBoolean = function toBoolean(value) {
+  return (Boolean(isFinite(value) && Number(value) || value));
+};
+
 var gallonsToAcreFeet = function gallonsToAcreFeet(value, precision){
   var returnValue = 0;
   if (!isNaN(value) && Number(value) > 0) {
@@ -1029,6 +1045,12 @@ function valueCalculator(
     case 'windDirection':
       returnValue = windDirection(value);
       break;
+    case 'mAToBoolean': 
+      returnValue = maToBoolean(value);
+      break;
+    case 'toBoolean': 
+      returnValue = toBoolean(value);
+      break;
     case 'millimetersToInches':
       returnValue = millimetersToInches(value, precision);
       break;
@@ -1238,6 +1260,16 @@ var displayFormula = function displayFormula(
   }
 
   switch (formulaValue) {
+    case 'toBoolean':
+      returnValue = toBoolean(
+        readingCurrent[valueKey],
+      );
+      break;
+    case 'mAToBoolean':
+      returnValue = mAToBoolean(
+        readingCurrent[valueKey],
+      );
+      break;
     case 'binLevel':
       returnValue = binLevel(
         readingCurrent['131'],
@@ -1792,6 +1824,7 @@ module.exports = {
   kPaToInchesMercury: kPaToInchesMercury,
   lastValveTime: lastValveTime,
   lastValveTimeToEpochMillis: lastValveTimeToEpochMillis,
+  mAToBoolean: mAToBoolean,
   metersPerSecondToMilesPerHour: metersPerSecondToMilesPerHour,
   millimetersToInches: millimetersToInches,
   moistureSensor: moistureSensor,
@@ -1820,6 +1853,7 @@ module.exports = {
   soilSalinitySensorAverage,
   soilTemperatureSensorAverage,
   spaceCamel: spaceCamel,
+  toBoolean: toBoolean,
   toC: toC,
   toValveTime: toValveTime,
   valveStatus: valveStatus,

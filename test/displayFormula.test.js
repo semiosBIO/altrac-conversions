@@ -134,4 +134,116 @@ describe('displayFormula function', () => {
 
   });
 
+  describe('toBoolean', () => {
+    it("Should generate true when value > 0" , () => {
+      const
+        formula = 'toBoolean',
+        multiplier = null,
+        precision = null,
+        context = {},
+        valueKey = 1,
+        readingCurrent = { 1: 1 },
+        readingLast = { 1: 1 },
+        physical = { };
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical
+      );
+
+
+      const expectedResult = true;
+      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+    });
+
+    it("Should generate false when value === 0" , () => {
+      const 
+        formula = 'toBoolean',
+        multiplier = null,
+        precision = null,
+        context = {},
+        valueKey = 1,
+        readingCurrent = { 1: 0 },
+        readingLast = { 1: 0 },
+        physical = { };
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical
+      );
+
+
+      const expectedResult = false;
+      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+    });
+
+  });
+
+  describe('mAToBoolean', () => {
+    it("Should generate true when value >= 5" , () => {
+      const
+        formula = 'mAToBoolean',
+        multiplier = null,
+        precision = null,
+        context = {},
+        valueKey = 1,
+        readingCurrent = { 1: 12 },
+        readingLast = { 1: 12 },
+        physical = { };
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical
+      );
+
+      const expectedResult = true;
+      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+    });
+
+    it("Should generate false when value < 5" , () => {
+      const
+        formula = 'mAToBoolean',
+        multiplier = null,
+        precision = null,
+        context = {},
+        valueKey = 1,
+        readingCurrent = { 1: 0.01 },
+        readingLast = { 1: 0.02 },
+        physical = { };
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical
+      );
+
+      const expectedResult = false;
+      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+    });
+
+  });
+
 });
