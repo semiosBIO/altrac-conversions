@@ -1262,12 +1262,12 @@ var displayFormula = function displayFormula(
   switch (formulaValue) {
     case 'toBoolean':
       returnValue = toBoolean(
-        readingCurrent[valueKey],
+        readingCurrent[valueKey] / multiplierValue,
       );
       break;
     case 'mAToBoolean':
       returnValue = mAToBoolean(
-        readingCurrent[valueKey],
+        readingCurrent[valueKey] / multiplierValue,
       );
       break;
     case 'binLevel':
