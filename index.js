@@ -26,6 +26,10 @@ var isNumber = function isNumber(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 };
 
+var map = function (value, x1, y1, x2, y2) {
+  return ((value - x1) * (y2 - x2) / (y1 - x1) + x2);
+};
+
 var voltToVWC = function voltToVWC(v) {
   /*
     0 to 1.1V VWC= 10*V-1
@@ -317,7 +321,6 @@ var percentTo20V = function percentTo20V(
 var fourToTwenty = function fourToTwenty(p, min, max, zero, precision) {
   var minNumber = 0;
   var maxNumber = 100;
-  var zeroNumber = 0;
   var precisionNumber = 0;
   if (!isNaN(min)) {
     minNumber = Number(min);
@@ -325,6 +328,7 @@ var fourToTwenty = function fourToTwenty(p, min, max, zero, precision) {
   if (!isNaN(max)) {
     maxNumber = Number(max);
   }
+  var zeroNumber = minNumber;
   if (!isNaN(zero)) {
     zeroNumber = Number(zero);
   }
@@ -333,7 +337,6 @@ var fourToTwenty = function fourToTwenty(p, min, max, zero, precision) {
   }
   var returnValue = (((((p * 3.34) / 100) * 1000) - 4) * (maxNumber - minNumber)) / (20 - 4);
   var mA = (((p * 3.34) / 100) * 1000);
-  var map = ((mA - 4) * (maxNumber - minNumber)) / (20 - 4);
   if (mA > 3.5 && returnValue < zeroNumber) {
     return 0;
   } else if (returnValue < zeroNumber) {
@@ -1203,7 +1206,8 @@ var displayFormula = function displayFormula(
   valueKey,
   readingCurrent,
   readingLast,
-  physical
+  physical,
+  mapValues
 ) {
   var ERROR = 'ERR';
   var isInvalidReading = function (x) {
@@ -1437,6 +1441,18 @@ var displayFormula = function displayFormula(
         precisionValue
       );
   }
+
+  if (
+    mapValues && typeof mapValues === 'object'
+    && isNumber(mapValues.inMin)
+    && isNumber(mapValues.inMax)
+    && isNumber(mapValues.outMin)
+    && isNumber(mapValues.outMax)
+  ) {
+    returnValue = map(returnValue, mapValues.inMin, mapValues.inMax, mapValues.outMin, mapValues.outMax);
+    returnValue = round(returnValue, precision);
+  }
+
   return returnValue;
 };
 
