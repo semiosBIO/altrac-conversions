@@ -252,7 +252,7 @@ var nextValveTime = function nextValveTime(valveTimeArr, valveNumber) {
         if (
           valveTimeToValveNumber(valveTimeArr[i]) === valveNumberC
           && valveTimeToValveNumber(valveTimeArr[i + 1]) === valveNumberC
-          && (valveTimeArr[i] < returnValue[0]|| returnValue[0] === 0)
+          && (valveTimeArr[i] < returnValue[0] || returnValue[0] === 0)
         ) {
           returnValue[0] = valveTimeArr[i];
           returnValue[1] = valveTimeArr[i + 1];
@@ -378,11 +378,11 @@ var millisecondsPastExpectedConnection = function millisecondsPastExpectedConnec
 }
 
 var spaceCamel = function spaceCamel(s) {
-  return s.replace(/([A-Z])/g, ' $1').replace(/^./, function(str) { return str.toUpperCase(); });
+  return s.replace(/([A-Z])/g, ' $1').replace(/^./, function (str) { return str.toUpperCase(); });
 };
 
 var dewPoint = function dewPoint(t, rh) {
-  var h = (Math.log10(rh) - 2) / 0.4343 + (17.62 * t)/(243.12 + t);
+  var h = (Math.log10(rh) - 2) / 0.4343 + (17.62 * t) / (243.12 + t);
   var dp = 243.12 * h / (17.62 - h); // this is the dew point in Celsius
   return dp;
 };
@@ -772,7 +772,7 @@ var numberToBinaryOnOff = function numberToBinaryOnOff(value, bit) {
  * @returns true when value > 5 else false
  */
 var mAToBoolean = function mAToBoolean(mA) {
-  return (isNumber(mA) &&  Number(mA) > 5);
+  return (isNumber(mA) && Number(mA) > 5);
 };
 
 /**
@@ -783,7 +783,7 @@ var toBoolean = function toBoolean(value) {
   return (Boolean(isFinite(value) && Number(value) || value));
 };
 
-var gallonsToAcreFeet = function gallonsToAcreFeet(value, precision){
+var gallonsToAcreFeet = function gallonsToAcreFeet(value, precision) {
   var returnValue = 0;
   if (!isNaN(value) && Number(value) > 0) {
     returnValue = round((Number(value) / 325851), precision);
@@ -911,9 +911,9 @@ var soilSalinitySensorAverage = function soilSalinitySensorAverage(reading, phys
 
   for (var key of keyList) {
     var rawValue = reading[key];
-    if(isNumber(rawValue)) {
+    if (isNumber(rawValue)) {
       var value = Number(rawValue) / multiplier;
-      if(value >= 0 && value < 20) {
+      if (value >= 0 && value < 20) {
         total += value;
         denominator += 1;
       }
@@ -949,9 +949,9 @@ var soilTemperatureSensorAverage = function soilTemperatureSensorAverage(reading
 
   for (var key of keyList) {
     var rawValue = reading[key];
-    if(isNumber(rawValue)) {
+    if (isNumber(rawValue)) {
       var value = Number(rawValue) / multiplier;
-      if(value >= -50 && value < 100) {
+      if (value >= -50 && value < 100) {
         total += value;
         denominator += 1;
       }
@@ -1048,10 +1048,10 @@ function valueCalculator(
     case 'windDirection':
       returnValue = windDirection(value);
       break;
-    case 'mAToBoolean': 
+    case 'mAToBoolean':
       returnValue = maToBoolean(value);
       break;
-    case 'toBoolean': 
+    case 'toBoolean':
       returnValue = toBoolean(value);
       break;
     case 'millimetersToInches':
@@ -1225,7 +1225,7 @@ var displayFormula = function displayFormula(
     valueKey = JSON.parse(valueKey);
   }
 
-  switch(typeof valueKey) {
+  switch (typeof valueKey) {
     case 'number':
     case 'string':
       returnValue = readingCurrent[valueKey];
@@ -1418,7 +1418,7 @@ var displayFormula = function displayFormula(
         readingCurrent['135']
       );
       break;
-    case 'rolling' :
+    case 'rolling':
       returnValue = valueCalculator(
         formulaValueSecondary,
         readingCurrent[valueKey] / multiplierValue,
@@ -1462,7 +1462,7 @@ var displayFormula = function displayFormula(
  * @param {int} size 
  * @returns {string} padded with leading zeros up to size.
  */
-var pad = function(value, size) {
+var pad = function (value, size) {
   var s = String(value);
   while (s.length < (size || 2)) { s = `0${s}`; }
   return s;
@@ -1473,19 +1473,19 @@ var pad = function(value, size) {
  * @param {int} min 
  * @returns {string} 'hh:mm'
  */
-var formatTime = function(hr, min) {
+var formatTime = function (hr, min) {
   return `${pad(hr)}:${pad(min)}`;
 }
 
-var scheduleStartDecode = function(value) { return value >> 16 >>> 0; }
-var scheduleStopDecode = function(value) { return value & 0xFFFF >>> 0; }
-var scheduleEncode = function(start, stop) { return ((start << 16) >>> 0) | ((stop & 0xFFFF) >>> 0); }
+var scheduleStartDecode = function (value) { return value >> 16 >>> 0; }
+var scheduleStopDecode = function (value) { return value & 0xFFFF >>> 0; }
+var scheduleEncode = function (start, stop) { return ((start << 16) >>> 0) | ((stop & 0xFFFF) >>> 0); }
 
 /**
  * @param {int} value in minutes from start of week.
  * @returns event time as binary representation.
  */
-var scheduleRing = function(value) {
+var scheduleRing = function (value) {
   var LIMIT = 10080;
   var result = value;
 
@@ -1512,32 +1512,32 @@ var scheduleRing = function(value) {
  */
 const scheduleRingUnion = (nStart, nStop, oStart, oStop) => {
   var MINUTES_MAXIMUM = 7 * 24 * 60;
-  var isInvalid = function(value) { return value < 0 || value > MINUTES_MAXIMUM; }
+  var isInvalid = function (value) { return value < 0 || value > MINUTES_MAXIMUM; }
 
   if (isInvalid(nStart)) throw new Error(`Invalid nStart: ${nStart}`);
-  if (isInvalid(nStop )) throw new Error(`Invalid nStop: ${nStop}`);
+  if (isInvalid(nStop)) throw new Error(`Invalid nStop: ${nStop}`);
   if (isInvalid(oStart)) throw new Error(`Invalid oStart: ${oStart}`);
-  if (isInvalid(oStop )) throw new Error(`Invalid oStop: ${oStop}`);
+  if (isInvalid(oStop)) throw new Error(`Invalid oStop: ${oStop}`);
 
   if (nStart > nStop) nStop += MINUTES_MAXIMUM;
   if (oStart > oStop) oStop += MINUTES_MAXIMUM;
 
-  var shiftRelative = function(stop, value) { return (stop - MINUTES_MAXIMUM) > value ? value + MINUTES_MAXIMUM : value; }
+  var shiftRelative = function (stop, value) { return (stop - MINUTES_MAXIMUM) > value ? value + MINUTES_MAXIMUM : value; }
 
   oStart = shiftRelative(nStop, oStart);
-  oStop  = shiftRelative(nStop, oStop);
+  oStop = shiftRelative(nStop, oStop);
   nStart = shiftRelative(oStop, nStart);
-  nStop  = shiftRelative(oStop, nStop);
+  nStop = shiftRelative(oStop, nStop);
 
-  var isBetween = function(value, low, high) { return ((value >= low) && (value <= high)); }
+  var isBetween = function (value, low, high) { return ((value >= low) && (value <= high)); }
 
   var result;
 
   if (isBetween(nStart, oStart, oStop)
-   || isBetween(oStart, nStart, nStop)) {
+    || isBetween(oStart, nStart, nStop)) {
     result = {
       start: scheduleRing(Math.min(nStart, oStart)),
-      stop:  scheduleRing(Math.max(nStop,  oStop)),
+      stop: scheduleRing(Math.max(nStop, oStop)),
     };
   }
 
@@ -1555,7 +1555,7 @@ const scheduleRingUnion = (nStart, nStop, oStart, oStop) => {
  * @param {int} minStop 
  * @param {int} utcDifferenceMinutes 
  */
-var insertTime = function(
+var insertTime = function (
   scheduleEvents,
   dayStart, hourStart, minStart,
   dayStop, hourStop, minStop,
@@ -1566,12 +1566,12 @@ var insertTime = function(
   const isOutOfRange = (x, low, high) => (x < low || x > high);
   const isInvalid = (x, high) => isOutOfRange(x, 0, high);
 
-  if (isInvalid(dayStart,   6)) throw new Error(`Invalid dayStart: ${dayStart}`);
-  if (isInvalid(dayStop,    6)) throw new Error(`Invalid dayStop: ${dayStop}`);
+  if (isInvalid(dayStart, 6)) throw new Error(`Invalid dayStart: ${dayStart}`);
+  if (isInvalid(dayStop, 6)) throw new Error(`Invalid dayStop: ${dayStop}`);
   if (isInvalid(hourStart, 23)) throw new Error(`Invalid hourStart: ${hourStart}`);
-  if (isInvalid(hourStop,  23)) throw new Error(`Invalid hourStop: ${hourStop}`);
-  if (isInvalid(minStart,  59)) throw new Error(`Invalid minStart: ${minStart}`);
-  if (isInvalid(minStop,   59)) throw new Error(`Invalid minStop: ${minStop}`);
+  if (isInvalid(hourStop, 23)) throw new Error(`Invalid hourStop: ${hourStop}`);
+  if (isInvalid(minStart, 59)) throw new Error(`Invalid minStart: ${minStart}`);
+  if (isInvalid(minStop, 59)) throw new Error(`Invalid minStop: ${minStop}`);
 
   if (isOutOfRange(utcDifferenceMinutes, -840, 720)) throw new Error(`Invalid utcDifferenceMinutes: ${utcDifferenceMinutes}`);
 
@@ -1639,16 +1639,16 @@ var insertTime = function(
   return result;
 };
 
- /**
-  * Insert a new scheduled event into an array of schedule Events.
-  * @param {int} scheduleEvents 
-  * @param {int} dayStart 
-  * @param {int} hourStart 
-  * @param {int} minStart 
-  * @param {int} duration - minutes
-  * @param {int} utcDifferenceMinutes - UTC offset
-  */
-var insertTimeDuration = function(
+/**
+ * Insert a new scheduled event into an array of schedule Events.
+ * @param {int} scheduleEvents 
+ * @param {int} dayStart 
+ * @param {int} hourStart 
+ * @param {int} minStart 
+ * @param {int} duration - minutes
+ * @param {int} utcDifferenceMinutes - UTC offset
+ */
+var insertTimeDuration = function (
   scheduleEvents,
   dayStart, hourStart, minStart,
   duration,
@@ -1679,21 +1679,21 @@ var insertTimeDuration = function(
  * @param {int} key 
  * @returns {Time}
  */
-var decodeTime = function(schedEvent, offset, _key) {
+var decodeTime = function (schedEvent, offset, _key) {
   var key = 0;
   if (_key) {
     key = _key;
   }
   var ONE_WEEK = 7 * 24 * 60;
   var start = scheduleRing(scheduleStartDecode(schedEvent) - offset);
-  var stop  = scheduleRing(scheduleStopDecode(schedEvent)  - offset);
+  var stop = scheduleRing(scheduleStopDecode(schedEvent) - offset);
   var positiveStop = stop;
 
   if (start > stop) positiveStop = stop + ONE_WEEK;
 
-  var DAY = function(date) { return  Math.floor(date / (24 * 60)); }
-  var HOUR = function(date) { return Math.floor(date / 60) - (DAY(date) * 24); }
-  var MINUTE = function(date) { return date % 60; }
+  var DAY = function (date) { return Math.floor(date / (24 * 60)); }
+  var HOUR = function (date) { return Math.floor(date / 60) - (DAY(date) * 24); }
+  var MINUTE = function (date) { return date % 60; }
 
   var dayStart = DAY(start);
   var hrStart = HOUR(start);
@@ -1735,7 +1735,7 @@ var decodeTime = function(schedEvent, offset, _key) {
 
   // write out our human readable values
   var daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  var HUMAN = function(x) { return daysOfWeek[x.day] + ' ' + (x.hr > 12 ? x.hr - 12 : x.hr) + ':' + pad(x.min) + (x.hr >= 12 ? ' PM' : ' AM'); }
+  var HUMAN = function (x) { return daysOfWeek[x.day] + ' ' + (x.hr > 12 ? x.hr - 12 : x.hr) + ':' + pad(x.min) + (x.hr >= 12 ? ' PM' : ' AM'); }
   var humanStart = HUMAN(timesDecoded.start);
   var humanStop = HUMAN(timesDecoded.stop);
   timesDecoded.start.human = humanStart;
@@ -1762,7 +1762,7 @@ var decodeTime = function(schedEvent, offset, _key) {
  * @param {int} offset - UTC offset
  * @returns {Array.<Event>}
  */
-var decodeScheduleUI = function(schedule, _offset) {
+var decodeScheduleUI = function (schedule, _offset) {
   var offset = 0;
   if (_offset) {
     offset = _offset;
