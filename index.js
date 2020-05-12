@@ -17,7 +17,7 @@ var round = function round(n, d) {
       decimalPlaces = 1000;
       break;
     default:
-      decimalPlaces = 1;
+      return n;
   }
   return Math.round(n * decimalPlaces) / decimalPlaces;
 };
@@ -1422,14 +1422,12 @@ var displayFormula = function displayFormula(
       returnValue = valueCalculator(
         formulaValueSecondary,
         readingCurrent[valueKey] / multiplierValue,
-        context,
-        precisionValue
+        context
       );
       returnValue += valueCalculator(
         formulaValueSecondary,
         readingLast[valueKey] / multiplierValue,
-        context,
-        precisionValue
+        context
       );
       returnValue = (returnValue / 2);
       break;
@@ -1437,8 +1435,7 @@ var displayFormula = function displayFormula(
       returnValue = valueCalculator(
         formula,
         readingCurrent[valueKey] / multiplierValue,
-        context,
-        precisionValue
+        context
       );
   }
 
@@ -1450,7 +1447,10 @@ var displayFormula = function displayFormula(
     && isNumber(mapValues.outMax)
   ) {
     returnValue = map(returnValue, mapValues.inMin, mapValues.inMax, mapValues.outMin, mapValues.outMax);
-    returnValue = round(returnValue, precision);
+  }
+
+  if (isNumber(returnValue)) {
+    returnValue = round(returnValue, precisionValue);
   }
 
   return returnValue;
