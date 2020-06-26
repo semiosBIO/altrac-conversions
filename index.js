@@ -885,7 +885,7 @@ var soilMoistureSensorAverage = function soilMoistureSensorAverage(reading, phys
 
   if (denominator === 0) return undefined;
 
-  var average = round(total / denominator);
+  var average = round(total / denominator, precision);
   return average;
 }
 
