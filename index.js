@@ -1260,6 +1260,74 @@ var displayFormula = function displayFormula(
   }
 
   switch (formulaValue) {
+    case 'difference':
+      {
+        const [valueKey0, valueKey1] = valueKey;
+        let value0, value1;
+
+        if (typeof valueKey0 === 'object') {
+          value0 = valueCalculator(
+            valueKey0.formula,
+            readingCurrent[valueKey0.valueKey] / (valueKey0.multiplier || 1),
+            valueKey0.context || '',
+            valueKey0.precision || 0
+          );
+          value1 = valueCalculator(
+            valueKey1.formula,
+            readingCurrent[valueKey1.valueKey] / (valueKey1.multiplier || 1),
+            valueKey1.context || '',
+            valueKey1.precision || 0
+          );
+        } else {
+          value0 = valueCalculator(
+            formula,
+            readingCurrent[valueKey0] / multiplierValue,
+            context,
+            precisionValue
+          );
+          value1 = valueCalculator(
+            formula,
+            readingCurrent[valueKey1] / multiplierValue,
+            context,
+            precisionValue
+          );
+        }
+
+        if (isNumber(value0) && isNumber(value1)) {
+          returnValue = Math.abs(value0 - value1);
+        } else {
+          returnValue = 'ERR';
+        }
+      }
+      break;
+    case 'pumpRunning':
+    case 'pumpShouldBeRunning':
+    case 'pumpStopped':
+      {
+        const [run, signal] = valueKey;
+        const isRun = valueCalculator(
+            run.formula,
+            readingCurrent[run.valueKey] / (run.multiplier || 1),
+            run.context || '',
+            run.precision || 0
+          );
+        const isSignal = valueCalculator(
+            signal.formula,
+            readingCurrent[signal.valueKey] / (signal.multiplier || 1),
+            signal.context || '',
+            signal.precision || 0
+          );
+        if (isNumber(isRun) && isNumber(isSignal)) {
+          switch (formula) {
+            case 'pumpRunning':         returnValue = Boolean( isRun &&  isSignal); break;
+            case 'pumpShouldBeRunning': returnValue = Boolean( isRun && !isSignal); break;
+            case 'pumpStopped':         returnValue = Boolean(!isRun && !isSignal); break;
+          }
+        } else {
+          returnValue = 'ERR';
+        }
+      }
+      break;
     case 'toBoolean':
       returnValue = toBoolean(
         readingCurrent[valueKey],

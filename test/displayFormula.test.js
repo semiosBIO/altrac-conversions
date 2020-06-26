@@ -246,4 +246,486 @@ describe('displayFormula function', () => {
 
   });
 
+  describe('difference', () => {
+    it("should generate the correct difference between two values" , () => {
+      const
+        formula = 'difference',
+        multiplier = null,
+        precision = null,
+        context = {},
+        valueKey = [
+          {
+            formula: 'default',
+            multiplier: 1,
+            precision: 1,
+            valueKey: 'A',
+          },
+          {
+            formula: 'default',
+            multiplier: 2,
+            precision: 1,
+            valueKey: 'B',
+          }
+        ],
+        readingCurrent = { A: 100, B:202 },
+        readingLast = {},
+        physical = {};
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical
+      );
+
+      const expectedResult = 1;
+      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+    });
+
+    it("should generate the correct difference between two values, using string valueKeys" , () => {
+      const
+        formula = 'difference',
+        multiplier = 1,
+        precision = 1,
+        context = {},
+        valueKey = ['A', 'B'],
+        readingCurrent = { A: 100, B:101 },
+        readingLast = {},
+        physical = {};
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical
+      );
+
+      const expectedResult = 1;
+      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+    });
+
+    it("should generate zero when values are equal", () => {
+      const
+        formula = 'difference',
+        multiplier = null,
+        precision = null,
+        context = {},
+        valueKey = [
+          {
+            formula: 'default',
+            multiplier: 1,
+            precision: 1,
+            valueKey: 'A',
+          },
+          {
+            formula: 'default',
+            multiplier: 1,
+            precision: 1,
+            valueKey: 'B',
+          }
+        ],
+        readingCurrent = { A: 100, B: 100 },
+        readingLast = {},
+        physical = {};
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical
+      );
+
+      const expectedResult = 0;
+      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+    });
+
+    it("should generate an error when values are non-numeric", () => {
+      const
+        formula = 'difference',
+        multiplier = null,
+        precision = null,
+        context = {},
+        valueKey = [
+          {
+            formula: 'default',
+            multiplier: 1,
+            precision: 1,
+            valueKey: 'A',
+          },
+          {
+            formula: 'default',
+            multiplier: 1,
+            precision: 1,
+            valueKey: 'B',
+          }
+        ],
+        readingCurrent = { A: 'a', B: 'b' },
+        readingLast = {},
+        physical = {};
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical
+      );
+
+      const expectedResult = 'ERR';
+      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+    });
+
+  });
+
+  describe('pumpRunning', () => {
+    it("should generate generate true if pump is running" , () => {
+      const
+        formula = 'pumpRunning',
+        multiplier = null,
+        precision = null,
+        context = {},
+        valueKey = [
+          {
+            formula: 'default',
+            multiplier: 1,
+            precision: 1,
+            valueKey: 'A',
+          },
+          {
+            formula: 'default',
+            multiplier: 2,
+            precision: 1,
+            valueKey: 'B',
+          }
+        ],
+        readingCurrent = { A: 1, B: 2 },
+        readingLast = {},
+        physical = {};
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical
+      );
+
+      const expectedResult = true;
+      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+    });
+
+    it("should generate generate false if pump is not running" , () => {
+      const
+        formula = 'pumpRunning',
+        multiplier = null,
+        precision = null,
+        context = {},
+        valueKey = [
+          {
+            formula: 'default',
+            multiplier: 1,
+            precision: 1,
+            valueKey: 'A',
+          },
+          {
+            formula: 'default',
+            multiplier: 2,
+            precision: 1,
+            valueKey: 'B',
+          }
+        ],
+        readingCurrent = { A: 1, B: 0 },
+        readingLast = {},
+        physical = {};
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical
+      );
+
+      const expectedResult = false;
+      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+    });
+
+    it("should generate an error when values are non-numeric", () => {
+      const
+        formula = 'pumpRunning',
+        multiplier = null,
+        precision = null,
+        context = {},
+        valueKey = [
+          {
+            formula: 'default',
+            multiplier: 1,
+            precision: 1,
+            valueKey: 'A',
+          },
+          {
+            formula: 'default',
+            multiplier: 2,
+            precision: 1,
+            valueKey: 'B',
+          }
+        ],
+        readingCurrent = { A: 'a', B: 'b' },
+        readingLast = {},
+        physical = {};
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical
+      );
+
+      const expectedResult = 'ERR';
+      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+    });
+
+  });
+
+  describe('pumpShouldBeRunning', () => {
+    it("should generate generate true if pump should be running" , () => {
+      const
+        formula = 'pumpShouldBeRunning',
+        multiplier = null,
+        precision = null,
+        context = {},
+        valueKey = [
+          {
+            formula: 'default',
+            multiplier: 1,
+            precision: 1,
+            valueKey: 'A',
+          },
+          {
+            formula: 'default',
+            multiplier: 2,
+            precision: 1,
+            valueKey: 'B',
+          }
+        ],
+        readingCurrent = { A: 1, B: 0 },
+        readingLast = {},
+        physical = {};
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical
+      );
+
+      const expectedResult = true;
+      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+    });
+
+    it("should generate generate false if pump should not be running" , () => {
+      const
+        formula = 'pumpShouldBeRunning',
+        multiplier = null,
+        precision = null,
+        context = {},
+        valueKey = [
+          {
+            formula: 'default',
+            multiplier: 1,
+            precision: 1,
+            valueKey: 'A',
+          },
+          {
+            formula: 'default',
+            multiplier: 2,
+            precision: 1,
+            valueKey: 'B',
+          }
+        ],
+        readingCurrent = { A: 1, B: 2 },
+        readingLast = {},
+        physical = {};
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical
+      );
+
+      const expectedResult = false;
+      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+    });
+  });
+
+  describe('pumpStopped', () => {
+    it("should generate generate true if pump is stopped" , () => {
+      const
+        formula = 'pumpStopped',
+        multiplier = null,
+        precision = null,
+        context = {},
+        valueKey = [
+          {
+            formula: 'default',
+            multiplier: 1,
+            precision: 1,
+            valueKey: 'A',
+          },
+          {
+            formula: 'default',
+            multiplier: 2,
+            precision: 1,
+            valueKey: 'B',
+          }
+        ],
+        readingCurrent = { A: 0, B: 0 },
+        readingLast = {},
+        physical = {};
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical
+      );
+
+      const expectedResult = true;
+      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+    });
+
+    it("should generate generate false if pump is not stopped" , () => {
+      const
+        formula = 'pumpStopped',
+        multiplier = null,
+        precision = null,
+        context = {},
+        valueKey = [
+          {
+            formula: 'default',
+            multiplier: 1,
+            precision: 1,
+            valueKey: 'A',
+          },
+          {
+            formula: 'default',
+            multiplier: 2,
+            precision: 1,
+            valueKey: 'B',
+          }
+        ],
+        readingCurrent = { A: 1, B: 2 },
+        readingLast = {},
+        physical = {};
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical
+      );
+
+      const expectedResult = false;
+      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+    });
+
+  });
+
+  describe('pumpOutput', () => {
+    it("should generate generate the correct value" , () => {
+      const
+        formula = 'pumpOutput',
+        multiplier = 1,
+        precision = null,
+        context = {},
+        valueKey = 'A',
+        readingCurrent = { A: 200, date: '2020-01-01T00:20:00.000Z' },
+        readingLast =    { A: 100, date: '2020-01-01T00:10:00.000Z' },
+        physical = {};
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical
+      );
+
+      const expectedResult = 10;
+      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+    });
+
+    it("should generate generate zero when an input value is invalid" , () => {
+      const
+        formula = 'pumpOutput',
+        multiplier = 1,
+        precision = null,
+        context = {},
+        valueKey = 'A',
+        readingCurrent = { A: 200, date: '2020-01-01T00:20:00.000Z' },
+        readingLast =    { A: undefined, date: '2020-01-01T00:10:00.000Z' },
+        physical = {};
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical
+      );
+
+      const expectedResult = 0;
+      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+    });
+
+  });
+
 });
