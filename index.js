@@ -885,7 +885,7 @@ var soilMoistureSensorAverage = function soilMoistureSensorAverage(reading, phys
 
   if (denominator === 0) return undefined;
 
-  var average = round(total / denominator, precision);
+  var average = round(total / denominator);
   return average;
 }
 
@@ -1221,7 +1221,7 @@ var displayFormula = function displayFormula(
   var returnValue;
 
   if (typeof valueKey === 'string'
-    && valueKey.startsWith('[')) {
+    && (valueKey.startsWith('[') || valueKey.startsWith('{'))) {
     valueKey = JSON.parse(valueKey);
   }
 
@@ -1233,7 +1233,6 @@ var displayFormula = function displayFormula(
       break;
 
     case 'object':
-      if (!Array.isArray(valueKey)) return ERROR;
       break;
 
     default:
@@ -1304,24 +1303,60 @@ var displayFormula = function displayFormula(
         }
       }
       break;
+    case 'engineState':
+      {
+        const ENGINE_STATE = '134';
+        const ENGINE_STATE_INTENTION = '131';
+        const ENGINE_STATE_TIMESTAMP = '132';
+        const rpm = reading0[ENGINE_STATE];
+        let intention = reading0[ENGINE_STATE_INTENTION] || 0;
+        const timestamp = reading0[ENGINE_STATE_TIMESTAMP];
+        const offRpm = device.physical.offRpm
+        const highRpm = device.physical.highRpm
+        returnValue = engineStateCalculator(
+          rpm,
+          intention,
+          timestamp,
+          offRpm,
+          highRpm
+        );
+      }
+      break;
+    case 'engineStateIntention':
+      returnValue = valueCalculator(
+        formula,
+        readingCurrent[valueKey] / multiplierValue,
+        context
+      );
+      break;
+    case 'engineStateTransition':
+      returnValue = valueCalculator(
+        formula,
+        readingCurrent[valueKey] / multiplierValue,
+        context
+      );
+      break;
     case 'pumpRunning':
     case 'pumpShouldBeRunning':
     case 'pumpStopped':
       {
-        const [run, signal] = valueKey;
+        const { run, signal } = valueKey;
+
         const isRun = valueCalculator(
             run.formula,
             readingCurrent[run.valueKey] / (run.multiplier || 1),
             run.context || '',
             run.precision || 0
           );
+
         const isSignal = valueCalculator(
             signal.formula,
             readingCurrent[signal.valueKey] / (signal.multiplier || 1),
             signal.context || '',
             signal.precision || 0
           );
-        if (isNumber(isRun) && isNumber(isSignal)) {
+
+        if (typeof isRun === 'boolean' && typeof isSignal === 'boolean') {
           switch (formula) {
             case 'pumpRunning':         returnValue = Boolean( isRun &&  isSignal); break;
             case 'pumpShouldBeRunning': returnValue = Boolean( isRun && !isSignal); break;
@@ -1480,6 +1515,9 @@ var displayFormula = function displayFormula(
         'f'
       ) || ERROR;
       break;
+    case 'startMode':
+        returnValue = readingCurrent[valueKey] ? 'AUTO' : 'MANUAL';
+        break;
     case 'millisecondsPastExpectedConnection':
       returnValue = millisecondsPastExpectedConnection(
         readingCurrent.date,
