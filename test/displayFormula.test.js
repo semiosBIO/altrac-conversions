@@ -399,20 +399,20 @@ describe('displayFormula function', () => {
         multiplier = null,
         precision = null,
         context = {},
-        valueKey = [
-          {
+        valueKey = {
+          run: {
             formula: 'default',
             multiplier: 1,
             precision: 1,
             valueKey: 'A',
           },
-          {
+          signal: {
             formula: 'default',
             multiplier: 2,
             precision: 1,
             valueKey: 'B',
           }
-        ],
+        },
         readingCurrent = { A: 1, B: 2 },
         readingLast = {},
         physical = {};
@@ -438,20 +438,20 @@ describe('displayFormula function', () => {
         multiplier = null,
         precision = null,
         context = {},
-        valueKey = [
-          {
+        valueKey = {
+          run: {
             formula: 'default',
             multiplier: 1,
             precision: 1,
             valueKey: 'A',
           },
-          {
+          signal: {
             formula: 'default',
             multiplier: 2,
             precision: 1,
             valueKey: 'B',
           }
-        ],
+        },
         readingCurrent = { A: 1, B: 0 },
         readingLast = {},
         physical = {};
@@ -477,20 +477,20 @@ describe('displayFormula function', () => {
         multiplier = null,
         precision = null,
         context = {},
-        valueKey = [
-          {
+        valueKey = {
+          run: {
             formula: 'default',
             multiplier: 1,
             precision: 1,
             valueKey: 'A',
           },
-          {
+          signal: {
             formula: 'default',
             multiplier: 2,
             precision: 1,
             valueKey: 'B',
           }
-        ],
+        },
         readingCurrent = { A: 'a', B: 'b' },
         readingLast = {},
         physical = {};
@@ -519,20 +519,20 @@ describe('displayFormula function', () => {
         multiplier = null,
         precision = null,
         context = {},
-        valueKey = [
-          {
+        valueKey = {
+          run: {
             formula: 'default',
             multiplier: 1,
             precision: 1,
             valueKey: 'A',
           },
-          {
+          signal: {
             formula: 'default',
             multiplier: 2,
             precision: 1,
             valueKey: 'B',
           }
-        ],
+        },
         readingCurrent = { A: 1, B: 0 },
         readingLast = {},
         physical = {};
@@ -558,20 +558,20 @@ describe('displayFormula function', () => {
         multiplier = null,
         precision = null,
         context = {},
-        valueKey = [
-          {
+        valueKey = {
+          run: {
             formula: 'default',
             multiplier: 1,
             precision: 1,
             valueKey: 'A',
           },
-          {
+          signal: {
             formula: 'default',
             multiplier: 2,
             precision: 1,
             valueKey: 'B',
           }
-        ],
+        },
         readingCurrent = { A: 1, B: 2 },
         readingLast = {},
         physical = {};
@@ -599,20 +599,20 @@ describe('displayFormula function', () => {
         multiplier = null,
         precision = null,
         context = {},
-        valueKey = [
-          {
+        valueKey = {
+          run: {
             formula: 'default',
             multiplier: 1,
             precision: 1,
             valueKey: 'A',
           },
-          {
+          signal: {
             formula: 'default',
             multiplier: 2,
             precision: 1,
             valueKey: 'B',
           }
-        ],
+        },
         readingCurrent = { A: 0, B: 0 },
         readingLast = {},
         physical = {};
@@ -638,20 +638,20 @@ describe('displayFormula function', () => {
         multiplier = null,
         precision = null,
         context = {},
-        valueKey = [
-          {
+        valueKey = {
+          run: {
             formula: 'default',
             multiplier: 1,
             precision: 1,
             valueKey: 'A',
           },
-          {
+          signal: {
             formula: 'default',
             multiplier: 2,
             precision: 1,
             valueKey: 'B',
           }
-        ],
+        },
         readingCurrent = { A: 1, B: 2 },
         readingLast = {},
         physical = {};

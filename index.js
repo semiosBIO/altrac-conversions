@@ -1356,11 +1356,22 @@ var displayFormula = function displayFormula(
             signal.precision || 0
           );
 
-        if (typeof isRun === 'boolean' && typeof isSignal === 'boolean') {
+        const isValidBoolean = value => typeof value === 'boolean' || isNumber(value) || (typeof value === 'string' && /^true|false|t|f|on|off)$/i.test(value));
+
+        const toBoolean = value => {
+          if (typeof value === 'boolean') return value;
+          if (isNumber(value)) return !!value;
+          if (typeof value === 'string') return !!(/^true|t|on)$/i.test(value));
+        }
+
+        if (isValidBoolean(isRun) && isValidBoolean(isSignal)) {
+          const run = toBoolean(isRun);
+          const signal = toBoolean(isSignal);
+
           switch (formula) {
-            case 'pumpRunning':         returnValue = Boolean( isRun &&  isSignal); break;
-            case 'pumpShouldBeRunning': returnValue = Boolean( isRun && !isSignal); break;
-            case 'pumpStopped':         returnValue = Boolean(!isRun && !isSignal); break;
+            case 'pumpRunning':         returnValue =  run &&  signal; break;
+            case 'pumpShouldBeRunning': returnValue =  run && !signal; break;
+            case 'pumpStopped':         returnValue = !run && !signal; break;
           }
         } else {
           returnValue = 'ERR';
