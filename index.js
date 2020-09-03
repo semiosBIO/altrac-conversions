@@ -26,7 +26,7 @@ var isNumber = function isNumber(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 };
 
-var isBoolean = value => typeof value === 'boolean' || isNumber(value) || (typeof value === 'string' && /^true|false|t|f|on|off)$/i.test(value));
+var isBoolean = function(value) { return typeof value === 'boolean' || isNumber(value) || (typeof value === 'string' && /^true|false|t|f|on|off)$/i.test(value)); }
 
 
 var map = function (value, x1, y1, x2, y2) {
@@ -1272,8 +1272,9 @@ var displayFormula = function displayFormula(
   switch (formulaValue) {
     case 'difference':
       {
-        const [valueKey0, valueKey1] = valueKey;
-        let value0, value1;
+        var valueKey0 = valueKey[0];
+        var valueKey1 = valueKey[1];
+        var value0, value1;
 
         if (typeof valueKey0 === 'object') {
           value0 = valueCalculator(
@@ -1312,14 +1313,14 @@ var displayFormula = function displayFormula(
       break;
     case 'engineState':
       {
-        const ENGINE_STATE = '134';
-        const ENGINE_STATE_INTENTION = '131';
-        const ENGINE_STATE_TIMESTAMP = '132';
-        const rpm = reading0[ENGINE_STATE];
-        let intention = reading0[ENGINE_STATE_INTENTION] || 0;
-        const timestamp = reading0[ENGINE_STATE_TIMESTAMP];
-        const offRpm = device.physical.offRpm
-        const highRpm = device.physical.highRpm
+        var ENGINE_STATE = '134';
+        var ENGINE_STATE_INTENTION = '131';
+        var ENGINE_STATE_TIMESTAMP = '132';
+        var rpm = reading0[ENGINE_STATE];
+        var intention = reading0[ENGINE_STATE_INTENTION] || 0;
+        var timestamp = reading0[ENGINE_STATE_TIMESTAMP];
+        var offRpm = device.physical.offRpm
+        var highRpm = device.physical.highRpm
         returnValue = engineStateCalculator(
           rpm,
           intention,
@@ -1347,16 +1348,17 @@ var displayFormula = function displayFormula(
     case 'pumpShouldBeRunning':
     case 'pumpStopped':
       {
-        const { run, signal } = valueKey;
+        var run = valueKey.run;
+        var signal = valueKey.signal;
 
-        const isRun = valueCalculator(
+        var isRun = valueCalculator(
             run.formula,
             readingCurrent[run.valueKey] / (run.multiplier || 1),
             run.context || '',
             run.precision || 0
           );
 
-        const isSignal = valueCalculator(
+        var isSignal = valueCalculator(
             signal.formula,
             readingCurrent[signal.valueKey] / (signal.multiplier || 1),
             signal.context || '',
@@ -1364,8 +1366,8 @@ var displayFormula = function displayFormula(
           );
 
         if (isBoolean(isRun) && isBoolean(isSignal)) {
-          const run = toBoolean(isRun);
-          const signal = toBoolean(isSignal);
+          var run = toBoolean(isRun);
+          var signal = toBoolean(isSignal);
 
           switch (formula) {
             case 'pumpRunning':         returnValue =  run &&  signal; break;
@@ -1626,7 +1628,7 @@ var scheduleRing = function (value) {
  * @param {int} oStop - minutes from start of week
  * @returns {Event} - undefined if no overlap
  */
-const scheduleRingUnion = (nStart, nStop, oStart, oStop) => {
+var scheduleRingUnion = function(nStart, nStop, oStart, oStop) {
   var MINUTES_MAXIMUM = 7 * 24 * 60;
   var isInvalid = function (value) { return value < 0 || value > MINUTES_MAXIMUM; }
 
@@ -1679,8 +1681,8 @@ var insertTime = function (
 ) {
   if (!Array.isArray(scheduleEvents)) throw new Error('Invalid scheduleEvents array');
 
-  const isOutOfRange = (x, low, high) => (x < low || x > high);
-  const isInvalid = (x, high) => isOutOfRange(x, 0, high);
+  var isOutOfRange = function(x, low, high) { return (x < low || x > high); };
+  var isInvalid = function(x, high) { return isOutOfRange(x, 0, high); };
 
   if (isInvalid(dayStart, 6)) throw new Error(`Invalid dayStart: ${dayStart}`);
   if (isInvalid(dayStop, 6)) throw new Error(`Invalid dayStop: ${dayStop}`);
@@ -1710,7 +1712,7 @@ var insertTime = function (
   stop = scheduleRing(stop);
 
   // create array for the new schedule
-  const result = [];
+  var result = [];
 
   if (scheduleEvents.length < 1) {
     // no previous scheduleEvents, so nothing to de-dupe
@@ -1721,16 +1723,17 @@ var insertTime = function (
     var newStop = stop;
 
     // loop through old schedule and figure out where to put new value
-    scheduleEvents.map((schedEvent) => {
+    scheduleEvents.map(function(schedEvent) {
       var oldStart = scheduleStartDecode(schedEvent);
       var oldStop = scheduleStopDecode(schedEvent);
       var intervalCombined = false;
 
       // check if the intervals overlap
-      const ringUnion = scheduleRingUnion(newStart, newStop, oldStart, oldStop);
+      var ringUnion = scheduleRingUnion(newStart, newStop, oldStart, oldStop);
 
       if (ringUnion) {
-        const { start, stop } = ringUnion;
+        var start = ringUnion.start;
+        var stop = ringUnion.stop;
         newStart = start;
         newStop = stop;
         intervalCombined = true;
@@ -1751,7 +1754,7 @@ var insertTime = function (
   }
 
   // sort for consistency
-  result.sort((a, b) => (a - b));
+  result.sort(function(a, b) { return (a - b) });
   return result;
 };
 
@@ -1778,7 +1781,7 @@ var insertTimeDuration = function (
   var stop = start + duration;
 
   // 0 for UTC offset, due to this doubling up on offset.
-  const decoded = decodeTime(scheduleEncode(start, stop), 0);
+  var decoded = decodeTime(scheduleEncode(start, stop), 0);
 
   return insertTime(
     scheduleEvents,
@@ -1889,18 +1892,10 @@ var decodeScheduleUI = function (schedule, _offset) {
       var event = schedule[i];
       var answer = decodeTime(event, offset, i);
 
-      const {
-        duration: {
-          days: durationDays,
-        },
-        start: {
-          day: dayStart,
-          hr: hrStart,
-        },
-        stop: {
-          day: dayStop,
-        },
-      } = answer;
+      var durationDays = answer.duration && answer.duration.days;
+      var dayStart = answer.start && answer.start.day;
+      var hrStart = answer.start && answer.start.hr;
+      var dayStop = answer.stop && answer.stop.day;
 
       if (dayStart <= dayStop && durationDays !== 7) {
         answers.push(answer);
