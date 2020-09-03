@@ -26,6 +26,9 @@ var isNumber = function isNumber(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 };
 
+var isBoolean = value => typeof value === 'boolean' || isNumber(value) || (typeof value === 'string' && /^true|false|t|f|on|off)$/i.test(value));
+
+
 var map = function (value, x1, y1, x2, y2) {
   return ((value - x1) * (y2 - x2) / (y1 - x1) + x2);
 };
@@ -780,7 +783,11 @@ var mAToBoolean = function mAToBoolean(mA) {
  * @returns true when value is truthy.
  */
 var toBoolean = function toBoolean(value) {
-  return (Boolean(isFinite(value) && Number(value) || value));
+  if (!value) return false; // matches '', 0, false, undefined
+  if (typeof value === 'boolean') return value;
+  if (isNumber(value) && isFinite(value)) return !!value;
+  if (typeof value === 'string') return !!(/^true|t|on)$/i.test(value));
+  return !!value;
 };
 
 var gallonsToAcreFeet = function gallonsToAcreFeet(value, precision) {
@@ -1356,15 +1363,7 @@ var displayFormula = function displayFormula(
             signal.precision || 0
           );
 
-        const isValidBoolean = value => typeof value === 'boolean' || isNumber(value) || (typeof value === 'string' && /^true|false|t|f|on|off)$/i.test(value));
-
-        const toBoolean = value => {
-          if (typeof value === 'boolean') return value;
-          if (isNumber(value)) return !!value;
-          if (typeof value === 'string') return !!(/^true|t|on)$/i.test(value));
-        }
-
-        if (isValidBoolean(isRun) && isValidBoolean(isSignal)) {
+        if (isBoolean(isRun) && isBoolean(isSignal)) {
           const run = toBoolean(isRun);
           const signal = toBoolean(isSignal);
 
