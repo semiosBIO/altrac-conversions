@@ -26,7 +26,7 @@ var isNumber = function isNumber(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 };
 
-var isBoolean = function(value) { return typeof value === 'boolean' || isNumber(value) || (typeof value === 'string' && /^true|false|t|f|on|off)$/i.test(value)); }
+var isBoolean = function(value) { return typeof value === 'boolean' || isNumber(value) || (typeof value === 'string' && /^(true|false|t|f|on|off)$/i.test(value)); }
 
 
 var map = function (value, x1, y1, x2, y2) {
