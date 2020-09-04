@@ -786,7 +786,7 @@ var toBoolean = function toBoolean(value) {
   if (!value) return false; // matches '', 0, false, undefined
   if (typeof value === 'boolean') return value;
   if (isNumber(value) && isFinite(value)) return !!value;
-  if (typeof value === 'string') return !!(/^true|t|on)$/i.test(value));
+  if (typeof value === 'string') return !!(/^(true|t|on)$/i.test(value));
   return !!value;
 };
 
