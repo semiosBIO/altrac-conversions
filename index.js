@@ -1319,8 +1319,8 @@ var displayFormula = function displayFormula(
         var rpm = readingCurrent[ENGINE_STATE];
         var intention = readingCurrent[ENGINE_STATE_INTENTION] || 0;
         var timestamp = readingCurrent[ENGINE_STATE_TIMESTAMP];
-        var offRpm = device.physical.offRpm
-        var highRpm = device.physical.highRpm
+        var offRpm = physical.offRpm || 500;
+        var highRpm = physical.highRpm || 1200;
         returnValue = engineStateCalculator(
           rpm,
           intention,
