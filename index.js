@@ -1311,39 +1311,6 @@ var displayFormula = function displayFormula(
         }
       }
       break;
-    case 'engineState':
-      {
-        var ENGINE_STATE = '134';
-        var ENGINE_STATE_INTENTION = '131';
-        var ENGINE_STATE_TIMESTAMP = '132';
-        var rpm = readingCurrent[ENGINE_STATE];
-        var intention = readingCurrent[ENGINE_STATE_INTENTION] || 0;
-        var timestamp = readingCurrent[ENGINE_STATE_TIMESTAMP];
-        var offRpm = physical.offRpm || 500;
-        var highRpm = physical.highRpm || 1200;
-        returnValue = engineStateCalculator(
-          rpm,
-          intention,
-          timestamp,
-          offRpm,
-          highRpm
-        );
-      }
-      break;
-    case 'engineStateIntention':
-      returnValue = valueCalculator(
-        formula,
-        readingCurrent[valueKey] / multiplierValue,
-        context
-      );
-      break;
-    case 'engineStateTransition':
-      returnValue = valueCalculator(
-        formula,
-        readingCurrent[valueKey] / multiplierValue,
-        context
-      );
-      break;
     case 'pumpRunning':
     case 'pumpShouldBeRunning':
     case 'pumpStopped':
