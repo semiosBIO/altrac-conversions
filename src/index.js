@@ -1316,42 +1316,6 @@ const displayFormula = function displayFormula(
         }
       }
       break;
-    case 'pumpRunning':
-    case 'pumpShouldBeRunning':
-    case 'pumpStopped':
-      {
-        const { run } = valueKey;
-        const { signal } = valueKey;
-
-        const isRun = valueCalculator(
-          run.formula,
-          readingCurrent[run.valueKey] / (run.multiplier || 1),
-          run.context || '',
-          run.precision || 0,
-        );
-
-        const isSignal = valueCalculator(
-          signal.formula,
-          readingCurrent[signal.valueKey] / (signal.multiplier || 1),
-          signal.context || '',
-          signal.precision || 0,
-        );
-
-        if (isBoolean(isRun) && isBoolean(isSignal)) {
-          const runB = toBoolean(isRun);
-          const signalB = toBoolean(isSignal);
-
-          switch (formula) {
-            case 'pumpRunning': returnValue = runB && signalB; break;
-            case 'pumpShouldBeRunning': returnValue = runB && !signalB; break;
-            case 'pumpStopped': returnValue = !runB && !signalB; break;
-            default: returnValue = false;
-          }
-        } else {
-          returnValue = 'ERR';
-        }
-      }
-      break;
     case 'toBoolean':
       returnValue = toBoolean(
         readingCurrent[valueKey] / multiplierValue,
