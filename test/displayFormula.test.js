@@ -1,6 +1,3 @@
-const path = require('path');
-const CWD = p => path.resolve(process.cwd(), p);
-
 const sinon = require('sinon');
 const assert = require('assert');
 const should = require('should');
@@ -8,7 +5,7 @@ const moment = require('moment');
 
 const noop = ()=>{};
 
-const conversions = require(CWD('../altrac-conversions'));
+const conversions = require('../lib/index.js');
 
 describe('displayFormula function', () => {
   describe('valueKey', () => {
