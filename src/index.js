@@ -1,7 +1,9 @@
+/* eslint-disable no-bitwise */
+/* eslint-disable no-restricted-globals */
 // index.js
-/* eslint-disable */
-var round = function round(n, d) {
-  var decimalPlaces;
+
+const round = function round(n, d) {
+  let decimalPlaces;
 
   switch (d) {
     case 0:
@@ -22,18 +24,16 @@ var round = function round(n, d) {
   return Math.round(n * decimalPlaces) / decimalPlaces;
 };
 
-var isNumber = function isNumber(n) {
+const isNumber = function isNumber(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 };
 
-var isBoolean = function(value) { return typeof value === 'boolean' || isNumber(value) || (typeof value === 'string' && /^(true|false|t|f|on|off)$/i.test(value)); }
+const isBoolean = (value) => (typeof value === 'boolean' || isNumber(value) || (typeof value === 'string' && /^(true|false|t|f|on|off)$/i.test(value)));
 
 
-var map = function (value, x1, y1, x2, y2) {
-  return ((value - x1) * (y2 - x2) / (y1 - x1) + x2);
-};
+const map = (value, x1, y1, x2, y2) => (((value - x1) * (y2 - x2)) / (y1 - x1) + x2);
 
-var voltToVWC = function voltToVWC(v) {
+const voltToVWC = function voltToVWC(v) {
   /*
     0 to 1.1V VWC= 10*V-1
     1.1V to 1.3V  VWC= 25*V- 17.5
@@ -42,49 +42,48 @@ var voltToVWC = function voltToVWC(v) {
   */
   if (v < 0.1) {
     return 0;
-  } else if (v >= 0.1 && v < 1.1) {
+  } if (v >= 0.1 && v < 1.1) {
     return ((10 * v) - 1);
-  } else if (v >= 1.1 && v < 1.3) {
+  } if (v >= 1.1 && v < 1.3) {
     return ((25 * v) - 17.5);
-  } else if (v >= 1.3 && v < 1.82) {
+  } if (v >= 1.3 && v < 1.82) {
     return ((48.04 * v) - 47.5);
-  } else if (v >= 1.82 && v <= 3) { // went to 3, since this is suppsoedly the max
+  } if (v >= 1.82 && v <= 3) { // went to 3, since this is supposedly the max
     return ((26.32 * v) - 7.89);
-  } else {
-    return 'ERR';
   }
+  return 'ERR';
 };
-var percentToVWC = function percentToVWC(p) {
-  var v = (p) * 5;
+const percentToVWC = function percentToVWC(p) {
+  const v = (p) * 5;
   return voltToVWC(v);
 };
-var analogToVWC = function analogToVWC(a) {
-  var v = (a / 1023) * 5;
+const analogToVWC = function analogToVWC(a) {
+  const v = (a / 1023) * 5;
   return voltToVWC(v);
 };
 
-var percentToDigital = function percentToDigital(a) {
+const percentToDigital = function percentToDigital(a) {
   if (a > 0.5) {
     return 1;
   }
   return 0;
 };
-var analogToDigital = function analogToDigital(a) {
+const analogToDigital = function analogToDigital(a) {
   if (a > 511) {
     return 1;
   }
   return 0;
 };
 
-var percentToDigitalInverse = function percentToDigitalInverse(a) {
+const percentToDigitalInverse = function percentToDigitalInverse(a) {
   return (percentToDigital(a) === 1 ? 0 : 1);
 };
-var analogToDigitalInverse = function analogToDigitalInverse(a) {
+const analogToDigitalInverse = function analogToDigitalInverse(a) {
   return (analogToDigital(a) === 1 ? 0 : 1);
 };
 
-var voltToCentibar = function voltToCentibar(v) {
-  var centibar = 'ERR';
+const voltToCentibar = function voltToCentibar(v) {
+  let centibar = 'ERR';
   if (v < 0) {
     centibar = 'VLO';
   } else if (v >= 0 && v <= 3.1) {
@@ -94,81 +93,81 @@ var voltToCentibar = function voltToCentibar(v) {
   }
   return round(centibar, 0);
 };
-var percentToCentibar = function percentToCentibar(p) {
-  var v = (p) * 5;
+const percentToCentibar = function percentToCentibar(p) {
+  const v = (p) * 5;
   return voltToCentibar(v);
 };
-var analogToCentibar = function analogToCentibar(a) {
-  var v = (a / 1023) * 5;
+const analogToCentibar = function analogToCentibar(a) {
+  const v = (a / 1023) * 5;
   return voltToCentibar(v);
 };
 
-var metersPerSecondToMilesPerHour = function metersPerSecondToMilesPerHour(ms, precision) {
-  var precisionValue = 0;
+const metersPerSecondToMilesPerHour = function metersPerSecondToMilesPerHour(ms, precision) {
+  let precisionValue = 0;
   if (precision && !isNaN(precision)) {
     precisionValue = Number(precision);
   }
   return round(ms * 2.23694, precisionValue);
 };
 
-var millimetersToInches = function millimetersToInches(mm, precision) {
-  var precisionValue = 0;
+const millimetersToInches = function millimetersToInches(mm, precision) {
+  let precisionValue = 0;
   if (precision && !isNaN(precision)) {
     precisionValue = Number(precision);
   }
   return round(mm * 0.0393701, precisionValue);
 };
 
-var kilometersToMiles = function kilometersToMiles(km, precision) {
-  var precisionValue = 0;
+const kilometersToMiles = function kilometersToMiles(km, precision) {
+  let precisionValue = 0;
   if (precision && !isNaN(precision)) {
     precisionValue = Number(precision);
   }
   return round(km * 0.621371, precisionValue);
 };
 
-var kPaToInchesMercury = function kPaToInchesMercury(kpa, precision) {
-  var precisionValue = 0;
+const kPaToInchesMercury = function kPaToInchesMercury(kpa, precision) {
+  let precisionValue = 0;
   if (precision && !isNaN(precision)) {
     precisionValue = Number(precision);
   }
   return round(kpa * 0.2953, precisionValue);
 };
 
-var numberMap = function numberMap(value, inMin, inMax, outMin, outMax) {
+const numberMap = function numberMap(value, inMin, inMax, outMin, outMax) {
   return (((value - inMin) * (outMax - outMin)) / (inMax - inMin)) + outMin;
 };
 
-var valveStatus = function valveStatus(status) {
+const valveStatus = function valveStatus(status) {
   if (status === 0xFFFF) {
     return 0;
   }
   return status & 1 ? 1 : 0;
 };
-var valveStatusString = function valveStatusString(status) {
+const valveStatusString = function valveStatusString(status) {
   if (status === 0xFFFF) {
     return 'ERR';
   }
   return valveStatus(status) ? 'ON' : 'OFF';
 };
 
-var cToF = function cToF(c) {
+const cToF = function cToF(c) {
   return (c * 1.8) + 32;
 };
 
-var fToC = function fToC(f) {
+const fToC = function fToC(f) {
   return (f - 32) / 1.8;
 };
 
-var cellSignalToRssi = function cellSignalToRssi(signal) {
+const cellSignalToRssi = function cellSignalToRssi(signal) {
   return signal >>> 8;
 };
-var cellSignalToQuality = function cellSignalToQuality(signal) {
-  return signal & 0xFF >>> 0;
+const cellSignalToQuality = function cellSignalToQuality(signal) {
+  return (signal & 0xFF) >>> 0;
 };
 
-var fromC = function fromC(c, tempConv, precision) {
-  var returnValue = null;
+const fromC = function fromC(c, tempConv, precision) {
+  let returnValue = null;
   if (c <= 120 && c >= -50) {
     if (tempConv === 'f') {
       returnValue = round(cToF(c), precision);
@@ -178,12 +177,12 @@ var fromC = function fromC(c, tempConv, precision) {
   }
   return returnValue;
 };
-var fromCMultiplier = function fromCMultiplier(c, tempConv, precision) {
+const fromCMultiplier = function fromCMultiplier(c, tempConv, precision) {
   return fromC(c / 100, tempConv, precision);
 };
 
-var toC = function toC(v, tempConv, precision) {
-  var returnValue = -99;
+const toC = function toC(v, tempConv, precision) {
+  let returnValue = -99;
   if (tempConv === 'f') {
     returnValue = fToC(v);
   } else if (tempConv === 'c') {
@@ -192,28 +191,28 @@ var toC = function toC(v, tempConv, precision) {
   return round(returnValue, precision);
 };
 
-var valveTimeToValveNumber = function valveTimeToValveNumber(valveTime) {
-  return (Number(valveTime) >> 28 & 0x7 >>> 0);
+const valveTimeToValveNumber = function valveTimeToValveNumber(valveTime) {
+  return (((Number(valveTime) >> 28) & 0x7) >>> 0);
 };
-var valveTimeToEpoch = function valveTimeToEpoch(valveTime) {
+const valveTimeToEpoch = function valveTimeToEpoch(valveTime) {
   return (Number(valveTime) & 0xFFFFFFF) * 60;
 };
-var valveTimeToEpochMillis = function valveTimeToEpochMillis(valveTime) {
+const valveTimeToEpochMillis = function valveTimeToEpochMillis(valveTime) {
   return (Number(valveTime) & 0xFFFFFFF) * 60 * 1000;
 };
 
-var valveTimeToDate = function valveTimeToDate(valveTime) {
+const valveTimeToDate = function valveTimeToDate(valveTime) {
   return (new Date(valveTimeToEpochMillis(valveTime)));
 };
 
-var lastValveTime = function lastValveTime(valveTimeArr, valveNumber) {
-  var valveNumberC = 1;
+const lastValveTime = function lastValveTime(valveTimeArr, valveNumber) {
+  let valveNumberC = 1;
   if (valveNumber && valveNumber >= 0 && valveNumber <= 8) {
     valveNumberC = valveNumber;
   }
-  var returnValue = [0, 0];
+  const returnValue = [0, 0];
   if (valveTimeArr) {
-    for (var i = 0; i < valveTimeArr.length; i += 2) {
+    for (let i = 0; i < valveTimeArr.length; i += 2) {
       if (
         valveTimeToValveNumber(valveTimeArr[i]) === valveNumberC
         && valveTimeToValveNumber(valveTimeArr[i + 1]) === valveNumberC
@@ -238,160 +237,161 @@ var lastValveTime = function lastValveTime(valveTimeArr, valveNumber) {
   return returnValue;
 };
 
-var nextValveTime = function nextValveTime(valveTimeArr, valveNumber) {
-  var valveNumberC = 1;
+const nextValveTime = function nextValveTime(valveTimeArr, valveNumber) {
+  let valveNumberC = 1;
   if (valveNumber && valveNumber >= 0 && valveNumber <= 8) {
     valveNumberC = valveNumber;
   }
-  var returnValue = [0, 0];
+  const returnValue = [0, 0];
   if (valveTimeArr) {
-    for (var i = 0; i < valveTimeArr.length; i += 2) {
+    for (let i = 0; i < valveTimeArr.length; i += 2) {
       if (
         valveTimeToEpochMillis(valveTimeArr[i]) < (new Date().getTime())
         && valveTimeToEpochMillis(valveTimeArr[i + 1]) < (new Date().getTime())
       ) {
         // nothing to do here
-      } else {
-        if (
-          valveTimeToValveNumber(valveTimeArr[i]) === valveNumberC
+      } else if (
+        valveTimeToValveNumber(valveTimeArr[i]) === valveNumberC
           && valveTimeToValveNumber(valveTimeArr[i + 1]) === valveNumberC
           && (valveTimeArr[i] < returnValue[0] || returnValue[0] === 0)
-        ) {
-          returnValue[0] = valveTimeArr[i];
-          returnValue[1] = valveTimeArr[i + 1];
-        } else {
-          // do nothing
-        }
+      ) {
+        returnValue[0] = valveTimeArr[i];
+        returnValue[1] = valveTimeArr[i + 1];
+      } else {
+        // do nothing
       }
     }
   }
   return returnValue;
 };
 
-var nextValveTimeToEpochMillis = function nextValveTimeToEpochMillis(valveTimeArr, valveNumber) {
-  var nextTimes = nextValveTime(valveTimeArr, valveNumber);
-  var returnValue = [0, 0];
+const nextValveTimeToEpochMillis = function nextValveTimeToEpochMillis(valveTimeArr, valveNumber) {
+  const nextTimes = nextValveTime(valveTimeArr, valveNumber);
+  const returnValue = [0, 0];
   returnValue[0] = valveTimeToEpochMillis(nextTimes[0]);
   returnValue[1] = valveTimeToEpochMillis(nextTimes[1]);
   return returnValue;
 };
 
-var lastValveTimeToEpochMillis = function lastValveTimeToEpochMillis(valveTimeArr, valveNumber) {
-  var nextTimes = lastValveTime(valveTimeArr, valveNumber);
-  var returnValue = [0, 0];
+const lastValveTimeToEpochMillis = function lastValveTimeToEpochMillis(valveTimeArr, valveNumber) {
+  const nextTimes = lastValveTime(valveTimeArr, valveNumber);
+  const returnValue = [0, 0];
   returnValue[0] = valveTimeToEpochMillis(nextTimes[0]);
   returnValue[1] = valveTimeToEpochMillis(nextTimes[1]);
   return returnValue;
 };
 
-var toValveTime = function toValveTime(state, valve, epoch) {
-  var statePrep = (state << 31) >>> 0;
-  var valvePrep = (valve << 28) >>> 0;
-  var epochPrep = epoch / 60;
-  var returnVal = (statePrep | valvePrep | epochPrep) >>> 0;
+const toValveTime = function toValveTime(state, valve, epoch) {
+  const statePrep = (state << 31) >>> 0;
+  const valvePrep = (valve << 28) >>> 0;
+  const epochPrep = epoch / 60;
+  const returnVal = (statePrep | valvePrep | epochPrep) >>> 0;
   return returnVal;
 };
 
-var secondsToHHMMSS = function secondsToHHMMSS(totalSeconds) {
-  var hours = Math.floor(totalSeconds / 3600);
-  var minutes = Math.floor((totalSeconds - (hours * 3600)) / 60);
-  var seconds = totalSeconds - (hours * 3600) - (minutes * 60);
-  var result = '';
+const secondsToHHMMSS = function secondsToHHMMSS(totalSeconds) {
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds - (hours * 3600)) / 60);
+  let seconds = totalSeconds - (hours * 3600) - (minutes * 60);
+  let result = '';
 
   // round seconds
   seconds = Math.round(seconds * 100) / 100;
 
-  result += hours > 0 ? hours + ' hours, ' : '';
-  result += minutes > 0 ? minutes + ' minutes, ' : '';
-  result += seconds > 0 ? seconds + ' seconds' : '';
+  result += hours > 0 ? `${hours} hours, ` : '';
+  result += minutes > 0 ? `${minutes} minutes, ` : '';
+  result += seconds > 0 ? `${seconds} seconds` : '';
 
   return result;
 };
 
-var percentTo20V = function percentTo20V(
+const percentTo20V = function percentTo20V(
   p,
   precision,
   resistor1,
   resistor2,
-  voltageReference
+  voltageReference,
 ) {
-  resistor1 = typeof resistor1 !== 'undefined' ? resistor1 : 1800;
-  resistor2 = typeof resistor2 !== 'undefined' ? resistor2 : 10000;
-  voltageReference = typeof voltageReference !== 'undefined' ? voltageReference : 3.3;
-  return round(p * (1 / (resistor1 / (resistor1 + resistor2))) * voltageReference, precision || 2);
+  const resistor1Temp = typeof resistor1 !== 'undefined' ? resistor1 : 1800;
+  const resistor2Temp = typeof resistor2 !== 'undefined' ? resistor2 : 10000;
+  const voltageReferenceTemp = typeof voltageReference !== 'undefined' ? voltageReference : 3.3;
+  return round(
+    p * (1 / (resistor1Temp / (resistor1Temp + resistor2Temp))) * voltageReferenceTemp,
+    precision || 2,
+  );
 };
 
-var fourToTwenty = function fourToTwenty(p, min, max, zero, precision) {
-  var minNumber = 0;
-  var maxNumber = 100;
-  var precisionNumber = 0;
+const fourToTwenty = function fourToTwenty(p, min, max, zero, precision) {
+  let minNumber = 0;
+  let maxNumber = 100;
+  let precisionNumber = 0;
   if (!isNaN(min)) {
     minNumber = Number(min);
   }
   if (!isNaN(max)) {
     maxNumber = Number(max);
   }
-  var zeroNumber = minNumber;
+  let zeroNumber = minNumber;
   if (!isNaN(zero)) {
     zeroNumber = Number(zero);
   }
   if (!isNaN(precision)) {
     precisionNumber = Number(precision);
   }
-  var returnValue = (((((p * 3.34) / 100) * 1000) - 4) * (maxNumber - minNumber)) / (20 - 4);
-  var mA = (((p * 3.34) / 100) * 1000);
+  const returnValue = (((((p * 3.34) / 100) * 1000) - 4) * (maxNumber - minNumber)) / (20 - 4);
+  const mA = (((p * 3.34) / 100) * 1000);
   if (mA > 3.5 && returnValue < zeroNumber) {
     return 0;
-  } else if (returnValue < zeroNumber) {
+  } if (returnValue < zeroNumber) {
     return 'OFF';
-  } else if (returnValue > maxNumber) {
+  } if (returnValue > maxNumber) {
     return 'ERH';
   }
   return round(returnValue, precisionNumber);
 };
 
-var fuelLevel = function fuelLevel(percent, size, maxSize) {
+const fuelLevel = function fuelLevel(percent, size, maxSize) {
   return percent * (1 / (size / maxSize));
 };
 
-var ftToM = function ftToM(ft) {
+const ftToM = function ftToM(ft) {
   return ft * 0.3048;
 };
 
-var mToFt = function mToFt(m) {
+const mToFt = function mToFt(m) {
   return m * 3.28084;
 };
 
-var millisecondsPastExpectedConnection = function millisecondsPastExpectedConnection(lastConnection, sleepTime) {
-  var currentTime = (new Date()).getTime();
-  var sleepInterval = (sleepTime * 1000);
+const millisecondsPastExpectedConnection = (lastConnection, sleepTime) => {
+  const currentTime = (new Date()).getTime();
+  let sleepInterval = (sleepTime * 1000);
 
   if (!sleepTime || sleepTime === 0) {
     sleepInterval = (60 * 10 * 1000) + 20000; // checks in every ten minutes, max
   }
 
-  var nextSeen = new Date(
-    (new Date(lastConnection).getTime() + sleepInterval)
+  const nextSeen = new Date(
+    (new Date(lastConnection).getTime() + sleepInterval),
   ).getTime();
 
   if (nextSeen < currentTime) {
     return (currentTime - nextSeen);
   }
   return 0;
-}
-
-var spaceCamel = function spaceCamel(s) {
-  return s.replace(/([A-Z])/g, ' $1').replace(/^./, function (str) { return str.toUpperCase(); });
 };
 
-var dewPoint = function dewPoint(t, rh) {
-  var h = (Math.log10(rh) - 2) / 0.4343 + (17.62 * t) / (243.12 + t);
-  var dp = 243.12 * h / (17.62 - h); // this is the dew point in Celsius
+const spaceCamel = function spaceCamel(s) {
+  return s.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
+};
+
+const dewPoint = function dewPoint(t, rh) {
+  const h = (Math.log10(rh) - 2) / 0.4343 + (17.62 * t) / (243.12 + t);
+  const dp = (243.12 * h) / (17.62 - h); // this is the dew point in Celsius
   return dp;
 };
 
-var pumpState = function pumpState(state) {
-  var deviceStatus = '';
+const pumpState = function pumpState(state) {
+  let deviceStatus = '';
   switch (state & 0xF) {
     case 1:
       deviceStatus = 'FWD';
@@ -411,41 +411,42 @@ var pumpState = function pumpState(state) {
   return deviceStatus;
 };
 
-var flowMeterState = function flowMeterState(value) {
+const flowMeterState = function flowMeterState(value) {
   if (value > 0) {
     return 'RUN';
   }
   return 'STP';
 };
 
-var pumpOutput = function pumpOutput(readingCurrent, readingLast, currentTime, lastTime, multiplierValue) {
-  var diff = (readingCurrent - readingLast) / multiplierValue;
+const pumpOutput = (readingCurrent, readingLast, currentTime, lastTime, multiplierValue) => {
+  let diff = (readingCurrent - readingLast) / multiplierValue;
   if (readingCurrent - readingLast < 0 && readingCurrent - readingLast >= -60000) {
     return 0;
-  } else if (readingCurrent - readingLast < -60000) {
+  }
+  if (readingCurrent - readingLast < -60000) {
     diff = (readingCurrent - readingLast + 65535) / multiplierValue;
   }
   if (currentTime === lastTime) {
     return 0;
   }
-  var current = new Date(isNumber(currentTime) ? currentTime * 1000 : currentTime).getTime();
-  var previous = new Date(isNumber(lastTime) ? lastTime * 1000 : lastTime).getTime();
-  var diffMinutes = (current - previous) / 1000 / 60;
-  var output = Math.round(diff / diffMinutes);
+  const current = new Date(isNumber(currentTime) ? currentTime * 1000 : currentTime).getTime();
+  const previous = new Date(isNumber(lastTime) ? lastTime * 1000 : lastTime).getTime();
+  const diffMinutes = (current - previous) / 1000 / 60;
+  const output = Math.round(diff / diffMinutes);
   return isNaN(output) ? 0 : output;
 };
 
-var rpmToState = function rpmToState(rpm, off, high) {
-  var returnValue = 'OFF';
-  var offTest = 150;
+const rpmToState = function rpmToState(rpm, off, high) {
+  let returnValue = 'OFF';
+  let offTest = 150;
   if (off) {
     offTest = off;
   }
-  var highTest = 350;
+  let highTest = 350;
   if (high) {
     highTest = high;
   }
-  var rpmTest = 0;
+  let rpmTest = 0;
   if (rpm) {
     rpmTest = rpm;
   }
@@ -457,107 +458,104 @@ var rpmToState = function rpmToState(rpm, off, high) {
     returnValue = 'HIGH';
   }
   return returnValue;
-}
+};
 
-var engineStateCalculator = function engineStateCalculator(
+const engineStateCalculator = function engineStateCalculator(
   rpm,
   intention,
   timestamp,
   offRpm,
-  highRpm
+  highRpm,
 ) {
-  if (!rpm) rpm = 0;
-  if (!intention) intention = 0;
-  if (!timestamp) timestamp = ((new Date()).getTime() / 1000);
-  if (!offRpm) offRpm = 750;
-  if (!highRpm) highRpm = 1600;
-  var returnValue = 0;
-  var timeDiff = ((new Date()).getTime() / 1000) - timestamp;
-  if (intention) {
-    if (rpm < offRpm) {
+  const rpmTemp = !rpm ? 0 : rpm;
+  const intentionTemp = !intention ? 0 : intention;
+  const timestampTemp = !timestamp ? ((new Date()).getTime() / 1000) : timestamp;
+  const offRpmTemp = !offRpm ? 750 : offRpm;
+  const highRpmTemp = !highRpm ? 1600 : highRpm;
+  let returnValue = 0;
+  const timeDiff = ((new Date()).getTime() / 1000) - timestampTemp;
+  if (intentionTemp) {
+    if (rpmTemp < offRpmTemp) {
       if (timeDiff >= 120) {
         returnValue = 8; // STATE_FALSE_START
       } else {
         returnValue = 6; // STATE_CRANK_ON
       }
-    } else if (rpm >= offRpm && rpm <= highRpm) {
+    } else if (rpmTemp >= offRpmTemp && rpmTemp <= highRpmTemp) {
       returnValue = 9; // STATE_WARMUP_DELAY
     } else {
       returnValue = 12; // STATE_RUNNING_LOADED
     }
+  } else if (rpmTemp < offRpmTemp) {
+    returnValue = 1; // STATE_ENGINE_STOPPED
+  } else if (rpmTemp >= offRpmTemp && rpmTemp <= highRpmTemp) {
+    returnValue = 9; // STATE_WARMUP_DELAY
   } else {
-    if (rpm < offRpm) {
-      returnValue = 1; // STATE_ENGINE_STOPPED
-    } else if (rpm >= offRpm && rpm <= highRpm) {
-      returnValue = 9; // STATE_WARMUP_DELAY
-    } else {
-      returnValue = 13; // STATE_COOLDOWN_DELAY
-    }
+    returnValue = 13; // STATE_COOLDOWN_DELAY
   }
   return returnValue;
-}
+};
 
-var rpmOrchardRiteAutometer9117 = function rpmOrchardRiteAutometer9117(rpm) {
-  var returnValue = Math.round((rpm / -170.1244909 + 8.572735138) * rpm);
+const rpmOrchardRiteAutometer9117 = function rpmOrchardRiteAutometer9117(rpm) {
+  const returnValue = Math.round((rpm / -170.1244909 + 8.572735138) * rpm);
   if (returnValue < 0) { return 0; }
   if (returnValue > 3000) { return 3000; }
   return returnValue;
-}
+};
 
-var lineFit = function lineFit(val, m, b, precision, max, min) {
-  var maxValue = max ? max : 4294967295;
-  var minValue = min ? min : 0;
-  var returnValue = (val * m + b);
-  returnValue = round(returnValue, precision ? precision : 0);
+const lineFit = function lineFit(val, m, b, precision, max, min) {
+  const maxValue = max || 4294967295;
+  const minValue = min || 0;
+  let returnValue = (val * m + b);
+  returnValue = round(returnValue, precision || 0);
   if (returnValue < minValue) { return minValue; }
   if (returnValue > maxValue) { return maxValue; }
-}
+  return returnValue;
+};
 
-var binLevel = function binLevel(
+const binLevel = function binLevel(
   binLevelCurrent,
   binLevelLast,
   debounce,
   powered,
-  numberOfBins
+  numberOfBins,
 ) {
-  var fullness = 0;
+  let fullness = 0;
   if (!debounce) {
     fullness = binLevelCurrent;
+  } else if (binLevelCurrent === binLevelLast) {
+    fullness = binLevelCurrent;
+  } else if (binLevelCurrent < binLevelLast) {
+    fullness = binLevelCurrent;
   } else {
-    if (binLevelCurrent === binLevelLast) {
-      fullness = binLevelCurrent;
-    } else if (binLevelCurrent < binLevelLast) {
-      fullness = binLevelCurrent;
-    } else {
-      fullness = binLevelLast;
-    }
+    fullness = binLevelLast;
   }
 
-  var iterations = 4;
-  var totalBins = 4;
+  let iterations = 4;
+  let totalBins = 4;
   if (numberOfBins && numberOfBins > 0 && numberOfBins < 5) {
     iterations = numberOfBins;
     totalBins = numberOfBins;
   }
-  var i = 1;
+  let i = 1;
   if (powered) {
     i = 2;
     iterations += 1;
   }
 
-  var numberFull = 0;
+  let numberFull = 0;
   for (i; i <= iterations; i += 1) {
-    if ((fullness & Math.pow(2, (i - 1))) === Math.pow(2, (i - 1))) {
+    if ((fullness & 2 ** (i - 1)) === 2 ** (i - 1)) {
       numberFull += 1;
     } else {
       numberFull += 0;
     }
   }
-  return numberFull + '/' + totalBins;
+  return `${numberFull}/${totalBins}`;
 };
 
-var windMachineChangeStatus = function windMachineChangeStatus(cs) {
-  var returnValue = '';
+const windMachineChangeStatus = function windMachineChangeStatus(cs) {
+  let returnValue = '';
   switch (cs) {
     case 0:
       returnValue = 'No Change';
@@ -578,10 +576,10 @@ var windMachineChangeStatus = function windMachineChangeStatus(cs) {
       returnValue = cs;
   }
   return returnValue;
-}
+};
 
-var windMachineCommunicationStatus = function windMachineCommunicationStatus(cs) {
-  var returnValue = '';
+const windMachineCommunicationStatus = function windMachineCommunicationStatus(cs) {
+  let returnValue = '';
   switch (cs) {
     case -2:
       returnValue = 'Comm Error';
@@ -599,10 +597,10 @@ var windMachineCommunicationStatus = function windMachineCommunicationStatus(cs)
       returnValue = cs;
   }
   return returnValue;
-}
+};
 
-var windMachineEngineState = function windMachineEngineState(cs) {
-  var returnValue = '';
+const windMachineEngineState = function windMachineEngineState(cs) {
+  let returnValue = '';
   switch (cs) {
     case 0:
       returnValue = 'ECU Delay';
@@ -659,90 +657,90 @@ var windMachineEngineState = function windMachineEngineState(cs) {
       returnValue = cs;
   }
   return returnValue;
-}
+};
 
-var windMachineMPC20ShutdownStatus = function windMachineMPC20ShutdownStatus(sd) {
-  var returnArray = [];
-  if (sd & Math.pow(2, 0)) { returnArray.push('Overspeed SD'); }
-  if (sd & Math.pow(2, 1)) { returnArray.push('Underspeed SD'); }
-  if (sd & Math.pow(2, 2)) { returnArray.push('Overcrank SD'); }
-  if (sd & Math.pow(2, 3)) { returnArray.push('Low Oil Pressure SD'); }
-  if (sd & Math.pow(2, 4)) { returnArray.push('High Engine Temp SD'); }
-  if (sd & Math.pow(2, 5)) { returnArray.push('Low Fuel SD'); }
-  if (sd & Math.pow(2, 6)) { returnArray.push('Low Discharge Pressure SD'); }
-  if (sd & Math.pow(2, 7)) { returnArray.push('High Discharge Pressure SD'); }
-  if (sd & Math.pow(2, 8)) { returnArray.push('Speed Signal Lost SD'); }
-  if (sd & Math.pow(2, 9)) { returnArray.push('Low Lube Level SD'); }
-  if (sd & Math.pow(2, 10)) { returnArray.push('Fuel Leak SD'); }
-  if (sd & Math.pow(2, 11)) { returnArray.push('Fuel Filter Restriction SD'); }
-  if (sd & Math.pow(2, 12)) { returnArray.push('Air Damper Closed SD no'); }
-  if (sd & Math.pow(2, 13)) { returnArray.push('Air Filter Restriction SD'); }
-  if (sd & Math.pow(2, 14)) { returnArray.push('Oil Filter Restriction SD'); }
-  if (sd & Math.pow(2, 15)) { returnArray.push('Remote Stop SD'); }
-  if (sd & Math.pow(2, 16)) { returnArray.push('Coolant Level SD'); }
-  if (sd & Math.pow(2, 17)) { returnArray.push('High Level SD'); }
-  if (sd & Math.pow(2, 18)) { returnArray.push('Low Level SD'); }
-  if (sd & Math.pow(2, 19)) { returnArray.push('High Flow SD'); }
-  if (sd & Math.pow(2, 20)) { returnArray.push('Low Flow SD'); }
-  if (sd & Math.pow(2, 21)) { returnArray.push('High Pump Oil Temp SD'); }
-  if (sd & Math.pow(2, 22)) { returnArray.push('High Pump Housing Temp SD'); }
-  if (sd & Math.pow(2, 23)) { returnArray.push('Water in Fuel SD'); }
-  if (sd & Math.pow(2, 24)) { returnArray.push('Low Suction SD'); }
-  if (sd & Math.pow(2, 25)) { returnArray.push('High Suction SD'); }
-  if (sd & Math.pow(2, 26)) { returnArray.push('High Engine Oil Pressure SD'); }
-  if (sd & Math.pow(2, 27)) { returnArray.push('High Engine Oil Temp SD'); }
-  if (sd & Math.pow(2, 28)) { returnArray.push('Low Gear Box Pressure SD'); }
-  if (sd & Math.pow(2, 29)) { returnArray.push('High Gear Box Pressure SD'); }
-  if (sd & Math.pow(2, 30)) { returnArray.push('Battery Charger Fail SD'); }
-  if (sd & Math.pow(2, 31)) { returnArray.push('Red Lamp Status'); }
+const windMachineMPC20ShutdownStatus = function windMachineMPC20ShutdownStatus(sd) {
+  const returnArray = [];
+  if (sd & (2 ** 0)) { returnArray.push('Overspeed SD'); }
+  if (sd & (2 ** 1)) { returnArray.push('Underspeed SD'); }
+  if (sd & (2 ** 2)) { returnArray.push('Overcrank SD'); }
+  if (sd & (2 ** 3)) { returnArray.push('Low Oil Pressure SD'); }
+  if (sd & (2 ** 4)) { returnArray.push('High Engine Temp SD'); }
+  if (sd & (2 ** 5)) { returnArray.push('Low Fuel SD'); }
+  if (sd & (2 ** 6)) { returnArray.push('Low Discharge Pressure SD'); }
+  if (sd & (2 ** 7)) { returnArray.push('High Discharge Pressure SD'); }
+  if (sd & (2 ** 8)) { returnArray.push('Speed Signal Lost SD'); }
+  if (sd & (2 ** 9)) { returnArray.push('Low Lube Level SD'); }
+  if (sd & (2 ** 10)) { returnArray.push('Fuel Leak SD'); }
+  if (sd & (2 ** 11)) { returnArray.push('Fuel Filter Restriction SD'); }
+  if (sd & (2 ** 12)) { returnArray.push('Air Damper Closed SD no'); }
+  if (sd & (2 ** 13)) { returnArray.push('Air Filter Restriction SD'); }
+  if (sd & (2 ** 14)) { returnArray.push('Oil Filter Restriction SD'); }
+  if (sd & (2 ** 15)) { returnArray.push('Remote Stop SD'); }
+  if (sd & (2 ** 16)) { returnArray.push('Coolant Level SD'); }
+  if (sd & (2 ** 17)) { returnArray.push('High Level SD'); }
+  if (sd & (2 ** 18)) { returnArray.push('Low Level SD'); }
+  if (sd & (2 ** 19)) { returnArray.push('High Flow SD'); }
+  if (sd & (2 ** 20)) { returnArray.push('Low Flow SD'); }
+  if (sd & (2 ** 21)) { returnArray.push('High Pump Oil Temp SD'); }
+  if (sd & (2 ** 22)) { returnArray.push('High Pump Housing Temp SD'); }
+  if (sd & (2 ** 23)) { returnArray.push('Water in Fuel SD'); }
+  if (sd & (2 ** 24)) { returnArray.push('Low Suction SD'); }
+  if (sd & (2 ** 25)) { returnArray.push('High Suction SD'); }
+  if (sd & (2 ** 26)) { returnArray.push('High Engine Oil Pressure SD'); }
+  if (sd & (2 ** 27)) { returnArray.push('High Engine Oil Temp SD'); }
+  if (sd & (2 ** 28)) { returnArray.push('Low Gear Box Pressure SD'); }
+  if (sd & (2 ** 29)) { returnArray.push('High Gear Box Pressure SD'); }
+  if (sd & (2 ** 30)) { returnArray.push('Battery Charger Fail SD'); }
+  if (sd & (2 ** 31)) { returnArray.push('Red Lamp Status'); }
   return returnArray;
-}
+};
 
-var windMachineMPC20WarningStatus = function windMachineMPC20WarningStatus(wd) {
-  var returnArray = [];
-  if (wd & Math.pow(2, 0)) { returnArray.push('Low Fuel Warn'); }
-  if (wd & Math.pow(2, 1)) { returnArray.push('Fuel Leak Warn'); }
-  if (wd & Math.pow(2, 2)) { returnArray.push('Fuel Filter Restriction Warn'); }
-  if (wd & Math.pow(2, 3)) { returnArray.push('Low Lube Level W arn'); }
-  if (wd & Math.pow(2, 4)) { returnArray.push('Coolant Level Warn'); }
-  if (wd & Math.pow(2, 5)) { returnArray.push('Water in Fuel Warn'); }
-  if (wd & Math.pow(2, 6)) { returnArray.push('No Flow Warn'); }
-  if (wd & Math.pow(2, 7)) { returnArray.push('High Engine Oil Temp Warn'); }
-  if (wd & Math.pow(2, 8)) { returnArray.push('Low Oil Pressure Warn'); }
-  if (wd & Math.pow(2, 9)) { returnArray.push('High Engine Temp Warn'); }
-  if (wd & Math.pow(2, 10)) { returnArray.push('High Discharge Pressure Warn'); }
-  if (wd & Math.pow(2, 11)) { returnArray.push('Low Discharge Pressure Warn'); }
-  if (wd & Math.pow(2, 12)) { returnArray.push('High Suction Warn'); }
-  if (wd & Math.pow(2, 13)) { returnArray.push('Low Suction Warn'); }
-  if (wd & Math.pow(2, 14)) { returnArray.push('High Level Warn'); }
-  if (wd & Math.pow(2, 15)) { returnArray.push('Low Level Warn'); }
-  if (wd & Math.pow(2, 16)) { returnArray.push('High Flow Warn'); }
-  if (wd & Math.pow(2, 17)) { returnArray.push('Low Flow Warn'); }
-  if (wd & Math.pow(2, 18)) { returnArray.push('High Pump Oil Temp Warn'); }
-  if (wd & Math.pow(2, 19)) { returnArray.push('High Pump Housing Temp Warn'); }
-  if (wd & Math.pow(2, 20)) { returnArray.push('Low Gear Box Pressure Warn'); }
-  if (wd & Math.pow(2, 21)) { returnArray.push('High Gear Box Pressure Warn'); }
-  if (wd & Math.pow(2, 22)) { returnArray.push('Air Damper Closed Warn'); }
-  if (wd & Math.pow(2, 23)) { returnArray.push('Air Filter Restriction Warn'); }
-  if (wd & Math.pow(2, 24)) { returnArray.push('Oil Filter Restriction Warn'); }
-  if (wd & Math.pow(2, 25)) { returnArray.push('Low Engine Temp Warn'); }
-  if (wd & Math.pow(2, 26)) { returnArray.push('High Engine Oil Pressure Warn'); }
-  if (wd & Math.pow(2, 27)) { returnArray.push('Battery Charger Fail Warn'); }
-  if (wd & Math.pow(2, 28)) { returnArray.push('Run To Destruct Warn'); }
-  if (wd & Math.pow(2, 29)) { returnArray.push('Battery High Warn'); }
-  if (wd & Math.pow(2, 30)) { returnArray.push('Battery Low Warn'); }
-  if (wd & Math.pow(2, 31)) { returnArray.push('Amber Lamp Status'); }
+const windMachineMPC20WarningStatus = function windMachineMPC20WarningStatus(wd) {
+  const returnArray = [];
+  if (wd & (2 ** 0)) { returnArray.push('Low Fuel Warn'); }
+  if (wd & (2 ** 1)) { returnArray.push('Fuel Leak Warn'); }
+  if (wd & (2 ** 2)) { returnArray.push('Fuel Filter Restriction Warn'); }
+  if (wd & (2 ** 3)) { returnArray.push('Low Lube Level W arn'); }
+  if (wd & (2 ** 4)) { returnArray.push('Coolant Level Warn'); }
+  if (wd & (2 ** 5)) { returnArray.push('Water in Fuel Warn'); }
+  if (wd & (2 ** 6)) { returnArray.push('No Flow Warn'); }
+  if (wd & (2 ** 7)) { returnArray.push('High Engine Oil Temp Warn'); }
+  if (wd & (2 ** 8)) { returnArray.push('Low Oil Pressure Warn'); }
+  if (wd & (2 ** 9)) { returnArray.push('High Engine Temp Warn'); }
+  if (wd & (2 ** 10)) { returnArray.push('High Discharge Pressure Warn'); }
+  if (wd & (2 ** 11)) { returnArray.push('Low Discharge Pressure Warn'); }
+  if (wd & (2 ** 12)) { returnArray.push('High Suction Warn'); }
+  if (wd & (2 ** 13)) { returnArray.push('Low Suction Warn'); }
+  if (wd & (2 ** 14)) { returnArray.push('High Level Warn'); }
+  if (wd & (2 ** 15)) { returnArray.push('Low Level Warn'); }
+  if (wd & (2 ** 16)) { returnArray.push('High Flow Warn'); }
+  if (wd & (2 ** 17)) { returnArray.push('Low Flow Warn'); }
+  if (wd & (2 ** 18)) { returnArray.push('High Pump Oil Temp Warn'); }
+  if (wd & (2 ** 19)) { returnArray.push('High Pump Housing Temp Warn'); }
+  if (wd & (2 ** 20)) { returnArray.push('Low Gear Box Pressure Warn'); }
+  if (wd & (2 ** 21)) { returnArray.push('High Gear Box Pressure Warn'); }
+  if (wd & (2 ** 22)) { returnArray.push('Air Damper Closed Warn'); }
+  if (wd & (2 ** 23)) { returnArray.push('Air Filter Restriction Warn'); }
+  if (wd & (2 ** 24)) { returnArray.push('Oil Filter Restriction Warn'); }
+  if (wd & (2 ** 25)) { returnArray.push('Low Engine Temp Warn'); }
+  if (wd & (2 ** 26)) { returnArray.push('High Engine Oil Pressure Warn'); }
+  if (wd & (2 ** 27)) { returnArray.push('Battery Charger Fail Warn'); }
+  if (wd & (2 ** 28)) { returnArray.push('Run To Destruct Warn'); }
+  if (wd & (2 ** 29)) { returnArray.push('Battery High Warn'); }
+  if (wd & (2 ** 30)) { returnArray.push('Battery Low Warn'); }
+  if (wd & (2 ** 31)) { returnArray.push('Amber Lamp Status'); }
   return returnArray;
-}
+};
 
-var chartDimensions = function chartDimensions(windowWidth) {
-  var windowWidth = windowWidth;
-  var chartWidth = 288;
-  var chartHeight = 288 - 30;
-  if (windowWidth >= 600) {
+const chartDimensions = function chartDimensions(windowWidth) {
+  const windowWidthTemp = windowWidth;
+  let chartWidth = 288;
+  let chartHeight = 288 - 30;
+  if (windowWidthTemp >= 600) {
     chartWidth = 614;
     chartHeight = 470;
-  } else if (windowWidth >= 375) {
+  } else if (windowWidthTemp >= 375) {
     chartWidth = 350;
     chartHeight = 320;
   }
@@ -751,22 +749,22 @@ var chartDimensions = function chartDimensions(windowWidth) {
   chartHeight -= 20;
 
   return ({
-    width: chartWidth + 'px',
-    height: chartHeight + 'px',
+    width: `${chartWidth}px`,
+    height: `${chartHeight}px`,
     widthNumber: chartWidth,
     heightNumber: chartHeight,
   });
 };
 
-var numberToBinary = function numberToBinary(value, bit) {
-  return (value & (Math.pow(2, bit)) >>> 0);
+const numberToBinary = function numberToBinary(value, bit) {
+  return (value & (2 ** bit)) >>> 0;
 };
 
-var numberToBinaryFE = function numberToBinaryFE(value, bit) {
+const numberToBinaryFE = function numberToBinaryFE(value, bit) {
   return numberToBinary(value, bit) ? 'F' : 'E';
 };
 
-var numberToBinaryOnOff = function numberToBinaryOnOff(value, bit) {
+const numberToBinaryOnOff = function numberToBinaryOnOff(value, bit) {
   return numberToBinary(value, bit) ? 'ON' : 'OFF';
 };
 
@@ -774,7 +772,7 @@ var numberToBinaryOnOff = function numberToBinaryOnOff(value, bit) {
  * @param {number} mA value > 0
  * @returns true when value > 5 else false
  */
-var mAToBoolean = function mAToBoolean(mA) {
+const mAToBoolean = function mAToBoolean(mA) {
   return (isNumber(mA) && Number(mA) > 5);
 };
 
@@ -782,7 +780,7 @@ var mAToBoolean = function mAToBoolean(mA) {
  * @param {any} value - 1/0, true/false, 'string'/'', thing/undefined
  * @returns true when value is truthy.
  */
-var toBoolean = function toBoolean(value) {
+const toBoolean = function toBoolean(value) {
   if (!value) return false; // matches '', 0, false, undefined
   if (typeof value === 'boolean') return value;
   if (isNumber(value) && isFinite(value)) return !!value;
@@ -790,8 +788,8 @@ var toBoolean = function toBoolean(value) {
   return !!value;
 };
 
-var gallonsToAcreFeet = function gallonsToAcreFeet(value, precision) {
-  var returnValue = 0;
+const gallonsToAcreFeet = function gallonsToAcreFeet(value, precision) {
+  let returnValue = 0;
   if (!isNaN(value) && Number(value) > 0) {
     returnValue = round((Number(value) / 325851), precision);
   }
@@ -806,41 +804,41 @@ var gallonsToAcreFeet = function gallonsToAcreFeet(value, precision) {
  * @param {*} precision
  * @param {*} valueKey
  */
-var moistureSensor = function moistureSensor(reading, physical, multiplier, precision, valueKey) {
-  var total = 0;
-  var denominator = 0;
-  var keyList;
+const moistureSensor = function moistureSensor(reading, physical, multiplier, precision, valueKey) {
+  let total = 0;
+  let denominator = 0;
+  let keyList;
 
   if (valueKey && Array.isArray(valueKey) && valueKey.length) {
     keyList = valueKey;
   } else {
     keyList = [];
-    for (var i = 1; i <= 16; i++) keyList.push(i);
+    for (let i = 1; i <= 16; i++) keyList.push(i);
   }
 
-  for (var key of keyList) {
-    var rawValue = reading[key];
+  keyList.forEach((key) => {
+    const rawValue = reading[key];
     if (isNumber(rawValue)) {
-      var value = Number(rawValue) / multiplier;
+      const value = Number(rawValue) / multiplier;
       if (value > 10 && value < 99) {
         total += value;
         denominator += 1;
       }
     }
-  }
+  });
 
   if (denominator === 0) return 'ERR';
 
-  var average = total / denominator;
+  const average = total / denominator;
 
   if ((new Date()).getTime() - Date.parse(reading['1Date']) > (21600000)) { // 6 hours
     return 'NC';
   }
 
-  var moistureSensorSettings = physical.moistureSensorSettings || {};
-  var moistureCombined = moistureSensorSettings.moistureCombined || {};
-  var goalMax = moistureCombined.goalMax || 0;
-  var goalMin = moistureCombined.goalMin || 0;
+  const moistureSensorSettings = physical.moistureSensorSettings || {};
+  const moistureCombined = moistureSensorSettings.moistureCombined || {};
+  let goalMax = moistureCombined.goalMax || 0;
+  let goalMin = moistureCombined.goalMin || 0;
 
   if (isNumber(goalMax)
     && Number(goalMax) > 0
@@ -854,10 +852,10 @@ var moistureSensor = function moistureSensor(reading, physical, multiplier, prec
     return 'NOT\nSET';
   }
 
-  var returnValue = round(((average - goalMin) / (goalMax - goalMin)) * 100, precision);
+  const returnValue = round(((average - goalMin) / (goalMax - goalMin)) * 100, precision);
 
   return returnValue;
-}
+};
 
 /**
  * Generates the average of a collection of moisture sensor readings.
@@ -867,34 +865,34 @@ var moistureSensor = function moistureSensor(reading, physical, multiplier, prec
  * @param {*} precision
  * @param {*} valueKey
  */
-var soilMoistureSensorAverage = function soilMoistureSensorAverage(reading, physical, multiplier, precision, valueKey) {
-  var total = 0;
-  var denominator = 0;
-  var keyList;
+const soilMoistureSensorAverage = (reading, physical, multiplier, precision, valueKey) => {
+  let total = 0;
+  let denominator = 0;
+  let keyList;
 
   if (valueKey && Array.isArray(valueKey)) {
     keyList = valueKey;
   } else {
     keyList = [];
-    for (var i = 1; i <= 16; i++) keyList.push(i);
+    for (let i = 1; i <= 16; i++) keyList.push(i);
   }
 
-  for (var key of keyList) {
-    var rawValue = reading[key];
+  keyList.forEach((key) => {
+    const rawValue = reading[key];
     if (isNumber(rawValue)) {
-      var value = Number(rawValue) / multiplier;
+      const value = Number(rawValue) / multiplier;
       if (value > 10 && value < 99) {
         total += value;
         denominator += 1;
       }
     }
-  }
+  });
 
   if (denominator === 0) return undefined;
 
-  var average = round(total / denominator);
+  const average = round(total / denominator);
   return average;
-}
+};
 
 /**
  * Generates the average of a collection of salinity sensor readings.
@@ -904,35 +902,35 @@ var soilMoistureSensorAverage = function soilMoistureSensorAverage(reading, phys
  * @param {*} precision
  * @param {*} valueKey
  */
-var soilSalinitySensorAverage = function soilSalinitySensorAverage(reading, physical, multiplier, precision, valueKey) {
-  var total = 0;
-  var denominator = 0;
-  var keyList;
+const soilSalinitySensorAverage = (reading, physical, multiplier, precision, valueKey) => {
+  let total = 0;
+  let denominator = 0;
+  let keyList;
 
   if (valueKey && Array.isArray(valueKey)) {
     keyList = valueKey;
   } else {
     keyList = [];
-    for (var i = 1; i <= 16; i++) keyList.push(i);
+    for (let i = 1; i <= 16; i++) keyList.push(i);
   }
 
-  for (var key of keyList) {
-    var rawValue = reading[key];
+  keyList.forEach((key) => {
+    const rawValue = reading[key];
     if (isNumber(rawValue)) {
-      var value = Number(rawValue) / multiplier;
-      if (value >= 0 && value < 20) {
+      const value = Number(rawValue) / multiplier;
+      if (value > 10 && value < 99) {
         total += value;
         denominator += 1;
       }
     }
-  }
+  });
 
   if (denominator === 0) return undefined;
 
-  var average = round(total / denominator, precision);
+  const average = round(total / denominator, precision);
 
   return average;
-}
+};
 
 /**
  * Generates the average of a collection of soil temperature readings.
@@ -942,45 +940,53 @@ var soilSalinitySensorAverage = function soilSalinitySensorAverage(reading, phys
  * @param {*} precision
  * @param {*} tempConv
  */
-var soilTemperatureSensorAverage = function soilTemperatureSensorAverage(reading, physical, multiplier, precision, valueKey, tempConv) {
-  var total = 0;
-  var denominator = 0;
-  var keyList;
+const soilTemperatureSensorAverage = (
+  reading,
+  physical,
+  multiplier,
+  precision,
+  valueKey,
+  tempConv,
+) => {
+  let total = 0;
+  let denominator = 0;
+  let keyList;
 
   if (valueKey && Array.isArray(valueKey)) {
     keyList = valueKey;
   } else {
     keyList = [];
-    for (var i = 1; i <= 16; i++) keyList.push(i);
+    for (let i = 1; i <= 16; i++) keyList.push(i);
   }
 
-  for (var key of keyList) {
-    var rawValue = reading[key];
+  keyList.forEach((key) => {
+    const rawValue = reading[key];
     if (isNumber(rawValue)) {
-      var value = Number(rawValue) / multiplier;
-      if (value >= -50 && value < 100) {
+      const value = Number(rawValue) / multiplier;
+      if (value > 10 && value < 99) {
         total += value;
         denominator += 1;
       }
     }
-  }
+  });
 
   if (denominator === 0) return undefined;
 
-  var average = total / denominator;
+  const average = total / denominator;
 
-  var returnResult = round((tempConv === 'f' ? cToF(average) : average), precision);
+  const returnResult = round((tempConv === 'f' ? cToF(average) : average), precision);
 
   return returnResult;
-}
+};
 
-var windDirection = function windDirection(wd) {
+const windDirection = function windDirection(wd) {
   if (wd > 360 || wd < 0) {
     return 'ERR';
   }
-  var dir = 'ERR';
+  let dir = 'ERR';
   if (wd < 0 || wd > 360) {
-    alert('Enter a degree between 0 and 360 degrees.');
+    // eslint-disable-next-line no-console
+    console.error('Enter a degree between 0 and 360 degrees.');
   } else if (wd >= 0 && wd <= 11.25) {
     dir = 'N';
   } else if (wd > 348.75 && wd <= 360) {
@@ -1023,9 +1029,9 @@ function valueCalculator(
   formula,
   value,
   context,
-  precision
+  precision,
 ) {
-  var returnValue = value;
+  let returnValue = value;
   switch (formula) {
     case 'valveStatus':
       returnValue = valveStatus(value);
@@ -1205,31 +1211,30 @@ function valueCalculator(
   return returnValue;
 }
 
-var displayFormula = function displayFormula(
+const displayFormula = function displayFormula(
   formula,
   multiplier,
   precision,
   context,
-  valueKey,
+  _valueKey,
   readingCurrent,
   readingLast,
   physical,
-  mapValues
+  mapValues,
 ) {
-  var ERROR = 'ERR';
-  var isInvalidReading = function (x) {
-    return (
-      x === 4294967295
-      || x === 65535
-      || x === -32768
-      || !isNumber(x)
-    );
-  };
-  var returnValue;
+  const ERROR = 'ERR';
+  const isInvalidReading = (x) => (
+    x === 4294967295
+    || x === 65535
+    || x === -32768
+    || !isNumber(x)
+  );
+  let returnValue;
 
-  if (typeof valueKey === 'string'
-    && (valueKey.startsWith('[') || valueKey.startsWith('{'))) {
-    valueKey = JSON.parse(valueKey);
+  let valueKey = _valueKey;
+  if (typeof _valueKey === 'string'
+    && (_valueKey.startsWith('[') || _valueKey.startsWith('{'))) {
+    valueKey = JSON.parse(_valueKey);
   }
 
   switch (typeof valueKey) {
@@ -1244,16 +1249,15 @@ var displayFormula = function displayFormula(
 
     default:
       return ERROR;
-      break;
   }
 
-  var multiplierValue = 1;
+  let multiplierValue = 1;
   if (multiplier) { multiplierValue = multiplier; }
-  var precisionValue = 0;
+  let precisionValue = 0;
   if (precision) { precisionValue = precision; }
 
-  var formulaValue = formula;
-  var formulaValueSecondary = '';
+  let formulaValue = formula;
+  let formulaValueSecondary = '';
 
   if (formula
     && formula.substr(formula.length - ('Rolling').length) === 'Rolling') {
@@ -1261,7 +1265,7 @@ var displayFormula = function displayFormula(
     formulaValueSecondary = formula.substr(0, formula.length - ('Rolling').length);
   }
 
-  var physicalValue = {};
+  let physicalValue = {};
   if (
     physical
     && typeof physical === 'object'
@@ -1272,35 +1276,36 @@ var displayFormula = function displayFormula(
   switch (formulaValue) {
     case 'difference':
       {
-        var valueKey0 = valueKey[0];
-        var valueKey1 = valueKey[1];
-        var value0, value1;
+        const valueKey0 = valueKey[0];
+        const valueKey1 = valueKey[1];
+        let value0; let
+          value1;
 
         if (typeof valueKey0 === 'object') {
           value0 = valueCalculator(
             valueKey0.formula,
             readingCurrent[valueKey0.valueKey] / (valueKey0.multiplier || 1),
             valueKey0.context || '',
-            valueKey0.precision || 0
+            valueKey0.precision || 0,
           );
           value1 = valueCalculator(
             valueKey1.formula,
             readingCurrent[valueKey1.valueKey] / (valueKey1.multiplier || 1),
             valueKey1.context || '',
-            valueKey1.precision || 0
+            valueKey1.precision || 0,
           );
         } else {
           value0 = valueCalculator(
             formula,
             readingCurrent[valueKey0] / multiplierValue,
             context,
-            precisionValue
+            precisionValue,
           );
           value1 = valueCalculator(
             formula,
             readingCurrent[valueKey1] / multiplierValue,
             context,
-            precisionValue
+            precisionValue,
           );
         }
 
@@ -1315,31 +1320,32 @@ var displayFormula = function displayFormula(
     case 'pumpShouldBeRunning':
     case 'pumpStopped':
       {
-        var run = valueKey.run;
-        var signal = valueKey.signal;
+        const { run } = valueKey;
+        const { signal } = valueKey;
 
-        var isRun = valueCalculator(
-            run.formula,
-            readingCurrent[run.valueKey] / (run.multiplier || 1),
-            run.context || '',
-            run.precision || 0
-          );
+        const isRun = valueCalculator(
+          run.formula,
+          readingCurrent[run.valueKey] / (run.multiplier || 1),
+          run.context || '',
+          run.precision || 0,
+        );
 
-        var isSignal = valueCalculator(
-            signal.formula,
-            readingCurrent[signal.valueKey] / (signal.multiplier || 1),
-            signal.context || '',
-            signal.precision || 0
-          );
+        const isSignal = valueCalculator(
+          signal.formula,
+          readingCurrent[signal.valueKey] / (signal.multiplier || 1),
+          signal.context || '',
+          signal.precision || 0,
+        );
 
         if (isBoolean(isRun) && isBoolean(isSignal)) {
-          var run = toBoolean(isRun);
-          var signal = toBoolean(isSignal);
+          const runB = toBoolean(isRun);
+          const signalB = toBoolean(isSignal);
 
           switch (formula) {
-            case 'pumpRunning':         returnValue =  run &&  signal; break;
-            case 'pumpShouldBeRunning': returnValue =  run && !signal; break;
-            case 'pumpStopped':         returnValue = !run && !signal; break;
+            case 'pumpRunning': returnValue = runB && signalB; break;
+            case 'pumpShouldBeRunning': returnValue = runB && !signalB; break;
+            case 'pumpStopped': returnValue = !runB && !signalB; break;
+            default: returnValue = false;
           }
         } else {
           returnValue = 'ERR';
@@ -1362,11 +1368,11 @@ var displayFormula = function displayFormula(
         readingLast['131'],
         physicalValue.debounce,
         physicalValue.powered,
-        physicalValue.bins
+        physicalValue.bins,
       );
       break;
-    case 'pumpOutput':
-      var flowTime = 132;
+    case 'pumpOutput': {
+      let flowTime = 132;
       if (physicalValue.flowTimestampKey) {
         flowTime = physicalValue.flowTimestampKey;
       }
@@ -1375,45 +1381,45 @@ var displayFormula = function displayFormula(
         readingLast[valueKey],
         readingCurrent[flowTime] || readingCurrent.date,
         readingLast[flowTime] || readingLast.date,
-        multiplierValue
+        multiplierValue,
       );
+    }
       break;
-    case 'fuelLevel':
-      var fuelTankSize = 5.0;
+    case 'fuelLevel': {
+      let fuelTankSize = 5.0;
       if (physicalValue && physicalValue.fuelTankSize) {
         fuelTankSize = physicalValue.fuelTankSize;
       }
-      var fuelSensorRange = 5.557;
+      let fuelSensorRange = 5.557;
       if (physicalValue && physicalValue.fuelSensorRange) {
         fuelSensorRange = physicalValue.fuelSensorRange;
       }
       // 0.25V is based on the Rochester R3D-LP + 5V from ISBD
       // 0.25V = 5% * 5V
-      var fuelSensorMinV = 0.25; // based on the Rochester R3D-LP Gauge
+      let fuelSensorMinV = 0.25; // based on the Rochester R3D-LP Gauge
       if (physicalValue && physicalValue.fuelSensorMinV) {
         fuelSensorMinV = physicalValue.fuelSensorMinV;
       }
       // 4.6V is based on the Rochester R3D-LP + 5V + Experience with Zirkle
       // Rochester says 80% of in voltage is max, so 5V * 80% = 4V
       // But @ Zirkle, some gauges show 4.6V, and look like they are working
-      var fuelSensorMaxV = 4.6; // based on the Rochester R3D-LP Gauge
+      let fuelSensorMaxV = 4.6; // based on the Rochester R3D-LP Gauge
       if (physicalValue && physicalValue.fuelSensorMaxV) {
         fuelSensorMaxV = physicalValue.fuelSensorMaxV;
       }
-      var fuelSensorVCal = 5.557;
+      let fuelSensorVCal = 5.557;
       if (physicalValue && physicalValue.fuelSensorVCal) {
         fuelSensorVCal = physicalValue.fuelSensorVCal;
       }
 
-      if ((readingCurrent[valueKey]) * fuelSensorVCal > fuelSensorMaxV) { returnValue = 'Error High'; }
-      else if ((readingCurrent[valueKey]) * fuelSensorVCal < fuelSensorMinV) { returnValue = 'Not Connected'; }
-      else {
+      if ((readingCurrent[valueKey]) * fuelSensorVCal > fuelSensorMaxV) { returnValue = 'Error High'; } else if ((readingCurrent[valueKey]) * fuelSensorVCal < fuelSensorMinV) { returnValue = 'Not Connected'; } else {
         returnValue = round(fuelLevel(
           readingCurrent[valueKey] / multiplierValue,
           fuelTankSize,
-          fuelSensorRange
+          fuelSensorRange,
         ));
       }
+    }
       break;
     case 'fourToTwenty':
       returnValue = fourToTwenty(
@@ -1421,14 +1427,14 @@ var displayFormula = function displayFormula(
         physicalValue.min || 0,
         physicalValue.max || 100,
         physicalValue.zero || 0,
-        physicalValue.precision || 0
+        physicalValue.precision || 0,
       );
       break;
     case 'rpmToState':
       returnValue = rpmToState(
         readingCurrent[valueKey] / multiplierValue,
         physicalValue.offRpm,
-        physicalValue.highRpm
+        physicalValue.highRpm,
       );
       break;
     case 'percentTo20V':
@@ -1437,13 +1443,13 @@ var displayFormula = function displayFormula(
         precision,
         physicalValue.batteryExternalCalibrationResistor1 || 1800,
         physicalValue.batteryExternalCalibrationResistor2 || 10000,
-        physicalValue.batteryExternalCalibrationVoltageReference || 3.3
+        physicalValue.batteryExternalCalibrationVoltageReference || 3.3,
       );
       break;
     case 'dewPoint':
       returnValue = dewPoint(
         readingCurrent['128'],
-        readingCurrent[valueKey] / multiplierValue
+        readingCurrent[valueKey] / multiplierValue,
       );
       returnValue = fromC(returnValue, context.tempConv, precisionValue);
       break;
@@ -1453,7 +1459,7 @@ var displayFormula = function displayFormula(
         physicalValue,
         multiplierValue,
         precisionValue,
-        valueKey
+        valueKey,
       );
       break;
     case 'soilMoistureSensorAverage':
@@ -1462,7 +1468,7 @@ var displayFormula = function displayFormula(
         physicalValue,
         multiplierValue,
         precisionValue,
-        valueKey
+        valueKey,
       ) || ERROR;
       break;
     case 'soilSalinitySensorAverage':
@@ -1471,7 +1477,7 @@ var displayFormula = function displayFormula(
         physicalValue,
         multiplierValue,
         precisionValue,
-        valueKey
+        valueKey,
       ) || ERROR;
       break;
     case 'soilTemperatureSensorAverageC':
@@ -1481,7 +1487,7 @@ var displayFormula = function displayFormula(
         multiplierValue,
         precisionValue,
         valueKey,
-        'c'
+        'c',
       ) || ERROR;
       break;
     case 'soilTemperatureSensorAverageF':
@@ -1491,36 +1497,36 @@ var displayFormula = function displayFormula(
         multiplierValue,
         precisionValue,
         valueKey,
-        'f'
+        'f',
       ) || ERROR;
       break;
     case 'startMode':
-        returnValue = readingCurrent[valueKey] ? 'AUTO' : 'MANUAL';
-        break;
+      returnValue = readingCurrent[valueKey] ? 'AUTO' : 'MANUAL';
+      break;
     case 'millisecondsPastExpectedConnection':
       returnValue = millisecondsPastExpectedConnection(
         readingCurrent.date,
-        readingCurrent['135']
+        readingCurrent['135'],
       );
       break;
     case 'rolling':
       returnValue = valueCalculator(
         formulaValueSecondary,
         readingCurrent[valueKey] / multiplierValue,
-        context
+        context,
       );
       returnValue += valueCalculator(
         formulaValueSecondary,
         readingLast[valueKey] / multiplierValue,
-        context
+        context,
       );
-      returnValue = (returnValue / 2);
+      returnValue /= 2;
       break;
     default:
       returnValue = valueCalculator(
         formula,
         readingCurrent[valueKey] / multiplierValue,
-        context
+        context,
       );
   }
 
@@ -1531,7 +1537,13 @@ var displayFormula = function displayFormula(
     && isNumber(mapValues.outMin)
     && isNumber(mapValues.outMax)
   ) {
-    returnValue = map(returnValue, mapValues.inMin, mapValues.inMax, mapValues.outMin, mapValues.outMax);
+    returnValue = map(
+      returnValue,
+      mapValues.inMin,
+      mapValues.inMax,
+      mapValues.outMin,
+      mapValues.outMax,
+    );
   }
 
   if (isNumber(returnValue)) {
@@ -1544,35 +1556,33 @@ var displayFormula = function displayFormula(
 /**
  * Pads a value with 0.
  * @param {int} value to be padded.
- * @param {int} size 
+ * @param {int} size
  * @returns {string} padded with leading zeros up to size.
  */
-var pad = function (value, size) {
-  var s = String(value);
+const pad = (value, size) => {
+  let s = String(value);
   while (s.length < (size || 2)) { s = `0${s}`; }
   return s;
 };
 
 /**
- * @param {int} hr 
- * @param {int} min 
+ * @param {int} hr
+ * @param {int} min
  * @returns {string} 'hh:mm'
  */
-var formatTime = function (hr, min) {
-  return `${pad(hr)}:${pad(min)}`;
-}
+const formatTime = (hr, min) => `${pad(hr)}:${pad(min)}`;
 
-var scheduleStartDecode = function (value) { return value >> 16 >>> 0; }
-var scheduleStopDecode = function (value) { return value & 0xFFFF >>> 0; }
-var scheduleEncode = function (start, stop) { return ((start << 16) >>> 0) | ((stop & 0xFFFF) >>> 0); }
+const scheduleStartDecode = (value) => ((value >> 16) >>> 0);
+const scheduleStopDecode = (value) => ((value & 0xFFFF) >>> 0);
+const scheduleEncode = (start, stop) => (((start << 16) >>> 0) | ((stop & 0xFFFF) >>> 0));
 
 /**
  * @param {int} value in minutes from start of week.
  * @returns event time as binary representation.
  */
-var scheduleRing = function (value) {
-  var LIMIT = 10080;
-  var result = value;
+const scheduleRing = (value) => {
+  const LIMIT = 10080;
+  let result = value;
 
   if (result >= LIMIT) {
     result -= LIMIT;
@@ -1595,9 +1605,13 @@ var scheduleRing = function (value) {
  * @param {int} oStop - minutes from start of week
  * @returns {Event} - undefined if no overlap
  */
-var scheduleRingUnion = function(nStart, nStop, oStart, oStop) {
-  var MINUTES_MAXIMUM = 7 * 24 * 60;
-  var isInvalid = function (value) { return value < 0 || value > MINUTES_MAXIMUM; }
+const scheduleRingUnion = (_nStart, _nStop, _oStart, _oStop) => {
+  const MINUTES_MAXIMUM = 7 * 24 * 60;
+  const isInvalid = (value) => (value < 0 || value > MINUTES_MAXIMUM);
+  let oStart = _oStart;
+  let oStop = _oStop;
+  let nStart = _nStart;
+  let nStop = _nStop;
 
   if (isInvalid(nStart)) throw new Error(`Invalid nStart: ${nStart}`);
   if (isInvalid(nStop)) throw new Error(`Invalid nStop: ${nStop}`);
@@ -1607,16 +1621,18 @@ var scheduleRingUnion = function(nStart, nStop, oStart, oStop) {
   if (nStart > nStop) nStop += MINUTES_MAXIMUM;
   if (oStart > oStop) oStop += MINUTES_MAXIMUM;
 
-  var shiftRelative = function (stop, value) { return (stop - MINUTES_MAXIMUM) > value ? value + MINUTES_MAXIMUM : value; }
+  const shiftRelative = (stop, value) => (
+    (stop - MINUTES_MAXIMUM) > value ? value + MINUTES_MAXIMUM : value
+  );
 
   oStart = shiftRelative(nStop, oStart);
   oStop = shiftRelative(nStop, oStop);
   nStart = shiftRelative(oStop, nStart);
   nStop = shiftRelative(oStop, nStop);
 
-  var isBetween = function (value, low, high) { return ((value >= low) && (value <= high)); }
+  const isBetween = (value, low, high) => ((value >= low) && (value <= high));
 
-  var result;
+  let result;
 
   if (isBetween(nStart, oStart, oStop)
     || isBetween(oStart, nStart, nStop)) {
@@ -1631,25 +1647,25 @@ var scheduleRingUnion = function(nStart, nStop, oStart, oStop) {
 
 /**
  * Insert a new scheduled event into an array of schedule Events.
- * @param {Array.<Event>} scheduleEvents 
- * @param {int} dayStart 
- * @param {int} hourStart 
- * @param {int} minStart 
- * @param {int} dayStop 
- * @param {int} hourStop 
- * @param {int} minStop 
- * @param {int} utcDifferenceMinutes 
+ * @param {Array.<Event>} scheduleEvents
+ * @param {int} dayStart
+ * @param {int} hourStart
+ * @param {int} minStart
+ * @param {int} dayStop
+ * @param {int} hourStop
+ * @param {int} minStop
+ * @param {int} utcDifferenceMinutes
  */
-var insertTime = function (
+const insertTime = (
   scheduleEvents,
   dayStart, hourStart, minStart,
   dayStop, hourStop, minStop,
   utcDifferenceMinutes,
-) {
+) => {
   if (!Array.isArray(scheduleEvents)) throw new Error('Invalid scheduleEvents array');
 
-  var isOutOfRange = function(x, low, high) { return (x < low || x > high); };
-  var isInvalid = function(x, high) { return isOutOfRange(x, 0, high); };
+  const isOutOfRange = (x, low, high) => (x < low || x > high);
+  const isInvalid = (x, high) => isOutOfRange(x, 0, high);
 
   if (isInvalid(dayStart, 6)) throw new Error(`Invalid dayStart: ${dayStart}`);
   if (isInvalid(dayStop, 6)) throw new Error(`Invalid dayStop: ${dayStop}`);
@@ -1661,12 +1677,12 @@ var insertTime = function (
   if (isOutOfRange(utcDifferenceMinutes, -840, 720)) throw new Error(`Invalid utcDifferenceMinutes: ${utcDifferenceMinutes}`);
 
   // create our start minutes value
-  var start = dayStart * 24 * 60;
+  let start = dayStart * 24 * 60;
   start += hourStart * 60;
   start += minStart;
 
   // create our stop minutes value
-  var stop = dayStop * 24 * 60;
+  let stop = dayStop * 24 * 60;
   stop += hourStop * 60;
   stop += minStop;
 
@@ -1679,30 +1695,30 @@ var insertTime = function (
   stop = scheduleRing(stop);
 
   // create array for the new schedule
-  var result = [];
+  const result = [];
 
   if (scheduleEvents.length < 1) {
     // no previous scheduleEvents, so nothing to de-dupe
     result.push(scheduleEncode(start, stop));
   } else {
     // the rest of this is to de-dupe intervals
-    var newStart = start;
-    var newStop = stop;
+    let newStart = start;
+    let newStop = stop;
 
     // loop through old schedule and figure out where to put new value
-    scheduleEvents.map(function(schedEvent) {
-      var oldStart = scheduleStartDecode(schedEvent);
-      var oldStop = scheduleStopDecode(schedEvent);
-      var intervalCombined = false;
+    scheduleEvents.map((schedEvent) => {
+      let oldStart = scheduleStartDecode(schedEvent);
+      let oldStop = scheduleStopDecode(schedEvent);
+      let intervalCombined = false;
 
       // check if the intervals overlap
-      var ringUnion = scheduleRingUnion(newStart, newStop, oldStart, oldStop);
+      const ringUnion = scheduleRingUnion(newStart, newStop, oldStart, oldStop);
 
       if (ringUnion) {
-        var start = ringUnion.start;
-        var stop = ringUnion.stop;
-        newStart = start;
-        newStop = stop;
+        ({
+          start: newStart,
+          stop: newStop,
+        } = ringUnion);
         intervalCombined = true;
       }
 
@@ -1712,6 +1728,7 @@ var insertTime = function (
         oldStop = scheduleRing(oldStop);
         result.push(scheduleEncode(oldStart, oldStop));
       }
+      return 1;
     });
 
     // don't do this until the end or we will get dupe values
@@ -1721,76 +1738,43 @@ var insertTime = function (
   }
 
   // sort for consistency
-  result.sort(function(a, b) { return (a - b) });
+  result.sort((a, b) => (a - b));
   return result;
 };
 
 /**
- * Insert a new scheduled event into an array of schedule Events.
- * @param {int} scheduleEvents 
- * @param {int} dayStart 
- * @param {int} hourStart 
- * @param {int} minStart 
- * @param {int} duration - minutes
- * @param {int} utcDifferenceMinutes - UTC offset
- */
-var insertTimeDuration = function (
-  scheduleEvents,
-  dayStart, hourStart, minStart,
-  duration,
-  utcDifferenceMinutes,
-) {
-  // create our start minutes value
-  var start = dayStart * 24 * 60;
-  start += hourStart * 60;
-  start += minStart;
-
-  var stop = start + duration;
-
-  // 0 for UTC offset, due to this doubling up on offset.
-  var decoded = decodeTime(scheduleEncode(start, stop), 0);
-
-  return insertTime(
-    scheduleEvents,
-    decoded.start.day, decoded.start.hr, decoded.start.min,
-    decoded.stop.day, decoded.stop.hr, decoded.stop.min,
-    utcDifferenceMinutes,
-  );
-};
-
-/**
  * Convert schedule Event to time object.
- * @param {Event} schedEvent 
- * @param {int} offset 
- * @param {int} key 
+ * @param {Event} schedEvent
+ * @param {int} offset
+ * @param {int} key
  * @returns {Time}
  */
-var decodeTime = function (schedEvent, offset, _key) {
-  var key = 0;
+const decodeTime = (schedEvent, offset, _key) => {
+  let key = 0;
   if (_key) {
     key = _key;
   }
-  var ONE_WEEK = 7 * 24 * 60;
-  var start = scheduleRing(scheduleStartDecode(schedEvent) - offset);
-  var stop = scheduleRing(scheduleStopDecode(schedEvent) - offset);
-  var positiveStop = stop;
+  const ONE_WEEK = 7 * 24 * 60;
+  const start = scheduleRing(scheduleStartDecode(schedEvent) - offset);
+  const stop = scheduleRing(scheduleStopDecode(schedEvent) - offset);
+  let positiveStop = stop;
 
   if (start > stop) positiveStop = stop + ONE_WEEK;
 
-  var DAY = function (date) { return Math.floor(date / (24 * 60)); }
-  var HOUR = function (date) { return Math.floor(date / 60) - (DAY(date) * 24); }
-  var MINUTE = function (date) { return date % 60; }
+  const DAY = (date) => (Math.floor(date / (24 * 60)));
+  const HOUR = (date) => (Math.floor(date / 60) - (DAY(date) * 24));
+  const MINUTE = (date) => (date % 60);
 
-  var dayStart = DAY(start);
-  var hrStart = HOUR(start);
-  var minStart = MINUTE(start);
+  const dayStart = DAY(start);
+  const hrStart = HOUR(start);
+  const minStart = MINUTE(start);
 
-  var dayStop = DAY(stop);
-  var hrStop = HOUR(stop);
-  var minStop = MINUTE(stop);
+  const dayStop = DAY(stop);
+  const hrStop = HOUR(stop);
+  const minStop = MINUTE(stop);
 
   // put our basic calculated values in place
-  var timesDecoded = {
+  const timesDecoded = {
     start: {
       day: dayStart,
       hr: hrStart,
@@ -1820,16 +1804,16 @@ var decodeTime = function (schedEvent, offset, _key) {
   timesDecoded.duration.crossWeek = dayStart > dayStop;
 
   // write out our human readable values
-  var daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  var HUMAN = function (x) { return daysOfWeek[x.day] + ' ' + (x.hr > 12 ? x.hr - 12 : x.hr) + ':' + pad(x.min) + (x.hr >= 12 ? ' PM' : ' AM'); }
-  var humanStart = HUMAN(timesDecoded.start);
-  var humanStop = HUMAN(timesDecoded.stop);
+  const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const HUMAN = (x) => `${daysOfWeek[x.day]} ${x.hr > 12 ? x.hr - 12 : x.hr}:${pad(x.min)}${x.hr >= 12 ? ' PM' : ' AM'}`;
+  const humanStart = HUMAN(timesDecoded.start);
+  const humanStop = HUMAN(timesDecoded.stop);
   timesDecoded.start.human = humanStart;
   timesDecoded.stop.human = humanStop;
-  timesDecoded.human = 'Start: ' + humanStart + ', Stop: ' + humanStop + ' (' + schedEvent + ')';
+  timesDecoded.human = `Start: ${humanStart}, Stop: ${humanStop} (${schedEvent})`;
 
   // calculate if a scheduled item lasts 7 days, as this item is wonky
-  var sevenDay = (dayStart === dayStop && hrStart > hrStop);
+  const sevenDay = (dayStart === dayStop && hrStart > hrStop);
 
   // calculate number of days we are running for
   if (dayStart <= dayStop && !sevenDay) {
@@ -1844,33 +1828,66 @@ var decodeTime = function (schedEvent, offset, _key) {
 };
 
 /**
- * @param {Array.<Event>} schedule 
+ * Insert a new scheduled event into an array of schedule Events.
+ * @param {int} scheduleEvents
+ * @param {int} dayStart
+ * @param {int} hourStart
+ * @param {int} minStart
+ * @param {int} duration - minutes
+ * @param {int} utcDifferenceMinutes - UTC offset
+ */
+const insertTimeDuration = (
+  scheduleEvents,
+  dayStart, hourStart, minStart,
+  duration,
+  utcDifferenceMinutes,
+) => {
+  // create our start minutes value
+  let start = dayStart * 24 * 60;
+  start += hourStart * 60;
+  start += minStart;
+
+  const stop = start + duration;
+
+  // 0 for UTC offset, due to this doubling up on offset.
+  const decoded = decodeTime(scheduleEncode(start, stop), 0);
+
+  return insertTime(
+    scheduleEvents,
+    decoded.start.day, decoded.start.hr, decoded.start.min,
+    decoded.stop.day, decoded.stop.hr, decoded.stop.min,
+    utcDifferenceMinutes,
+  );
+};
+
+/**
+ * @param {Array.<Event>} schedule
  * @param {int} offset - UTC offset
  * @returns {Array.<Event>}
  */
-var decodeScheduleUI = function (schedule, _offset) {
-  var offset = 0;
+const decodeScheduleUI = (schedule, _offset) => {
+  let offset = 0;
   if (_offset) {
     offset = _offset;
   }
   if (schedule && Array.isArray(schedule) && schedule.length) {
-    var answers = [];
-    for (var i = 0; i < schedule.length; i++) {
-      var event = schedule[i];
-      var answer = decodeTime(event, offset, i);
+    const answers = [];
+    for (let i = 0; i < schedule.length; i++) {
+      const event = schedule[i];
+      const answer = decodeTime(event, offset, i);
 
-      var durationDays = answer.duration && answer.duration.days;
-      var dayStart = answer.start && answer.start.day;
-      var hrStart = answer.start && answer.start.hr;
-      var dayStop = answer.stop && answer.stop.day;
+      const durationDays = answer.duration && answer.duration.days;
+      const dayStart = answer.start && answer.start.day;
+      const hrStart = answer.start && answer.start.hr;
+      const dayStop = answer.stop && answer.stop.day;
 
       if (dayStart <= dayStop && durationDays !== 7) {
         answers.push(answer);
       } else {
         // if a multi-day run, we need to split for our UI
-        var answer2 = JSON.parse(JSON.stringify(answer));
-        var SATURDAY = 6;
-        var SUNDAY = 0;
+        const answer2 = JSON.parse(JSON.stringify(answer));
+        const SATURDAY = 6;
+        const SUNDAY = 0;
 
         answer.stop.day = SATURDAY;
         answer.duration.days = SATURDAY - dayStart;
@@ -1894,82 +1911,84 @@ var decodeScheduleUI = function (schedule, _offset) {
 
     return answers;
   }
+  return undefined;
 };
 
 module.exports = {
-  analogToCentibar: analogToCentibar,
-  analogToDigital: analogToDigital,
-  analogToDigitalInverse: analogToDigitalInverse,
-  analogToVWC: analogToVWC,
-  binLevel: binLevel,
-  cToF: cToF,
-  cellSignalToRssi: cellSignalToRssi,
-  cellSignalToQuality: cellSignalToQuality,
-  chartDimensions: chartDimensions,
-  decodeScheduleUI: decodeScheduleUI,
-  decodeTime: decodeTime,
-  displayFormula: displayFormula,
-  engineStateCalculator: engineStateCalculator,
-  flowMeterState: flowMeterState,
-  formatTime: formatTime,
-  fourToTwenty: fourToTwenty,
-  fromC: fromC,
-  fromCMultiplier: fromCMultiplier,
-  fToC: fToC,
-  ftToM: ftToM,
-  fuelLevel: fuelLevel,
-  gallonsToAcreFeet: gallonsToAcreFeet,
-  insertTime: insertTime,
-  insertTimeDuration: insertTimeDuration,
-  isNumber: isNumber,
-  kilometersToMiles: kilometersToMiles,
-  kPaToInchesMercury: kPaToInchesMercury,
-  lastValveTime: lastValveTime,
-  lastValveTimeToEpochMillis: lastValveTimeToEpochMillis,
-  mAToBoolean: mAToBoolean,
-  metersPerSecondToMilesPerHour: metersPerSecondToMilesPerHour,
-  millimetersToInches: millimetersToInches,
-  moistureSensor: moistureSensor,
-  mToFt: mToFt,
-  nextValveTime: nextValveTime,
-  nextValveTimeToEpochMillis: nextValveTimeToEpochMillis,
-  numberMap: numberMap,
-  numberToBinary: numberToBinary,
-  numberToBinaryFE: numberToBinaryFE,
-  numberToBinaryOnOff: numberToBinaryOnOff,
-  pad: pad,
-  percentTo20V: percentTo20V,
-  percentToCentibar: percentToCentibar,
-  percentToDigital: percentToDigital,
-  percentToDigitalInverse: percentToDigitalInverse,
-  percentToVWC: percentToVWC,
-  pumpOutput: pumpOutput,
-  pumpState: pumpState,
-  round: round,
-  rpmOrchardRiteAutometer9117: rpmOrchardRiteAutometer9117,
-  rpmToState: rpmToState,
-  scheduleRing: scheduleRing,
-  scheduleRingUnion: scheduleRingUnion,
-  secondsToHHMMSS: secondsToHHMMSS,
+  analogToCentibar,
+  analogToDigital,
+  analogToDigitalInverse,
+  analogToVWC,
+  binLevel,
+  cToF,
+  cellSignalToRssi,
+  cellSignalToQuality,
+  chartDimensions,
+  decodeScheduleUI,
+  decodeTime,
+  displayFormula,
+  engineStateCalculator,
+  flowMeterState,
+  formatTime,
+  fourToTwenty,
+  fromC,
+  fromCMultiplier,
+  fToC,
+  ftToM,
+  fuelLevel,
+  gallonsToAcreFeet,
+  insertTime,
+  insertTimeDuration,
+  isNumber,
+  kilometersToMiles,
+  kPaToInchesMercury,
+  lastValveTime,
+  lastValveTimeToEpochMillis,
+  lineFit,
+  mAToBoolean,
+  metersPerSecondToMilesPerHour,
+  millimetersToInches,
+  moistureSensor,
+  mToFt,
+  nextValveTime,
+  nextValveTimeToEpochMillis,
+  numberMap,
+  numberToBinary,
+  numberToBinaryFE,
+  numberToBinaryOnOff,
+  pad,
+  percentTo20V,
+  percentToCentibar,
+  percentToDigital,
+  percentToDigitalInverse,
+  percentToVWC,
+  pumpOutput,
+  pumpState,
+  round,
+  rpmOrchardRiteAutometer9117,
+  rpmToState,
+  scheduleRing,
+  scheduleRingUnion,
+  secondsToHHMMSS,
   soilMoistureSensorAverage,
   soilSalinitySensorAverage,
   soilTemperatureSensorAverage,
-  spaceCamel: spaceCamel,
-  toBoolean: toBoolean,
-  toC: toC,
-  toValveTime: toValveTime,
-  valveStatus: valveStatus,
-  valveStatusString: valveStatusString,
-  valveTimeToDate: valveTimeToDate,
-  valveTimeToEpoch: valveTimeToEpoch,
-  valveTimeToEpochMillis: valveTimeToEpochMillis,
-  valveTimeToValveNumber: valveTimeToValveNumber,
-  voltToCentibar: voltToCentibar,
-  voltToVWC: voltToVWC,
-  windDirection: windDirection,
-  windMachineChangeStatus: windMachineChangeStatus,
-  windMachineCommunicationStatus: windMachineCommunicationStatus,
-  windMachineEngineState: windMachineEngineState,
-  windMachineMPC20ShutdownStatus: windMachineMPC20ShutdownStatus,
-  windMachineMPC20WarningStatus: windMachineMPC20WarningStatus
+  spaceCamel,
+  toBoolean,
+  toC,
+  toValveTime,
+  valveStatus,
+  valveStatusString,
+  valveTimeToDate,
+  valveTimeToEpoch,
+  valveTimeToEpochMillis,
+  valveTimeToValveNumber,
+  voltToCentibar,
+  voltToVWC,
+  windDirection,
+  windMachineChangeStatus,
+  windMachineCommunicationStatus,
+  windMachineEngineState,
+  windMachineMPC20ShutdownStatus,
+  windMachineMPC20WarningStatus,
 };
