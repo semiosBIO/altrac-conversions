@@ -28,9 +28,6 @@ const isNumber = function isNumber(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 };
 
-const isBoolean = (value) => (typeof value === 'boolean' || isNumber(value) || (typeof value === 'string' && /^(true|false|t|f|on|off)$/i.test(value)));
-
-
 const map = (value, x1, y1, x2, y2) => (((value - x1) * (y2 - x2)) / (y1 - x1) + x2);
 
 const voltToVWC = function voltToVWC(v) {
