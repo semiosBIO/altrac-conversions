@@ -1323,6 +1323,30 @@ const displayFormula = function displayFormula(
         readingCurrent[valueKey] / multiplierValue,
       );
       break;
+    case 'percentToDigitalStringAND':
+      returnValue = 'ON';
+      if (Array.isArray(valueKey)) {
+        returnValue = valueKey.reduce((acc, key) => {
+          const output = (percentToDigital(readingCurrent[key] / multiplierValue) === 1) ? 'ON' : 'OFF';
+          if (output === 'OFF') return output;
+          return acc;
+        }, 'OFF');
+      } else {
+        returnValue = 'OFF';
+      }
+      break;
+    case 'percentToDigitalStringOR':
+      returnValue = 'OFF';
+      if (Array.isArray(valueKey)) {
+        returnValue = valueKey.reduce((acc, key) => {
+          const output = (percentToDigital(readingCurrent[key] / multiplierValue) === 1) ? 'ON' : 'OFF';
+          if (output === 'ON') return output;
+          return acc;
+        }, 'OFF');
+      } else {
+        returnValue = 'OFF';
+      }
+      break;
     case 'binLevel':
       returnValue = binLevel(
         readingCurrent['131'],
@@ -1906,6 +1930,7 @@ module.exports = {
   lastValveTime,
   lastValveTimeToEpochMillis,
   lineFit,
+  map,
   mAToBoolean,
   metersPerSecondToMilesPerHour,
   millimetersToInches,
