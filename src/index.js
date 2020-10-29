@@ -1370,6 +1370,14 @@ const displayFormula = function displayFormula(
       );
     }
       break;
+    case 'temperatureAutoDecimal':
+      returnValue = fromC(readingCurrent[valueKey] / multiplierValue, context.tempConv);
+      if (returnValue < 10 && returnValue > -10) {
+        precisionValue = 1;
+      } else {
+        precisionValue = 0;
+      }
+      break;
     case 'fuelLevel': {
       let fuelTankSize = 5.0;
       if (physicalValue && physicalValue.fuelTankSize) {
