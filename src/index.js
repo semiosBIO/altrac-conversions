@@ -457,6 +457,9 @@ const rpmToState = function rpmToState(rpm, off, high) {
   return returnValue;
 };
 
+const autoSwitchAnalog = (value) => (value > 9000 ? 1 : 0);
+const autoSwitchMPC20 = (value) => ((((value & 0xFF) >>> 0) - 10) === 1 ? 1 : 0);
+
 const engineStateCalculator = function engineStateCalculator(
   rpm,
   intention,
@@ -1114,6 +1117,12 @@ function valueCalculator(
       break;
     case 'pumpState':
       returnValue = pumpState(value);
+      break;
+    case 'autoSwitchAnalog':
+      returnValue = autoSwitchAnalog(value);
+      break;
+    case 'autoSwitchMPC20':
+      returnValue = autoSwitchMPC20(value);
       break;
     case 'rpmOrchardRiteAutometer9117':
       returnValue = rpmOrchardRiteAutometer9117(value);
