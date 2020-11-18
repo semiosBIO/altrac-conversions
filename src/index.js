@@ -459,6 +459,7 @@ const rpmToState = function rpmToState(rpm, off, high) {
 
 const autoSwitchAnalog = (value) => (value > 9000 ? 1 : 0);
 const autoSwitchMPC20 = (value) => ((((value & 0xFF) >>> 0) - 10) === 1 ? 1 : 0);
+const powerGood = (value) => ((value & 0x4) ? 1 : 0);
 
 const engineStateCalculator = function engineStateCalculator(
   rpm,
@@ -1126,6 +1127,9 @@ function valueCalculator(
       break;
     case 'rpmOrchardRiteAutometer9117':
       returnValue = rpmOrchardRiteAutometer9117(value);
+      break;
+    case 'powerGood':
+      returnValue = powerGood(value);
       break;
     case 'gallonsToAcreFeet':
       returnValue = gallonsToAcreFeet(value, precision);
