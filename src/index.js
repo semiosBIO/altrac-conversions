@@ -163,58 +163,59 @@ const cellSignalToQuality = function cellSignalToQuality(signal) {
   return (signal & 0xFF) >>> 0;
 };
 
-var cellSignalToBars = function cellSignalToBars(signal, signalType, quality, qualityType, service) {
+const cellSignalToBars = function cellSignalToBars(signal, signalType, quality, qualityType, service) {
   let signalStrength = 0;
   let signalQuality = 0;
 
-  //Strength of the signal 
-  if (service === 'LTE') {
+  //  Strength of the signal
+
+  if (service === 'LTE Cat-M1') {
     if (signalType === 'RSRP' && qualityType === 'RSRQ') {
- if (signal <= 90 && signal > 0) {
-        signalStrength = 5 ;
-      }else if(signal < 105) {
+      if (signal <= 90 && signal > 0) {
+        signalStrength = 5;
+      } else if (signal < 105) {
         signalStrength = 4;
-      }else if (signal < 111) {
+      } else if (signal < 111) {
         signalStrength = 3;
-      }else if (signal < 116) {
+      } else if (signal < 116) {
         signalStrength = 2;
-      }else if (signal <= 119){
+      } else if (signal <= 119) {
         signalStrength = 1;
       } else if (signal >= 120) {
         signalStrength = 0;
       }
-      } else {
-        signalStrength = -1;
-      }
-  } else if(service === 'UMTS') {
+    } else {
+      signalStrength = -1;
+    }
+  } else if (service === 'UMTS') {
     if (signal === 0) {
       signalStrength = 0;
-    } else if  (signal <= 70) {
-      signalStrength = 5 ;
-    }else if(signal <=  85) {
+    } else if (signal <= 70) {
+      signalStrength = 5;
+    } else if (signal <= 85) {
       signalStrength = 4;
-    }else if (signal < 100) {
+    } else if (signal < 100) {
       signalStrength = 3;
-    }else if (signal < 105) {
+    } else if (signal < 105) {
       signalStrength = 2;
-    }else if (signal <= 110){
+    } else if (signal <= 110) {
       signalStrength = 1;
     } else if (signal >= 110) {
       signalStrength = 0;
     }
-  } else if(service === 'UMTS_OLD' || service === 'GSM') {
-    if ( quality === 0 ) {
+  } else if (service === 'UMTS_OLD' || service === 'GSM') {
+    if (quality === 0) {
       if (signal === 0) {
         signalStrength = 0;
       } else if  (signal <= 70) {
-        signalStrength = 5 ;
-      }else if(signal <=  85) {
+        signalStrength = 5;
+      } else if (signal <= 85) {
         signalStrength = 4;
-      }else if (signal < 100) {
+      } else if (signal < 100) {
         signalStrength = 3;
-      }else if (signal < 105) {
+      } else if (signal < 105) {
         signalStrength = 2;
-      }else if (signal <= 110){
+      } else if (signal <= 110) {
         signalStrength = 1;
       } else if (signal >= 110) {
         signalStrength = 0;
@@ -239,18 +240,18 @@ var cellSignalToBars = function cellSignalToBars(signal, signalType, quality, qu
   }
 
   // Quality of the signal
-  if(service === 'UMTS_OLD') {
+  if (service === 'UMTS_OLD') {
     if (quality === 0) {
       signalQuality = signalStrength;
-    } else if(quality <= 6) {
+    } else if (quality <= 6) {
       signalQuality = 5;
     } else if (quality <= 10) {
       signalQuality = 3;
     } else if (quality <= 20) {
       signalQuality = 1;
-    } 
+    }
   } else {
-   if(quality <= 5 && quality > 0)  {
+  if (quality <= 5 && quality > 0)  {
     signalQuality = 5;
   } else if(quality <= 10) {
     signalQuality = 4;
@@ -263,17 +264,18 @@ var cellSignalToBars = function cellSignalToBars(signal, signalType, quality, qu
   } 
 }
 
-  // Get average of the sigal if Strength or Quality of the signal drops into the red zone return the SignalTotal as 1 if no connection return 0
-  if(signalStrength >= 1 && signalQuality >= 1) {
-     totalSignal = Math.round((signalStrength + signalQuality) / 2);
+   // Get average of the sigal if Strength or Quality of the signal drops into the red zone return the SignalTotal as 1 if no connection return 0
+   let totalSignal = 0;
+   if (signalStrength >= 1 && signalQuality >= 1) {
+    totalSignal = Math.round((signalStrength + signalQuality) / 2);
   } else if (signalStrength === 0 && signalQuality === 0) {
-     totalSignal = 0;
+    totalSignal = 0;
   } else if (signalStrength === -1 || signalQuality === -1) {
-     totalSignal = -1;
+    totalSignal = -1;
   } else {
     totalSignal = 1;
   }
-return totalSignal;
+  return totalSignal;
 };
 
 const fromC = function fromC(c, tempConv, precision) {
