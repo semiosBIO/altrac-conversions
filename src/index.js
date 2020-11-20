@@ -170,9 +170,7 @@ var cellSignalToBars = function cellSignalToBars(signal, signalType, quality, qu
   //Strength of the signal 
   if (service === 'LTE') {
     if (signalType === 'RSRP' && qualityType === 'RSRQ') {
-      if (signal === 0) {
-        signalStrength = -1;
-      } else if (signal <= 90 && signal > 0) {
+ if (signal <= 90 && signal > 0) {
         signalStrength = 5 ;
       }else if(signal < 105) {
         signalStrength = 4;
@@ -243,7 +241,7 @@ var cellSignalToBars = function cellSignalToBars(signal, signalType, quality, qu
   // Quality of the signal
   if(service === 'UMTS_OLD') {
     if (quality === 0) {
-      singalQuality = signalStrength;
+      signalQuality = signalStrength;
     } else if(quality <= 6) {
       signalQuality = 5;
     } else if (quality <= 10) {
@@ -252,9 +250,7 @@ var cellSignalToBars = function cellSignalToBars(signal, signalType, quality, qu
       signalQuality = 1;
     } 
   } else {
-    if(quality === 0) {
-      signalQuality = -1;
-  } else if(quality <= 5 && quality > 0)  {
+   if(quality <= 5 && quality > 0)  {
     signalQuality = 5;
   } else if(quality <= 10) {
     signalQuality = 4;
@@ -262,6 +258,8 @@ var cellSignalToBars = function cellSignalToBars(signal, signalType, quality, qu
     signalQuality = 3;
   } else if (quality < 20) {
     signalQuality = 2;
+  } else {
+    signalQuality = -1;
   } 
 }
 
@@ -270,7 +268,7 @@ var cellSignalToBars = function cellSignalToBars(signal, signalType, quality, qu
      totalSignal = Math.round((signalStrength + signalQuality) / 2);
   } else if (signalStrength === 0 && signalQuality === 0) {
      totalSignal = 0;
-  } else if (signalStrength === -1 || singalQuality === -1) {
+  } else if (signalStrength === -1 || signalQuality === -1) {
      totalSignal = -1;
   } else {
     totalSignal = 1;
