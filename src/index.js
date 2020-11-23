@@ -187,6 +187,8 @@ const cellSignalToBars = function cellSignalToBars(signal, signalType, quality, 
     } else {
       signalStrength = -1;
     }
+  } else if (service === 'LTE_OLD') {
+    signalStrength = -1;
   } else if (service === 'UMTS') {
     if (signal === 0) {
       signalStrength = 0;
@@ -264,9 +266,9 @@ const cellSignalToBars = function cellSignalToBars(signal, signalType, quality, 
   } 
 }
 
-   // Get average of the sigal if Strength or Quality of the signal drops into the red zone return the SignalTotal as 1 if no connection return 0
-   let totalSignal = 0;
-   if (signalStrength >= 1 && signalQuality >= 1) {
+  // Get average of the sigal if Strength or Quality of the signal drops into the red zone return the SignalTotal as 1 if no connection return 0
+  let totalSignal = 0;
+  if (signalStrength >= 1 && signalQuality >= 1) {
     totalSignal = Math.round((signalStrength + signalQuality) / 2);
   } else if (signalStrength === 0 && signalQuality === 0) {
     totalSignal = 0;
