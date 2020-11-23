@@ -169,7 +169,7 @@ const cellSignalToBars = function cellSignalToBars(signal, signalType, quality, 
 
   //  Strength of the signal
 
-  if (service === 'LTE Cat-M1') {
+  if (service === 'LTE Cat-M1' || service === 'LTE') {
     if (signalType === 'RSRP' && qualityType === 'RSRQ') {
       if (signal <= 90 && signal > 0) {
         signalStrength = 5;
