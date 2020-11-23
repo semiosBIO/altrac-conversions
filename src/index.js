@@ -205,9 +205,7 @@ const cellSignalToBars = function cellSignalToBars(signal, signalType, quality, 
     }
   } else if (service === 'UMTS_OLD' || service === 'GSM') {
     if (quality === 0) {
-      if (signal === 0) {
-        signalStrength = 0;
-      } else if  (signal <= 70) {
+      if (signal <= 70) {
         signalStrength = 5;
       } else if (signal <= 85) {
         signalStrength = 4;
@@ -218,6 +216,8 @@ const cellSignalToBars = function cellSignalToBars(signal, signalType, quality, 
       } else if (signal <= 110) {
         signalStrength = 1;
       } else if (signal >= 110) {
+        signalStrength = 0;
+      } else if (signal === 0) {
         signalStrength = 0;
       }
     } else {
