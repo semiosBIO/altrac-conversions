@@ -163,14 +163,19 @@ const cellSignalToQuality = function cellSignalToQuality(signal) {
   return (signal & 0xFF) >>> 0;
 };
 
-const cellSignalToBars = function cellSignalToBars(signal, signalType, quality, qualityType, service) {
+const cellSignalToBars = function cellSignalToBars(
+  signal, signalType, quality, qualityType, service,
+) {
   let signalStrength = 0;
   let signalQuality = 0;
 
   //  Strength of the signal
 
-  if (service === 'LTE Cat-M1' || service === 'LTE') {
-    if (signalType === 'RSRP' && qualityType === 'RSRQ') {
+  if (service === 'LTE Cat-M1' || service === 'LTE' || service === 'LTE_OLD') {
+    if (
+      (signalType === 'RSRP' && qualityType === 'RSRQ')
+      || (signal > 0 && quality > 0)
+    ) {
       if (signal <= 90 && signal > 0) {
         signalStrength = 5;
       } else if (signal < 105) {
@@ -184,12 +189,30 @@ const cellSignalToBars = function cellSignalToBars(signal, signalType, quality, 
       } else if (signal >= 120) {
         signalStrength = 0;
       }
+
+      if (quality <= 5 && quality > 0) {
+        signalQuality = 5;
+      } else if (quality <= 10) {
+        signalQuality = 4;
+      } else if (quality <= 15) {
+        signalQuality = 3;
+      } else if (quality < 17) {
+        signalQuality = 2;
+      } else if (quality <= 19) {
+        signalQuality = 1;
+      } else if (quality > 19) {
+        signalQuality = 0;
+      } else {
+        signalQuality = -1;
+      }
     } else {
       signalStrength = -1;
+      signalQuality = -1;
     }
-  } else if (service === 'LTE_OLD') {
-    signalStrength = -1;
-  } else if (service === 'UMTS') {
+  } else if (
+    service === 'UMTS'
+    || (signalType === 'RSCP' && qualityType === 'ECN0')
+  ) {
     if (signal === 0) {
       signalStrength = 0;
     } else if (signal <= 70) {
@@ -205,71 +228,89 @@ const cellSignalToBars = function cellSignalToBars(signal, signalType, quality, 
     } else if (signal >= 110) {
       signalStrength = 0;
     }
-  } else if (service === 'UMTS_OLD' || service === 'GSM') {
-    if (quality === 0) {
-      if (signal <= 70) {
-        signalStrength = 5;
-      } else if (signal <= 85) {
-        signalStrength = 4;
-      } else if (signal < 100) {
-        signalStrength = 3;
-      } else if (signal < 105) {
-        signalStrength = 2;
-      } else if (signal <= 110) {
-        signalStrength = 1;
-      } else if (signal >= 110) {
-        signalStrength = 0;
-      } else if (signal === 0) {
-        signalStrength = 0;
-      }
-    } else {
-      if (signal === 0) {
-        signalStrength = 0;
-      } else if  (signal <= 50) {
-        signalStrength = 5 ;
-      }else if(signal < 70) {
-        signalStrength = 4;
-      }else if (signal < 85) {
-        signalStrength = 3;
-      }else if (signal < 100) {
-        signalStrength = 2;
-      }else if (signal <= 120){
-        signalStrength = 1;
-      } else if (signal >= 120) {
-        signalStrength = 0;
-      }
-    }
-  }
 
-  // Quality of the signal
-  if (service === 'UMTS_OLD') {
-    if (quality === 0) {
-      signalQuality = signalStrength;
-    } else if (quality <= 6) {
+    if (quality <= 5 && quality > 0) {
       signalQuality = 5;
     } else if (quality <= 10) {
+      signalQuality = 4;
+    } else if (quality <= 15) {
       signalQuality = 3;
-    } else if (quality <= 20) {
+    } else if (quality < 20) {
+      signalQuality = 2;
+    } else {
+      signalQuality = -1;
+    }
+  } else if (
+    signalType === 'RXLEV'
+    || (quality === 0 && signal > 10)
+  ) {
+    // 2G
+    if (signal <= 70) {
+      signalStrength = 5;
+      signalQuality = 5;
+    } else if (signal <= 85) {
+      signalStrength = 4;
+      signalQuality = 4;
+    } else if (signal < 100) {
+      signalStrength = 3;
+      signalQuality = 3;
+    } else if (signal < 105) {
+      signalStrength = 2;
+      signalQuality = 2;
+    } else if (signal <= 110) {
+      signalStrength = 1;
       signalQuality = 1;
+    } else if (signal >= 110) {
+      signalStrength = 0;
+      signalQuality = 0;
+    } else if (signal === 0) {
+      signalStrength = 0;
+      signalQuality = 0;
+    }
+  } else if (quality > 0 && signal > 0) {
+    // old 3G calculation
+    if (signal <= 80) {
+      signalStrength = 5;
+    } else if (signal <= 90) {
+      signalStrength = 4;
+    } else if (signal < 100) {
+      signalStrength = 3;
+    } else if (signal < 105) {
+      signalStrength = 2;
+    } else if (signal <= 110) {
+      signalStrength = 1;
+    } else if (signal >= 110) {
+      signalStrength = 0;
+    } else if (signal === 0) {
+      signalStrength = 0;
+    }
+
+    if (quality <= 5 && quality > 0) {
+      signalQuality = 0;
+    } else if (quality <= 10) {
+      signalQuality = 1;
+    } else if (quality <= 15) {
+      signalQuality = 2;
+    } else if (quality < 23) {
+      signalQuality = 3;
+    } else if (quality <= 30) {
+      signalQuality = 4;
+    } else if (quality < 100) {
+      signalQuality = 5;
+    } else {
+      signalQuality = -1;
     }
   } else {
-  if (quality <= 5 && quality > 0)  {
-    signalQuality = 5;
-  } else if(quality <= 10) {
-    signalQuality = 4;
-  } else if(quality <= 15) {
-    signalQuality = 3;
-  } else if (quality < 20) {
-    signalQuality = 2;
-  } else {
+    signalStrength = -1;
     signalQuality = -1;
-  } 
-}
+  }
 
-  // Get average of the sigal if Strength or Quality of the signal drops into the red zone return the SignalTotal as 1 if no connection return 0
+  // Get average of the signal if Strength or Quality of the signal
+  // drops into the red zone return the SignalTotal as 1 if no
+  // connection return 0
   let totalSignal = 0;
   if (signalStrength >= 1 && signalQuality >= 1) {
-    totalSignal = Math.round((signalStrength + signalQuality) / 2);
+    totalSignal = Math.floor((signalStrength + signalQuality) / 2);
   } else if (signalStrength === 0 && signalQuality === 0) {
     totalSignal = 0;
   } else if (signalStrength === -1 || signalQuality === -1) {
@@ -1625,6 +1666,15 @@ const displayFormula = function displayFormula(
       break;
     case 'startMode':
       returnValue = readingCurrent[valueKey] ? 'AUTO' : 'MANUAL';
+      break;
+    case 'cellularSignalToBars':
+      returnValue = cellSignalToBars(
+        cellSignalToRssi(readingCurrent[valueKey]),
+        physicalValue.cellularStrengthType,
+        cellSignalToQuality(readingCurrent[valueKey]),
+        physicalValue.cellularQualityType,
+        physicalValue.cellularAccessTechnologyDetail,
+      );
       break;
     case 'millisecondsPastExpectedConnection':
       returnValue = millisecondsPastExpectedConnection(
