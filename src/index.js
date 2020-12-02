@@ -1594,6 +1594,95 @@ const displayFormula = function displayFormula(
         physicalValue.precision || 0,
       );
       break;
+    case 'current4To20':
+      if (valueKey === 'AN1') {
+        returnValue = map(
+          readingCurrent[valueKey] / multiplierValue,
+          physicalValue.anIn1SigMin || 4,
+          physicalValue.anIn1SigMax || 20,
+          physicalValue.anIn1Min || 0,
+          physicalValue.anIn1Max || 100,
+        );
+        if (returnValue < physicalValue.anIn1Min) returnValue = physicalValue.anIn1Min;
+        if (returnValue > physicalValue.anIn1Max) returnValue = physicalValue.anIn1Max;
+      } else if (valueKey === 'AN2') {
+        returnValue = map(
+          readingCurrent[valueKey] / multiplierValue,
+          physicalValue.anIn2SigMin || 4,
+          physicalValue.anIn2SigMax || 20,
+          physicalValue.anIn2Min || 0,
+          physicalValue.anIn2Max || 100,
+        );
+        if (returnValue < physicalValue.anIn2Min) returnValue = physicalValue.anIn2Min;
+        if (returnValue > physicalValue.anIn2Max) returnValue = physicalValue.anIn2Max;
+      } else if (valueKey === 'R1F') {
+        returnValue = map(
+          readingCurrent[valueKey] / multiplierValue,
+          physicalValue.anIn2SigMin || 4,
+          physicalValue.anIn2SigMax || 20,
+          physicalValue.anIn2Min || 0,
+          physicalValue.anIn2Max || 100,
+        );
+        if (returnValue < physicalValue.anIn2Min) returnValue = physicalValue.anIn2Min;
+        if (returnValue > physicalValue.anIn2Max) returnValue = physicalValue.anIn2Max;
+      } else if (valueKey === 'R2F') {
+        returnValue = map(
+          readingCurrent[valueKey] / multiplierValue,
+          physicalValue.anIn2SigMin || 4,
+          physicalValue.anIn2SigMax || 20,
+          physicalValue.anIn2Min || 0,
+          physicalValue.anIn2Max || 100,
+        );
+        if (returnValue < physicalValue.anIn2Min) returnValue = physicalValue.anIn2Min;
+        if (returnValue > physicalValue.anIn2Max) returnValue = physicalValue.anIn2Max;
+      }
+      break;
+    case 'voltage0To10':
+      if (valueKey === 'AN1') {
+        returnValue = map(
+          readingCurrent[valueKey] / multiplierValue,
+          physicalValue.anIn1SigMin || 0,
+          physicalValue.anIn1SigMax || 10,
+          physicalValue.anIn1Min || 0,
+          physicalValue.anIn1Max || 100,
+        );
+        if (returnValue < physicalValue.anIn1Min) returnValue = physicalValue.anIn1Min;
+        if (returnValue > physicalValue.anIn1Max) returnValue = physicalValue.anIn1Max;
+      } else if (valueKey === 'AN2') {
+        returnValue = map(
+          readingCurrent[valueKey] / multiplierValue,
+          physicalValue.anIn2SigMin || 0,
+          physicalValue.anIn2SigMax || 10,
+          physicalValue.anIn2Min || 0,
+          physicalValue.anIn2Max || 100,
+        );
+        if (returnValue < physicalValue.anIn2Min) returnValue = physicalValue.anIn2Min;
+        if (returnValue > physicalValue.anIn2Max) returnValue = physicalValue.anIn2Max;
+      } else if (valueKey === 'R1F') {
+        returnValue = map(
+          readingCurrent[valueKey] / multiplierValue,
+          physicalValue.anIn2SigMin || 0,
+          physicalValue.anIn2SigMax || 10,
+          physicalValue.anIn2Min || 0,
+          physicalValue.anIn2Max || 100,
+        );
+        if (returnValue < physicalValue.anIn2Min) returnValue = physicalValue.anIn2Min;
+        if (returnValue > physicalValue.anIn2Max) returnValue = physicalValue.anIn2Max;
+      } else if (valueKey === 'R2F') {
+        returnValue = map(
+          readingCurrent[valueKey] / multiplierValue,
+          physicalValue.anIn2SigMin || 0,
+          physicalValue.anIn2SigMax || 10,
+          physicalValue.anIn2Min || 0,
+          physicalValue.anIn2Max || 100,
+        );
+        if (returnValue < physicalValue.anIn2Min) returnValue = physicalValue.anIn2Min;
+        if (returnValue > physicalValue.anIn2Max) returnValue = physicalValue.anIn2Max;
+      }
+      break;
+    case 'closure':
+      returnValue = mAToBoolean(readingCurrent[valueKey]);
+      break;
     case 'rpmToState':
       returnValue = rpmToState(
         readingCurrent[valueKey] / multiplierValue,
