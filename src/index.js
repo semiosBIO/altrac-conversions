@@ -28,6 +28,24 @@ const isNumber = function isNumber(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 };
 
+const splitTemplate = function split(input, physical, string) {
+  if (!input) return null;
+  if (typeof input !== 'string') return input;
+  const output = input.match(/\{\{([a-zA-Z0-9. _]*\|[a-zA-Z0-9. _]*)\}\}/);
+  if (!output) {
+    return input;
+  }
+  const arr = output[1].split('|');
+  let returnValue;
+  if (physical && typeof physical === 'object' && physical.hasOwnProperty(arr[0])) {
+    returnValue = physical[arr[0]];
+  } else {
+    returnValue = arr[1];
+  }
+  if (isNumber(returnValue) && !string) returnValue = Number(returnValue);
+  return returnValue;
+};
+
 const map = (value, x1, y1, x2, y2) => (((value - x1) * (y2 - x2)) / (y1 - x1) + x2);
 
 const voltToVWC = function voltToVWC(v) {
@@ -2203,6 +2221,7 @@ module.exports = {
   insertTime,
   insertTimeDuration,
   isNumber,
+  splitTemplate,
   kilometersToMiles,
   kPaToInchesMercury,
   lastValveTime,
