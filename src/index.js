@@ -997,7 +997,7 @@ const moistureSensor = function moistureSensor(reading, physical, multiplier, pr
     const rawValue = reading[key];
     if (isNumber(rawValue)) {
       const value = Number(rawValue) / multiplier;
-      if (value > 10 && value < 99) {
+      if (value > 2 && value < 99) {
         total += value;
         denominator += 1;
       }
