@@ -11,6 +11,8 @@
         "ecmaVersion": 12
     },
     "rules": {
-      "no-plusplus": "warn"
+      "no-restricted-globals": "warn",
+      "no-bitwise": ["error", {"allow": ["|","&",">>>",">>","<<"]}],
+      "no-plusplus": ["error", {"allowForLoopAfterthoughts": true}]
     }
 }

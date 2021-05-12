@@ -1,5 +1,3 @@
-/* eslint-disable no-bitwise */
-/* eslint-disable no-restricted-globals */
 // index.js
 
 const round = function round(n, d) {
