@@ -40,7 +40,7 @@ const splitTemplate = function split(input, physical, string) {
   if (physical && typeof physical === 'object' && Object.prototype.hasOwnProperty.call(physical, arr[0])) {
     returnValue = physical[arr[0]];
   } else {
-    returnValue = arr[1];
+    [returnValue] = arr;
   }
   if (isNumber(returnValue) && !string) returnValue = Number(returnValue);
   return returnValue;
