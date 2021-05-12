@@ -1,5 +1,3 @@
-/* eslint-disable no-bitwise */
-/* eslint-disable no-restricted-globals */
 // index.js
 
 const round = function round(n, d) {
@@ -25,7 +23,11 @@ const round = function round(n, d) {
 };
 
 const isNumber = function isNumber(n) {
-  return !isNaN(parseFloat(n)) && isFinite(n);
+  return !Number.isNaN(parseFloat(n)) && Number.isFinite(parseFloat(n));
+};
+
+const isNumberFormat = function isNumberFormat(n) {
+  return !Number.isNaN(parseFloat(n)) && Number.isFinite(n);
 };
 
 const splitTemplate = function split(input, physical, string) {
@@ -37,10 +39,10 @@ const splitTemplate = function split(input, physical, string) {
   }
   const arr = output[1].split('|');
   let returnValue;
-  if (physical && typeof physical === 'object' && physical.hasOwnProperty(arr[0])) {
+  if (physical && typeof physical === 'object' && Object.prototype.hasOwnProperty.call(physical, arr[0])) {
     returnValue = physical[arr[0]];
   } else {
-    returnValue = arr[1];
+    [returnValue] = arr;
   }
   if (isNumber(returnValue) && !string) returnValue = Number(returnValue);
   return returnValue;
@@ -119,7 +121,7 @@ const analogToCentibar = function analogToCentibar(a) {
 
 const metersPerSecondToMilesPerHour = function metersPerSecondToMilesPerHour(ms, precision) {
   let precisionValue = 0;
-  if (precision && !isNaN(precision)) {
+  if (precision && !Number.isNaN(precision)) {
     precisionValue = Number(precision);
   }
   return round(ms * 2.23694, precisionValue);
@@ -127,7 +129,7 @@ const metersPerSecondToMilesPerHour = function metersPerSecondToMilesPerHour(ms,
 
 const millimetersToInches = function millimetersToInches(mm, precision) {
   let precisionValue = 0;
-  if (precision && !isNaN(precision)) {
+  if (precision && !Number.isNaN(precision)) {
     precisionValue = Number(precision);
   }
   return round(mm * 0.0393701, precisionValue);
@@ -135,7 +137,7 @@ const millimetersToInches = function millimetersToInches(mm, precision) {
 
 const kilometersToMiles = function kilometersToMiles(km, precision) {
   let precisionValue = 0;
-  if (precision && !isNaN(precision)) {
+  if (precision && !Number.isNaN(precision)) {
     precisionValue = Number(precision);
   }
   return round(km * 0.621371, precisionValue);
@@ -143,7 +145,7 @@ const kilometersToMiles = function kilometersToMiles(km, precision) {
 
 const kPaToInchesMercury = function kPaToInchesMercury(kpa, precision) {
   let precisionValue = 0;
-  if (precision && !isNaN(precision)) {
+  if (precision && !Number.isNaN(precision)) {
     precisionValue = Number(precision);
   }
   return round(kpa * 0.2953, precisionValue);
@@ -498,17 +500,17 @@ const fourToTwenty = function fourToTwenty(p, min, max, zero, precision) {
   let minNumber = 0;
   let maxNumber = 100;
   let precisionNumber = 0;
-  if (!isNaN(min)) {
+  if (!Number.isNaN(min)) {
     minNumber = Number(min);
   }
-  if (!isNaN(max)) {
+  if (!Number.isNaN(max)) {
     maxNumber = Number(max);
   }
   let zeroNumber = minNumber;
-  if (!isNaN(zero)) {
+  if (!Number.isNaN(zero)) {
     zeroNumber = Number(zero);
   }
-  if (!isNaN(precision)) {
+  if (!Number.isNaN(precision)) {
     precisionNumber = Number(precision);
   }
   const returnValue = (((((p * 3.34) / 100) * 1000) - 4) * (maxNumber - minNumber)) / (20 - 4);
@@ -602,11 +604,18 @@ const pumpOutput = (readingCurrent, readingLast, currentTime, lastTime, multipli
   if (currentTime === lastTime) {
     return 0;
   }
-  const current = new Date(isNumber(currentTime) ? currentTime * 1000 : currentTime).getTime();
-  const previous = new Date(isNumber(lastTime) ? lastTime * 1000 : lastTime).getTime();
+
+  const current = new Date(isNumberFormat(currentTime)
+    ? currentTime * 1000
+    : currentTime).getTime();
+
+  const previous = new Date(isNumberFormat(lastTime)
+    ? lastTime * 1000
+    : lastTime).getTime();
+
   const diffMinutes = (current - previous) / 1000 / 60;
   const output = Math.round(diff / diffMinutes);
-  return isNaN(output) ? 0 : output;
+  return Number.isNaN(output) ? 0 : output;
 };
 
 const rpmToState = function rpmToState(rpm, off, high) {
@@ -960,14 +969,14 @@ const mAToBoolean = function mAToBoolean(mA) {
 const toBoolean = function toBoolean(value) {
   if (!value) return false; // matches '', 0, false, undefined
   if (typeof value === 'boolean') return value;
-  if (isNumber(value) && isFinite(value)) return !!value;
+  if (isNumber(value) && Number.isFinite(value)) return !!value;
   if (typeof value === 'string') return !!(/^(true|t|on)$/i.test(value));
   return !!value;
 };
 
 const gallonsToAcreFeet = function gallonsToAcreFeet(value, precision) {
   let returnValue = 0;
-  if (!isNaN(value) && Number(value) > 0) {
+  if (!Number.isNaN(value) && Number(value) > 0) {
     returnValue = round((Number(value) / 325851), precision);
   }
   return returnValue;
