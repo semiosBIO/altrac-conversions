@@ -12,5 +12,9 @@ jobs:
       - uses: actions/setup-node@v2
       - name: Install
         run: yarn
+      - name: Lint
+        run: yarn lint
+      - name: Build
+        run: yarn build
       - name: Test
         run: yarn test
