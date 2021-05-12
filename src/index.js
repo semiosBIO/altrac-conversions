@@ -23,7 +23,11 @@ const round = function round(n, d) {
 };
 
 const isNumber = function isNumber(n) {
-  return !isNaN(parseFloat(n)) && isFinite(n);
+  return !Number.isNaN(parseFloat(n)) && Number.isFinite(parseFloat(n));
+};
+
+const isNumberFormat = function isNumber(n) {
+  return !Number.isNaN(parseFloat(n)) && Number.isFinite(n);
 };
 
 const splitTemplate = function split(input, physical, string) {
@@ -600,8 +604,8 @@ const pumpOutput = (readingCurrent, readingLast, currentTime, lastTime, multipli
   if (currentTime === lastTime) {
     return 0;
   }
-  const current = new Date(isNumber(currentTime) ? currentTime * 1000 : currentTime).getTime();
-  const previous = new Date(isNumber(lastTime) ? lastTime * 1000 : lastTime).getTime();
+  const current = new Date(isNumberFormat(currentTime) ? currentTime * 1000 : currentTime).getTime();
+  const previous = new Date(isNumberFormat(lastTime) ? lastTime * 1000 : lastTime).getTime();
   const diffMinutes = (current - previous) / 1000 / 60;
   const output = Math.round(diff / diffMinutes);
   return isNaN(output) ? 0 : output;

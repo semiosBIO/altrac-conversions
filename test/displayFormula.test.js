@@ -6,6 +6,7 @@ const conversions = require('../lib/index.js');
 describe('displayFormula function', () => {
   describe('valueKey', () => {
     it('Should generate an error for an invalid valueKey', () => {
+      console.log('put this log above it statement')
       const formula = undefined;
       const multiplier = 1;
       const precision = 2;
@@ -381,9 +382,8 @@ describe('displayFormula function', () => {
   });
 
   describe('pumpOutput', () => {
-    it('should generate generate the correct value', () => {
-      const
-        formula = 'pumpOutput';
+    it('should generate the correct value', () => {
+      const formula = 'pumpOutput';
       const multiplier = 1;
       const precision = null;
       const context = {};
