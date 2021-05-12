@@ -37,7 +37,7 @@ const splitTemplate = function split(input, physical, string) {
   }
   const arr = output[1].split('|');
   let returnValue;
-  if (physical && typeof physical === 'object' && physical.hasOwnProperty(arr[0])) {
+  if (physical && typeof physical === 'object' && Object.prototype.hasOwnProperty.call(physical, arr[0])) {
     returnValue = physical[arr[0]];
   } else {
     returnValue = arr[1];
