@@ -10,5 +10,16 @@ jobs:
       contents: read
       packages: write
     steps:
-    - uses: actions/checkout@v2
-      with: 
+      - name: Check out
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12.x'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@altracio'
+      - name: Install
+        run: npm install
+      - name: Build
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
