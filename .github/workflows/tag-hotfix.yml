@@ -1,0 +1,86 @@
+name: Tag Hotfix
+on:
+  create:
+    branches:
+      - hotfix/**
+      - '!release/**'
+
+jobs:
+  tag:
+    if: contains(github.ref, 'hotfix')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@altracio'
+
+      - name: Setup git
+        run: |
+          git config user.name ${GITHUB_ACTOR}
+          git config user.email "<>"
+
+      - name: Extract tag from ref
+        id: ref_version
+        run: echo "::set-output name=VALUE::${GITHUB_REF:18}"
+
+      - name: Extract package version
+        id: pkg_version
+        run: |
+          echo 'pkg_version<<EOF' >> $GITHUB_ENV
+          node -pe "require('./package.json').version" >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
+
+      - name: Bump version
+        run: |
+          npm version ${GITHUB_REF:18}
+
+      - name: Build changelog
+        id: build_changelog
+        run: |
+          echo 'pkg_changelog<<EOF' >> $GITHUB_ENV
+          git log HEAD ^${{ env.pkg_version }} --pretty=%s >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
+
+      - name: Git push
+        run: |
+          git tag ${GITHUB_REF:18}
+          git push --no-verify origin ${GITHUB_REF:11}
+          git push --no-verify origin tag ${GITHUB_REF:18}
+
+      - name: Merge hotfix into main
+        uses: repo-sync/pull-request@v2
+        with:
+          destination_branch: main
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          pr_title: "Merge hotfix ${{ steps.ref_version.outputs.VALUE }} into main"
+          pr_body: |
+            This PR was created by a workflow action
+            ${{ env.pkg_changelog }}
+          pr_label: git-flow
+
+      - name: Merge hotfix into develop
+        uses: repo-sync/pull-request@v2
+        with:
+          destination_branch: develop
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          pr_title: "Merge hotfix ${{ steps.ref_version.outputs.VALUE }} into develop"
+          pr_body: |
+            This PR was created by a workflow action
+            ${{ env.pkg_changelog }}
+          pr_label: git-flow
+
+      - name: Create release
+        id: create_release
+        uses: zendesk/action-create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.ref_version.outputs.VALUE }}
+          body: ${{ env.pkg_changelog }}
+          tag_schema: semantic
