@@ -53,12 +53,12 @@ jobs:
           git push --no-verify origin ${GITHUB_REF:11}
           git push --no-verify origin tag ${GITHUB_REF:18}
 
-      - name: Merge hotfix into main
+      - name: Merge hotfix into master
         uses: repo-sync/pull-request@v2
         with:
-          destination_branch: main
+          destination_branch: master
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          pr_title: "Merge hotfix ${{ steps.ref_version.outputs.VALUE }} into main"
+          pr_title: "Merge hotfix ${{ steps.ref_version.outputs.VALUE }} into master"
           pr_body: |
             This PR was created by a workflow action
             ${{ env.pkg_changelog }}

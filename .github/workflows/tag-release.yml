@@ -53,12 +53,12 @@ jobs:
           git push --no-verify origin ${GITHUB_REF:11}
           git push --no-verify origin tag ${GITHUB_REF:19}
 
-      - name: Merge releases into main
+      - name: Merge releases into master
         uses: repo-sync/pull-request@v2
         with:
-          destination_branch: main
+          destination_branch: master
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          pr_title: "Merge release ${{ steps.ref_version.outputs.VALUE }} into main"
+          pr_title: "Merge release ${{ steps.ref_version.outputs.VALUE }} into master"
           pr_body: This PR was created by a workflow
           pr_label: git-flow
 
