@@ -1,0 +1,25 @@
+name: Merge features into develop
+on:
+  push:
+    branches:
+      - 'feature/**'
+
+jobs:
+  merge:
+    if: ${{ contains(github.ref, 'feature') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Extract package version
+        id: ref_branch
+        run: |
+          echo "ref_branch=${GITHUB_REF:11}" >> $GITHUB_ENV
+
+      - name: Merge features into develop
+        uses: repo-sync/pull-request@v2
+        with:
+          destination_branch: develop
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          pr_title: "Merge ${{ env.ref_branch }} into develop"
+          pr_body: This PR was created by a workflow action
+          pr_label: git-flow
