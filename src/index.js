@@ -963,6 +963,14 @@ const mAToBoolean = function mAToBoolean(mA) {
 };
 
 /**
+ * @param {number} state value > 0
+ * @returns true when value > 5 else false
+ */
+const stateToBoolean = function stateToBoolean(state) {
+  return (isNumber(state) && Number(state) >= 9 && Number(state) <= 13);
+};
+
+/**
  * @param {any} value - 1/0, true/false, 'string'/'', thing/undefined
  * @returns true when value is truthy.
  */
@@ -1250,6 +1258,9 @@ function valueCalculator(
     case 'mAToBoolean':
       returnValue = mAToBoolean(value);
       break;
+    case 'stateToBoolean':
+      returnValue = stateToBoolean(value);
+      break;
     case 'toBoolean':
       returnValue = toBoolean(value);
       break;
@@ -1518,6 +1529,11 @@ const displayFormula = function displayFormula(
       break;
     case 'mAToBoolean':
       returnValue = mAToBoolean(
+        readingCurrent[valueKey] / multiplierValue,
+      );
+      break;
+    case 'stateToBoolean':
+      returnValue = stateToBoolean(
         readingCurrent[valueKey] / multiplierValue,
       );
       break;
@@ -2238,6 +2254,7 @@ module.exports = {
   lineFit,
   map,
   mAToBoolean,
+  stateToBoolean,
   metersPerSecondToMilesPerHour,
   millimetersToInches,
   moistureSensor,
