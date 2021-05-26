@@ -29,7 +29,7 @@ describe('displayFormula function', () => {
 
       const expectedResult = 'ERR';
 
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
 
     it('Should generate an error for invalid value', () => {
@@ -55,7 +55,7 @@ describe('displayFormula function', () => {
 
       const expectedResult = 'ERR';
 
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
 
     it('Should accept a valueKey Array', () => {
@@ -90,7 +90,7 @@ describe('displayFormula function', () => {
 
       const expectedResult = 16;
 
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
   });
 
@@ -122,7 +122,7 @@ describe('displayFormula function', () => {
 
       const expectedResult = 1;
 
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
   });
 
@@ -151,7 +151,7 @@ describe('displayFormula function', () => {
 
 
       const expectedResult = true;
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
 
     it('Should generate false when value === 0', () => {
@@ -178,7 +178,7 @@ describe('displayFormula function', () => {
 
 
       const expectedResult = false;
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
   });
 
@@ -206,7 +206,7 @@ describe('displayFormula function', () => {
       );
 
       const expectedResult = true;
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
 
     it('Should generate false when value < 5', () => {
@@ -232,7 +232,6 @@ describe('displayFormula function', () => {
       );
 
       const expectedResult = false;
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
     });
   });
 
@@ -273,7 +272,7 @@ describe('displayFormula function', () => {
       );
 
       const expectedResult = 1;
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
 
     it('should generate the correct difference between two values, using string valueKeys', () => {
@@ -299,7 +298,7 @@ describe('displayFormula function', () => {
       );
 
       const expectedResult = 1;
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
 
     it('should generate zero when values are equal', () => {
@@ -338,7 +337,7 @@ describe('displayFormula function', () => {
       );
 
       const expectedResult = 0;
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
 
     it('should generate an error when values are non-numeric', () => {
@@ -377,7 +376,7 @@ describe('displayFormula function', () => {
       );
 
       const expectedResult = 'ERR';
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
   });
 
@@ -404,7 +403,7 @@ describe('displayFormula function', () => {
       );
 
       const expectedResult = 10;
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
 
     it('should generate generate zero when an input value is invalid', () => {
@@ -430,7 +429,7 @@ describe('displayFormula function', () => {
       );
 
       const expectedResult = 0;
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
   });
 });
