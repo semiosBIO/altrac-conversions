@@ -232,6 +232,91 @@ describe('displayFormula function', () => {
       );
 
       const expectedResult = false;
+      assert(result === expectedResult);
+    });
+  });
+
+  describe('stateToBoolean', () => {
+    it('Should generate true when value >= 9 and <= 13', () => {
+      const
+        formula = 'stateToBoolean';
+      const multiplier = null;
+      const precision = null;
+      const context = {};
+      const valueKey = 'R1S';
+      const readingCurrent = { R1S: 9 };
+      const readingLast = { R1S: 9 };
+      const physical = {};
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical,
+      );
+
+      const expectedResult = true;
+      assert(result === expectedResult);
+
+      readingCurrent.R1S = 13;
+      readingLast.R1S = 13;
+      const result2 = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical,
+      );
+
+      assert(result2 === expectedResult);
+    });
+
+    it('Should generate false when value < 9 and > 13', () => {
+      const
+        formula = 'stateToBoolean';
+      const multiplier = null;
+      const precision = null;
+      const context = {};
+      const valueKey = 'R1S';
+      const readingCurrent = { R1S: 1 };
+      const readingLast = { R1S: 1 };
+      const physical = {};
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical,
+      );
+
+      const expectedResult = false;
+      assert(result === expectedResult);
+
+      readingCurrent.R1S = 14;
+      readingLast.R1S = 14;
+      const result2 = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical,
+      );
+
+      assert(result2 === expectedResult);
     });
   });
 
