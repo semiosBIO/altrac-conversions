@@ -89,7 +89,7 @@ describe('moisture functions', () => {
         valueKey,
       );
 
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
 
     it('Should generate the expected moisture sensor average value', () => {
@@ -118,7 +118,7 @@ describe('moisture functions', () => {
         valueKey,
       );
 
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
 
     it('Should generate negative values for low readings', () => {
@@ -147,7 +147,7 @@ describe('moisture functions', () => {
         valueKey,
       );
 
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
 
     it('Should generate values above 100 for high readings', () => {
@@ -174,7 +174,7 @@ describe('moisture functions', () => {
         precision,
         valueKey,
       );
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
   });
 
@@ -202,7 +202,7 @@ describe('moisture functions', () => {
         precision,
         valueKey,
       );
-      assert(typeof result === 'undefined', `result should be 'undefined', not ${result}`);
+      assert(typeof result === 'undefined');
     });
 
     it('Should generate the expected moisture sensor average value', () => {
@@ -229,7 +229,7 @@ describe('moisture functions', () => {
         precision,
         valueKey,
       );
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
 
     it('Should generate the expected average value for a small collection of keys', () => {
@@ -253,7 +253,7 @@ describe('moisture functions', () => {
         precision,
         valueKey,
       );
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
   });
 
@@ -275,7 +275,7 @@ describe('moisture functions', () => {
         valueKey,
       );
 
-      assert(typeof result === 'undefined', `result should be 'undefined', not ${result}`);
+      assert(typeof result === 'undefined');
     });
 
     it('Should generate the expected average value', () => {
@@ -295,7 +295,7 @@ describe('moisture functions', () => {
         precision,
         valueKey,
       );
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
 
     it('Should generate the expected average salinity value for a small collection of keys', () => {
@@ -312,7 +312,7 @@ describe('moisture functions', () => {
         precision,
         valueKey,
       );
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
   });
 
@@ -335,7 +335,7 @@ describe('moisture functions', () => {
         valueKey,
       );
 
-      assert(typeof result === 'undefined', `result should be 'undefined', not ${result}`);
+      assert(typeof result === 'undefined');
     });
 
     it('Should generate the expected average value', () => {
@@ -355,7 +355,7 @@ describe('moisture functions', () => {
         precision,
         valueKey,
       );
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
 
     it('Should generate the expected average value for a small collection of keys', () => {
@@ -372,7 +372,7 @@ describe('moisture functions', () => {
         precision,
         valueKey,
       );
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
   });
 });

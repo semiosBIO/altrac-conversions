@@ -29,7 +29,7 @@ describe('displayFormula function', () => {
 
       const expectedResult = 'ERR';
 
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
 
     it('Should generate an error for invalid value', () => {
@@ -55,7 +55,7 @@ describe('displayFormula function', () => {
 
       const expectedResult = 'ERR';
 
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
 
     it('Should accept a valueKey Array', () => {
@@ -90,7 +90,7 @@ describe('displayFormula function', () => {
 
       const expectedResult = 16;
 
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
   });
 
@@ -122,7 +122,7 @@ describe('displayFormula function', () => {
 
       const expectedResult = 1;
 
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
   });
 
@@ -151,7 +151,7 @@ describe('displayFormula function', () => {
 
 
       const expectedResult = true;
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
 
     it('Should generate false when value === 0', () => {
@@ -178,7 +178,7 @@ describe('displayFormula function', () => {
 
 
       const expectedResult = false;
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
   });
 
@@ -206,7 +206,7 @@ describe('displayFormula function', () => {
       );
 
       const expectedResult = true;
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
 
     it('Should generate false when value < 5', () => {
@@ -232,7 +232,91 @@ describe('displayFormula function', () => {
       );
 
       const expectedResult = false;
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
+    });
+  });
+
+  describe('stateToBoolean', () => {
+    it('Should generate true when value >= 9 and <= 13', () => {
+      const
+        formula = 'stateToBoolean';
+      const multiplier = null;
+      const precision = null;
+      const context = {};
+      const valueKey = 'R1S';
+      const readingCurrent = { R1S: 9 };
+      const readingLast = { R1S: 9 };
+      const physical = {};
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical,
+      );
+
+      const expectedResult = true;
+      assert(result === expectedResult);
+
+      readingCurrent.R1S = 13;
+      readingLast.R1S = 13;
+      const result2 = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical,
+      );
+
+      assert(result2 === expectedResult);
+    });
+
+    it('Should generate false when value < 9 and > 13', () => {
+      const
+        formula = 'stateToBoolean';
+      const multiplier = null;
+      const precision = null;
+      const context = {};
+      const valueKey = 'R1S';
+      const readingCurrent = { R1S: 1 };
+      const readingLast = { R1S: 1 };
+      const physical = {};
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical,
+      );
+
+      const expectedResult = false;
+      assert(result === expectedResult);
+
+      readingCurrent.R1S = 14;
+      readingLast.R1S = 14;
+      const result2 = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical,
+      );
+
+      assert(result2 === expectedResult);
     });
   });
 
@@ -273,7 +357,7 @@ describe('displayFormula function', () => {
       );
 
       const expectedResult = 1;
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
 
     it('should generate the correct difference between two values, using string valueKeys', () => {
@@ -299,7 +383,7 @@ describe('displayFormula function', () => {
       );
 
       const expectedResult = 1;
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
 
     it('should generate zero when values are equal', () => {
@@ -338,7 +422,7 @@ describe('displayFormula function', () => {
       );
 
       const expectedResult = 0;
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
 
     it('should generate an error when values are non-numeric', () => {
@@ -377,7 +461,7 @@ describe('displayFormula function', () => {
       );
 
       const expectedResult = 'ERR';
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
   });
 
@@ -404,7 +488,7 @@ describe('displayFormula function', () => {
       );
 
       const expectedResult = 10;
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
 
     it('should generate generate zero when an input value is invalid', () => {
@@ -430,7 +514,7 @@ describe('displayFormula function', () => {
       );
 
       const expectedResult = 0;
-      assert(result === expectedResult, `result should be ${expectedResult}, not ${result}`);
+      assert(result === expectedResult);
     });
   });
 });
