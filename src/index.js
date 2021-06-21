@@ -1661,23 +1661,23 @@ const displayFormula = function displayFormula(
       } else if (valueKey === 'R1F') {
         returnValue = map(
           readingCurrent[valueKey] / multiplierValue,
-          physicalValue.anIn2SigMin || 4,
-          physicalValue.anIn2SigMax || 20,
-          physicalValue.anIn2Min || 0,
-          physicalValue.anIn2Max || 100,
+          physicalValue.r1FSigMin || 4,
+          physicalValue.r1FSigMax || 20,
+          physicalValue.r1FMin || 0,
+          physicalValue.r1FMax || 100,
         );
-        if (returnValue < physicalValue.anIn2Min) returnValue = physicalValue.anIn2Min;
-        if (returnValue > physicalValue.anIn2Max) returnValue = physicalValue.anIn2Max;
+        if (returnValue < physicalValue.r1FMin) returnValue = physicalValue.r1FMin;
+        if (returnValue > physicalValue.r1FMax) returnValue = physicalValue.r1FMax;
       } else if (valueKey === 'R2F') {
         returnValue = map(
           readingCurrent[valueKey] / multiplierValue,
-          physicalValue.anIn2SigMin || 4,
-          physicalValue.anIn2SigMax || 20,
-          physicalValue.anIn2Min || 0,
-          physicalValue.anIn2Max || 100,
+          physicalValue.r2FSigMin || 4,
+          physicalValue.r2FSigMax || 20,
+          physicalValue.r2FMin || 0,
+          physicalValue.r2FMax || 100,
         );
-        if (returnValue < physicalValue.anIn2Min) returnValue = physicalValue.anIn2Min;
-        if (returnValue > physicalValue.anIn2Max) returnValue = physicalValue.anIn2Max;
+        if (returnValue < physicalValue.r2FMin) returnValue = physicalValue.r2FMin;
+        if (returnValue > physicalValue.r2FMax) returnValue = physicalValue.r2FMax;
       }
       break;
     case 'voltage0To10':
@@ -1704,23 +1704,23 @@ const displayFormula = function displayFormula(
       } else if (valueKey === 'R1F') {
         returnValue = map(
           readingCurrent[valueKey] / multiplierValue,
-          physicalValue.anIn2SigMin || 0,
-          physicalValue.anIn2SigMax || 10,
-          physicalValue.anIn2Min || 0,
-          physicalValue.anIn2Max || 100,
+          physicalValue.r1FSigMin || 0,
+          physicalValue.r1FSigMax || 10,
+          physicalValue.r1FMin || 0,
+          physicalValue.r1FMax || 100,
         );
-        if (returnValue < physicalValue.anIn2Min) returnValue = physicalValue.anIn2Min;
-        if (returnValue > physicalValue.anIn2Max) returnValue = physicalValue.anIn2Max;
+        if (returnValue < physicalValue.r1FMin) returnValue = physicalValue.r1FMin;
+        if (returnValue > physicalValue.r1FMax) returnValue = physicalValue.r1FMax;
       } else if (valueKey === 'R2F') {
         returnValue = map(
           readingCurrent[valueKey] / multiplierValue,
-          physicalValue.anIn2SigMin || 0,
-          physicalValue.anIn2SigMax || 10,
-          physicalValue.anIn2Min || 0,
-          physicalValue.anIn2Max || 100,
+          physicalValue.r2FSigMin || 0,
+          physicalValue.r2FSigMax || 10,
+          physicalValue.r2FMin || 0,
+          physicalValue.r2FMax || 100,
         );
-        if (returnValue < physicalValue.anIn2Min) returnValue = physicalValue.anIn2Min;
-        if (returnValue > physicalValue.anIn2Max) returnValue = physicalValue.anIn2Max;
+        if (returnValue < physicalValue.r2FMin) returnValue = physicalValue.r2FMin;
+        if (returnValue > physicalValue.r2FMax) returnValue = physicalValue.r2FMax;
       }
       break;
     case 'closure':
