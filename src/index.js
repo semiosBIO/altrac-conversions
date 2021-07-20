@@ -1851,7 +1851,7 @@ const displayFormula = function displayFormula(
     );
   }
 
-  if (isNumber(returnValue)) {
+  if (isNumber(returnValue) && !(typeof returnValue === 'string' && returnValue.includes('/'))) {
     returnValue = round(returnValue, precisionValue);
   }
 
