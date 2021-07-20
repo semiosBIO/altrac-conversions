@@ -1,6 +1,6 @@
 {
   "name": "@altracio/altrac-conversions",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "description": "Conversions and formulas for altrac",
   "main": "lib/index.js",
   "scripts": {
