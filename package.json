@@ -1,7 +1,7 @@
 {
   "name": "@altracio/altrac-conversions",
-  "version": "1.1.8",
-  "description": "Conversions and formulas for altrac",
+  "version": "1.1.9",
+  "description": "Conversions and formulas for Altrac",
   "main": "lib/index.js",
   "scripts": {
     "test": "export NODE_ENV=test; mocha --exit test",
