@@ -124,6 +124,66 @@ describe('displayFormula function', () => {
 
       assert(result === expectedResult);
     });
+
+    it('Should generate the correct value for bindicator 1/4', () => {
+      const formula = 'binLevel';
+      const multiplier = 1;
+      const precision = 2;
+      const context = {};
+      const valueKey = '131';
+      const readingCurrent = { 131: 1 };
+      const readingLast = { 131: 1 };
+      const physical = {
+        debounce: 1,
+        powered: false,
+        bins: 4,
+      };
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical,
+      );
+
+      const expectedResult = '1/4';
+
+      assert(result === expectedResult);
+    });
+
+    it('Should generate the correct value for bindicator 2/3', () => {
+      const formula = 'binLevel';
+      const multiplier = 1;
+      const precision = 2;
+      const context = {};
+      const valueKey = '131';
+      const readingCurrent = { 131: 7 };
+      const readingLast = { 131: 7 };
+      const physical = {
+        debounce: 1,
+        powered: true,
+        bins: 3,
+      };
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical,
+      );
+
+      const expectedResult = '2/3';
+
+      assert(result === expectedResult);
+    });
   });
 
   describe('toBoolean', () => {
@@ -514,6 +574,81 @@ describe('displayFormula function', () => {
       );
 
       const expectedResult = 0;
+      assert(result === expectedResult);
+    });
+  });
+
+  describe('rounding', () => {
+    it('should generate the correct value no digits', () => {
+      const formula = 'default';
+      const multiplier = 1;
+      const precision = 0;
+      const context = {};
+      const valueKey = 'A';
+      const readingCurrent = { A: 1.09934 };
+      const readingLast = { A: 1.09934 };
+      const physical = {};
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical,
+      );
+
+      const expectedResult = 1;
+      assert(result === expectedResult);
+    });
+    it('should generate the correct value one digit', () => {
+      const formula = 'default';
+      const multiplier = 1;
+      const precision = 1;
+      const context = {};
+      const valueKey = 'A';
+      const readingCurrent = { A: 1.09934 };
+      const readingLast = { A: 1.09934 };
+      const physical = {};
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical,
+      );
+
+      const expectedResult = 1.1;
+      assert(result === expectedResult);
+    });
+    it('should generate the correct value two digits', () => {
+      const formula = 'default';
+      const multiplier = 1;
+      const precision = 2;
+      const context = {};
+      const valueKey = 'A';
+      const readingCurrent = { A: 1.11934 };
+      const readingLast = { A: 1.11934 };
+      const physical = {};
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical,
+      );
+
+      const expectedResult = 1.12;
       assert(result === expectedResult);
     });
   });
