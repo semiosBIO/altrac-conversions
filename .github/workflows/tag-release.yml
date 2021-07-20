@@ -38,7 +38,7 @@ jobs:
 
       - name: Bump version
         run: |
-          npm version ${GITHUB_REF:19}
+          npm version ${GITHUB_REF:19} --allow-same-version
 
       - name: Build changelog
         id: build_changelog
