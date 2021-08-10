@@ -241,7 +241,7 @@ describe('displayFormula function', () => {
       assert(result === expectedResult);
     });
   });
-  describe.only('fourToTwentySD_', () => {
+  describe('fourToTwentySD_', () => {
     let formula = 'fourToTwentySD1';
     let multiplier = 10000;
     let precision = 1;
@@ -293,7 +293,7 @@ describe('displayFormula function', () => {
     });
 
   });
-  describe.only('voltage0To10', () => {
+  describe('voltage0To10', () => {
     let formula = 'voltage0To10';
     let multiplier = 1;
     let precision = 1;
