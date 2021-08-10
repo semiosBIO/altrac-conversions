@@ -496,7 +496,7 @@ const percentTo20V = function percentTo20V(
   );
 };
 
-const fourToTwenty = function fourToTwenty(p, min, max, zero, precision) {
+const fourToTwenty = function fourToTwenty(p, min, max, zero, precision, reference = 3.34) {
   let minNumber = 0;
   let maxNumber = 100;
   let precisionNumber = 0;
@@ -513,8 +513,10 @@ const fourToTwenty = function fourToTwenty(p, min, max, zero, precision) {
   if (!Number.isNaN(precision)) {
     precisionNumber = Number(precision);
   }
-  const returnValue = (((((p * 3.34) / 100) * 1000) - 4) * (maxNumber - minNumber)) / (20 - 4);
-  const mA = (((p * 3.34) / 100) * 1000);
+  const volt = p * reference;
+  const mA = volt * 10;
+  const mAP = (mA - 4) / 16;
+  const returnValue = mAP * (maxNumber - minNumber) + minNumber;
   if (mA > 3.5 && returnValue < zeroNumber) {
     return 0;
   } if (returnValue < zeroNumber) {
@@ -1637,6 +1639,26 @@ const displayFormula = function displayFormula(
         physicalValue.precision || 0,
       );
       break;
+    case 'fourToTwentySD1':
+      returnValue = fourToTwenty(
+        readingCurrent[valueKey] / multiplierValue,
+        physicalValue.minSD1 || 0,
+        physicalValue.maxSD1 || 100,
+        physicalValue.zeroSD1 || 0,
+        physicalValue.precisionSD1 || 0,
+        2.048,
+      );
+      break;
+    case 'fourToTwentySD2':
+      returnValue = fourToTwenty(
+        readingCurrent[valueKey] / multiplierValue,
+        physicalValue.minSD2 || 0,
+        physicalValue.maxSD2 || 100,
+        physicalValue.zeroSD2 || 0,
+        physicalValue.precisionSD2 || 0,
+        2.048,
+      );
+      break;
     case 'current4To20':
       if (valueKey === 'AN1') {
         returnValue = map(
@@ -1721,6 +1743,16 @@ const displayFormula = function displayFormula(
         );
         if (returnValue < physicalValue.r2FMin) returnValue = physicalValue.r2FMin;
         if (returnValue > physicalValue.r2FMax) returnValue = physicalValue.r2FMax;
+      } else {
+        returnValue = map(
+          readingCurrent[valueKey] / multiplierValue,
+          physicalValue.inSigMin || 0,
+          physicalValue.inSigMax || 10,
+          physicalValue.inMin || 0,
+          physicalValue.inMax || 100,
+        );
+        if (returnValue < physicalValue.inMin) returnValue = physicalValue.inMin;
+        if (returnValue > physicalValue.inMax) returnValue = physicalValue.inMax;
       }
       break;
     case 'closure':
