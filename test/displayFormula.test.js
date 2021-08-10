@@ -241,6 +241,184 @@ describe('displayFormula function', () => {
       assert(result === expectedResult);
     });
   });
+  describe('fourToTwentySD_', () => {
+    let formula = 'fourToTwentySD1';
+    let multiplier = 10000;
+    let precision = 1;
+    let context = {};
+    let valueKey = 150;
+    let readingCurrent = { 150: 3960 };
+    let readingLast = { 150: 3960 };
+    let physical = {};
+
+    beforeEach(() => {
+      formula = 'fourToTwentySD1';
+      multiplier = 10000;
+      precision = 1;
+      context = {};
+      valueKey = 150;
+      readingCurrent = { 150: 3960 };
+      readingLast = { 150: 3960 };
+      physical = {};
+    })
+    it('Should calculate correctly with defaults', () => {
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical,
+      );
+      assert.strictEqual(result, 26);
+    });
+    it('Should calculate correctly with defaults', () => {
+      physical.minSD1 = 10;
+      physical.maxSD1 = 90;
+      physical.zeroSD1 = 0;
+      physical.precisionSD1 = 2;
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical,
+      );
+      assert.strictEqual(result, 30.6);
+    });
+
+  });
+  describe('voltage0To10', () => {
+    let formula = 'voltage0To10';
+    let multiplier = 1;
+    let precision = 1;
+    let context = {};
+    let valueKey = 133;
+    let readingCurrent = { 133: 0.1 };
+    let readingLast = { 133: 0.1 };
+    let physical = {}
+
+    beforeEach(() => {
+      formula = 'voltage0To10';
+      multiplier = 1;
+      precision = 1;
+      context = {};
+      valueKey = 150;
+      readingCurrent = { 150: 0.180 };
+      readingLast = { 150: 0.180 };
+      physical = {};
+    })
+    it('Should calculate 0 correctly', () => {
+      readingCurrent = { 150: 0.180 };
+      readingLast = { 150: 0.180 };
+      physical = {
+        inSigMin: 0.180,
+        inSigMax: 0.9,
+        inMin: 0,
+        inMax: 50,
+      };
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical,
+      );
+      assert.strictEqual(result, 0);
+    });
+    it('Should calculate 5 PSI on 50 PSI range (10%)', () => {
+      readingCurrent = { 150: 0.252 };
+      readingLast = { 150: 0.252 };
+      physical = {
+        inSigMin: 0.180,
+        inSigMax: 0.9,
+        inMin: 0,
+        inMax: 50,
+      };
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical,
+      );
+      assert.strictEqual(result, 5);
+    });
+    it('Should calculate 10 PSI on 50 PSI range (20%)', () => {
+      readingCurrent = { 150: 0.324 };
+      readingLast = { 150: 0.324 };
+      physical = {
+        inSigMin: 0.180,
+        inSigMax: 0.9,
+        inMin: 0,
+        inMax: 50,
+      };
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical,
+      );
+      assert.strictEqual(result, 10);
+    });
+    it('Should calculate LOW PSI as 0', () => {
+      readingCurrent = { 150: 0.0 };
+      readingLast = { 150: 0.0 };
+      physical = {
+        inSigMin: 0.180,
+        inSigMax: 0.9,
+        inMin: 0,
+        inMax: 50,
+      };
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical,
+      );
+      assert.strictEqual(result, 0);
+    });
+    it('Should calculate HIGH PSI as 50', () => {
+      readingCurrent = { 150: 1.0 };
+      readingLast = { 150: 1.0 };
+      physical = {
+        inSigMin: 0.180,
+        inSigMax: 0.9,
+        inMin: 0,
+        inMax: 50,
+      };
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical,
+      );
+      assert.strictEqual(result, 50);
+    });
+  });
 
   describe('mAToBoolean', () => {
     it('Should generate true when value >= 5', () => {
