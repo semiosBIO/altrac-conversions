@@ -1743,7 +1743,7 @@ const displayFormula = function displayFormula(
         );
         if (returnValue < physicalValue.r2FMin) returnValue = physicalValue.r2FMin;
         if (returnValue > physicalValue.r2FMax) returnValue = physicalValue.r2FMax;
-      }  else {
+      } else {
         returnValue = map(
           readingCurrent[valueKey] / multiplierValue,
           physicalValue.inSigMin || 0,
