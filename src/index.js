@@ -1014,7 +1014,9 @@ const moistureSensor = function moistureSensor(reading, physical, multiplier, pr
 
   keyList.forEach((key) => {
     const rawValue = reading[key];
-    if (isNumber(rawValue)) {
+    const rawDate = reading[`${key}Date`] || new Date();
+
+    if (isNumber(rawValue) && (Date.parse(rawDate) > (new Date().getTime() - 86400000))) {
       const value = Number(rawValue) / multiplier;
       if (value > 2 && value < 99) {
         total += value;
