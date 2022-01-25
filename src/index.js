@@ -992,6 +992,22 @@ const gallonsToAcreFeet = function gallonsToAcreFeet(value, precision) {
   return returnValue;
 };
 
+const litersToAcreFeet = function litersToAcreFeet(value, precision) {
+  let returnValue = 0;
+  if (!Number.isNaN(value) && Number(value) > 0) {
+    returnValue = round((Number(value) / 1233481.8553199936), precision);
+  }
+  return returnValue;
+};
+
+const litersToGallons = function litersToGallons(value, precision) {
+  let returnValue = 0;
+  if (!Number.isNaN(value) && Number(value) > 0) {
+    returnValue = round((Number(value) / 3.78541253), precision);
+  }
+  return returnValue;
+};
+
 /**
  * Generates the display value for a collection of moisture sensor readings.
  * @param {*} reading
@@ -1333,6 +1349,12 @@ function valueCalculator(
       break;
     case 'gallonsToAcreFeet':
       returnValue = gallonsToAcreFeet(value, precision);
+      break;
+    case 'litersToAcreFeet':
+      returnValue = litersToAcreFeet(value, precision);
+      break;
+    case 'litersToGallons':
+      returnValue = litersToGallons(value, precision);
       break;
     case 'flowMeterState':
       returnValue = flowMeterState(value);
@@ -2277,6 +2299,8 @@ module.exports = {
   ftToM,
   fuelLevel,
   gallonsToAcreFeet,
+  litersToAcreFeet,
+  litersToGallons,
   insertTime,
   insertTimeDuration,
   isNumber,
