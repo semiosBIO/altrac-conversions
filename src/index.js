@@ -1032,7 +1032,7 @@ const litersToUserPreference = function litersToUserPreference(value, userPrefer
     if (userPreference === 'gpm') {
       returnValue = round((Number(value) / 3.78541), precision);
     } else {
-      returnValue = value;
+      returnValue = round((Number(value)), precision);
     }
   }
   return returnValue;
