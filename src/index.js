@@ -1008,6 +1008,36 @@ const litersToGallons = function litersToGallons(value, precision) {
   return returnValue;
 };
 
+const litersToUserPreference = function litersToUserPreference(value, userPreference, unitType, precision) {
+  let returnValue = 0;
+
+  if (!Number.isNaN(value) && Number(value) > 0) {
+    if( unitType === 'volume') {
+    if (userPreference === 'liters') {
+      returnValue = value;
+    } else if (userPreference === 'gallons') {
+      returnValue = round((Number(value) / 3.78541), precision);
+    } else if ( userPreference === 'acreInch') {
+      returnValue = round((Number(value) / 102790.15313), precision);
+    } else if ( userPreference === 'acreFeet') {
+      returnValue = round((Number(value) / 1233481.8553199936), precision);
+    } else if ( userPreference === 'cubicFeet') {
+      returnValue = round((Number(value) / 28.316846592), precision);
+    }else if ( userPreference === 'hectareM') {
+      returnValue = round((Number(value) / 10000000), precision);
+    }else if ( userPreference === 'cubicM') {
+      returnValue = round((Number(value) / 1000), precision);
+    }
+  } else if ( unitType === 'flow')
+    if (userPreference === 'gpm') {
+      returnValue = round((Number(value) / 3.78541), precision);
+    } else {
+      returnValue = value;
+    }
+  }
+  return returnValue;
+}
+
 /**
  * Generates the display value for a collection of moisture sensor readings.
  * @param {*} reading
@@ -1355,6 +1385,9 @@ function valueCalculator(
       break;
     case 'litersToGallons':
       returnValue = litersToGallons(value, precision);
+      break;
+    case 'litersToUserPreference':
+      returnValue = litersToUserPreference(value, userPreference, unitType, precision);
       break;
     case 'flowMeterState':
       returnValue = flowMeterState(value);
@@ -2301,6 +2334,7 @@ module.exports = {
   gallonsToAcreFeet,
   litersToAcreFeet,
   litersToGallons,
+  litersToUserPreference,
   insertTime,
   insertTimeDuration,
   isNumber,
