@@ -1013,10 +1013,10 @@ const litersToUserPreference = function litersToUserPreference(value, userPrefer
       returnValue = round((Number(value) / 1233481.8553199936), precision);
     }
   } else if ( unitType === 'flow')
-    if (userPreference === 'gpm') {
-      returnValue = round((Number(value) / 3.78541), precision);
-    } else {
+    if (userPreference === 'lpm') {
       returnValue = round((Number(value)), precision);
+    } else {
+      returnValue = round((Number(value) / 3.78541), precision);
     }
   }
   return returnValue;
