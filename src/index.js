@@ -1258,6 +1258,8 @@ function valueCalculator(
   formula,
   value,
   context,
+  unitType,
+  userPreference,
   precision,
 ) {
   let returnValue = value;
@@ -2311,7 +2313,6 @@ module.exports = {
   ftToM,
   fuelLevel,
   gallonsToAcreFeet,
-
   litersToUserPreference,
   insertTime,
   insertTimeDuration,
