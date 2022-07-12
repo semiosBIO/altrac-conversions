@@ -1624,6 +1624,25 @@ const displayFormula = function displayFormula(
       );
     }
       break;
+    case 'flowRate': {
+      let flowTime = 132;
+      if (physicalValue.flowTimestampKey) {
+        flowTime = physicalValue.flowTimestampKey;
+      }
+      if (physicalValue.unitsPerPulse) {
+        multiplierValue = (1 / Number(physicalValue.unitsPerPulse));
+      } else if (physicalValue.pulseMultiplier) {
+        multiplierValue = Number(physicalValue.pulseMultiplier);
+      }
+      returnValue = pumpOutput(
+        readingCurrent[valueKey],
+        readingLast[valueKey],
+        readingCurrent[flowTime] || readingCurrent.date,
+        readingLast[flowTime] || readingLast.date,
+        multiplierValue,
+      );
+    }
+      break;
     case 'temperatureAutoDecimal':
       returnValue = fromC(readingCurrent[valueKey] / multiplierValue, context.tempConv);
       if (returnValue < 10 && returnValue > -10) {
