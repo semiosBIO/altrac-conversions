@@ -1947,6 +1947,43 @@ const displayFormula = function displayFormula(
   return returnValue;
 };
 
+const fourToTwentyCurrent = (
+  multiplierValue,
+  precision,
+  context,
+  valueKey,
+  value,
+  readingLast,
+  physical,
+) => {
+
+  let returnValue = 0;
+
+  if (valueKey === 'R1F') {
+    returnValue = map(
+      value[valueKey] / multiplierValue,
+      physical.r1FMin || 0,
+      physical.r1FMax || 100,
+      physical.r1FSigMin || 4,
+      physical.r1FSigMax || 20,
+    );
+  } else if (valueKey === 'R2F') {
+    returnValue = map(
+      value[valueKey] / multiplierValue,
+      physical.r2FMin || 0,
+      physical.r2FMax || 100,
+      physical.r2FSigMin || 4,
+      physical.r2FSigMax || 20,
+    );
+  } else if (valueKey === '142') {
+    returnValue = fourToTwenty();
+  } else if (valueKey === '143') {
+    returnValue = fourToTwenty();
+  }
+
+  return returnValue;
+
+}
 /**
  * Pads a value with 0.
  * @param {int} value to be padded.
@@ -2322,6 +2359,7 @@ module.exports = {
   decodeScheduleUI,
   decodeTime,
   displayFormula,
+  fourToTwentyCurrent,
   engineStateCalculator,
   flowMeterState,
   formatTime,
