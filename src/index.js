@@ -1697,12 +1697,12 @@ const displayFormula = function displayFormula(
       );
       break;
     case 'fourToTwentySD1':
-      returnValue = fourToTwenty(
-        readingCurrent[valueKey] / multiplierValue,
-        physicalValue.minSD1 || 0,
-        physicalValue.maxSD1 || 100,
-        physicalValue.zeroSD1 || 0,
-        physicalValue.precisionSD1 || 0,
+      returnValue = fourToTwenty( // but in map 
+        readingCurrent[valueKey] / multiplierValue, //psi
+        physicalValue.minSD1 || 0, // 0
+        physicalValue.maxSD1 || 100, // 100
+        physicalValue.zeroSD1 || 0, // 1953.125
+        physicalValue.precisionSD1 || 0, // 9765.625
         2.048,
       );
       break;
@@ -1947,13 +1947,9 @@ const displayFormula = function displayFormula(
   return returnValue;
 };
 
-const fourToTwentyCurrent = (
-  multiplierValue,
-  precision,
-  context,
+const pressureFourToTwenty = (
   valueKey,
   value,
-  readingLast,
   physical,
 ) => {
 
@@ -1961,7 +1957,7 @@ const fourToTwentyCurrent = (
 
   if (valueKey === 'R1F') {
     returnValue = map(
-      value[valueKey] / multiplierValue,
+      value,
       physical.r1FMin || 0,
       physical.r1FMax || 100,
       physical.r1FSigMin || 4,
@@ -1969,16 +1965,20 @@ const fourToTwentyCurrent = (
     );
   } else if (valueKey === 'R2F') {
     returnValue = map(
-      value[valueKey] / multiplierValue,
+      value,
       physical.r2FMin || 0,
       physical.r2FMax || 100,
       physical.r2FSigMin || 4,
       physical.r2FSigMax || 20,
     );
-  } else if (valueKey === '142') {
-    returnValue = fourToTwenty();
-  } else if (valueKey === '143') {
-    returnValue = fourToTwenty();
+  } else if (valueKey === '142' || valueKey === '143') {
+    returnValue = map(
+      value,
+      physical.r2FMin || 0,
+      physical.r2FMax || 100,
+      1953.125,
+      9765.625,
+    );
   }
 
   return returnValue;
@@ -2359,7 +2359,7 @@ module.exports = {
   decodeScheduleUI,
   decodeTime,
   displayFormula,
-  fourToTwentyCurrent,
+  pressureFourToTwenty,
   engineStateCalculator,
   flowMeterState,
   formatTime,
