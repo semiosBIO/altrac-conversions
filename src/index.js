@@ -1960,16 +1960,16 @@ const pressureFourToTwenty = (
       value,
       physical.r1FMin || 0,
       physical.r1FMax || 100,
-      physical.r1FSigMin || 4,
-      physical.r1FSigMax || 20,
+      4,
+      20,
     );
   } else if (valueKey === 'R2F') {
     returnValue = map(
       value,
       physical.r2FMin || 0,
       physical.r2FMax || 100,
-      physical.r2FSigMin || 4,
-      physical.r2FSigMax || 20,
+      4,
+      20,
     );
   } else if (valueKey === '142' || valueKey === '143') {
     returnValue = map(
