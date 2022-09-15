@@ -1648,6 +1648,33 @@ const displayFormula = function displayFormula(
       );
     }
       break;
+    case 'flowRateLiters': {
+      let flowTime = 132;
+      if (physicalValue.flowTimestampKey) {
+        flowTime = physicalValue.flowTimestampKey;
+      }
+      if (physicalValue.unitsPerPulse) {
+        multiplierValue = (1 / Number(physicalValue.unitsPerPulse));
+      } else if (physicalValue.pulseMultiplier) {
+        multiplierValue = Number(physicalValue.pulseMultiplier);
+      }
+      let flowUnit = 'gallons';
+      if (physicalValue.flowUnits) {
+        flowUnit = physicalValue.flowUnits;
+      }
+
+      if (flowUnit === 'gallons') {
+        multiplierValue /= 3.78541;
+      }
+      returnValue = pumpOutput(
+        readingCurrent[valueKey],
+        readingLast[valueKey],
+        readingCurrent[flowTime] || readingCurrent.date,
+        readingLast[flowTime] || readingLast.date,
+        multiplierValue,
+      );
+    }
+      break;
     case 'flowCumulative': {
       let flowTime = 132;
       if (physicalValue.flowTimestampKey) {
