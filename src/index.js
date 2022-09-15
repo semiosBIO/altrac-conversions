@@ -595,17 +595,22 @@ const flowMeterState = function flowMeterState(value) {
   return 'STP';
 };
 
-const pumpOutput = (readingCurrent, readingLast, currentTime, lastTime, multiplierValue) => {
-  let diff = (readingCurrent - readingLast) / multiplierValue;
+const pulseDiff = (readingCurrent, readingLast, currentTime, lastTime) => {
+  let diff = (readingCurrent - readingLast);
   if (readingCurrent - readingLast < 0 && readingCurrent - readingLast >= -60000) {
     return 0;
   }
   if (readingCurrent - readingLast < -60000) {
-    diff = (readingCurrent - readingLast + 65535) / multiplierValue;
+    diff = (readingCurrent - readingLast + 65535);
   }
   if (currentTime === lastTime) {
     return 0;
   }
+  return diff;
+};
+
+const pumpOutput = (readingCurrent, readingLast, currentTime, lastTime, multiplierValue) => {
+  const diff = pulseDiff(readingCurrent, readingLast, currentTime, lastTime) / multiplierValue;
 
   const current = new Date(isNumberFormat(currentTime)
     ? currentTime * 1000
@@ -1641,6 +1646,52 @@ const displayFormula = function displayFormula(
         readingLast[flowTime] || readingLast.date,
         multiplierValue,
       );
+    }
+      break;
+    case 'flowCumulative': {
+      let flowTime = 132;
+      if (physicalValue.flowTimestampKey) {
+        flowTime = physicalValue.flowTimestampKey;
+      }
+      if (physicalValue.unitsPerPulse) {
+        multiplierValue = Number(physicalValue.unitsPerPulse);
+      } else if (physicalValue.pulseMultiplier) {
+        multiplierValue = 1 / Number(physicalValue.pulseMultiplier);
+      }
+      returnValue = pulseDiff(
+        readingCurrent[valueKey],
+        readingLast[valueKey],
+        readingCurrent[flowTime] || readingCurrent.date,
+        readingLast[flowTime] || readingLast.date,
+      );
+      returnValue *= multiplierValue;
+    }
+      break;
+    case 'flowCumulativeLiters': {
+      let flowTime = 132;
+      if (physicalValue.flowTimestampKey) {
+        flowTime = physicalValue.flowTimestampKey;
+      }
+      if (physicalValue.unitsPerPulse) {
+        multiplierValue = Number(physicalValue.unitsPerPulse);
+      } else if (physicalValue.pulseMultiplier) {
+        multiplierValue = 1 / Number(physicalValue.pulseMultiplier);
+      }
+      let flowUnit = 'gallons';
+      if (physicalValue.flowUnits) {
+        flowUnit = physicalValue.flowUnits;
+      }
+
+      if (flowUnit === 'gallons') {
+        multiplierValue *= 3.78541;
+      }
+      returnValue = pulseDiff(
+        readingCurrent[valueKey],
+        readingLast[valueKey],
+        readingCurrent[flowTime] || readingCurrent.date,
+        readingLast[flowTime] || readingLast.date,
+      );
+      returnValue *= multiplierValue;
     }
       break;
     case 'temperatureAutoDecimal':
