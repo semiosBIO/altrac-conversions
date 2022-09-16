@@ -1954,8 +1954,8 @@ const pressureFourToTwenty = (
 ) => {
   let returnValue = 0;
 
-  if ( value > 1000 || value < 0) {
-    return 'ERR'
+  if (value > 1000 || value < 0) {
+    return 'ERR';
   }
 
   if (valueKey === 'R1F') {
