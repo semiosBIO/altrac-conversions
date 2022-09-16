@@ -1979,7 +1979,9 @@ const pressureFourToTwenty = (
       value,
       physical.r2FMin || 0,
       physical.r2FMax || 100,
+      // 1953.125 is equal to 4mA for valve = (1953.125 / 10000) * 2.048 * 10 = 4
       1953.125,
+      // 9765.625 is equal to 20mA for valve = (9765.625 / 10000) * 2.048 * 10 = 20
       9765.625,
     );
   } else {
