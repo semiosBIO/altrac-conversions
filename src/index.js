@@ -427,8 +427,8 @@ const nextValveTime = function nextValveTime(valveTimeArr, valveNumber) {
         // nothing to do here
       } else if (
         valveTimeToValveNumber(valveTimeArr[i]) === valveNumberC
-          && valveTimeToValveNumber(valveTimeArr[i + 1]) === valveNumberC
-          && (valveTimeArr[i] < returnValue[0] || returnValue[0] === 0)
+        && valveTimeToValveNumber(valveTimeArr[i + 1]) === valveNumberC
+        && (valveTimeArr[i] < returnValue[0] || returnValue[0] === 0)
       ) {
         returnValue[0] = valveTimeArr[i];
         returnValue[1] = valveTimeArr[i + 1];
@@ -1697,12 +1697,12 @@ const displayFormula = function displayFormula(
       );
       break;
     case 'fourToTwentySD1':
-      returnValue = fourToTwenty( // but in map 
-        readingCurrent[valueKey] / multiplierValue, //psi
-        physicalValue.minSD1 || 0, // 0
-        physicalValue.maxSD1 || 100, // 100
-        physicalValue.zeroSD1 || 0, // 1953.125
-        physicalValue.precisionSD1 || 0, // 9765.625
+      returnValue = fourToTwenty(
+        readingCurrent[valueKey] / multiplierValue,
+        physicalValue.minSD1 || 0,
+        physicalValue.maxSD1 || 100,
+        physicalValue.zeroSD1 || 0,
+        physicalValue.precisionSD1 || 0,
         2.048,
       );
       break;
@@ -1952,8 +1952,11 @@ const pressureFourToTwenty = (
   value,
   physical,
 ) => {
-
   let returnValue = 0;
+
+  if ( value > 1000 || value < 0) {
+    return 'ERR'
+  }
 
   if (valueKey === 'R1F') {
     returnValue = map(
@@ -1979,11 +1982,12 @@ const pressureFourToTwenty = (
       1953.125,
       9765.625,
     );
+  } else {
+    return 'ERR';
   }
 
   return returnValue;
-
-}
+};
 /**
  * Pads a value with 0.
  * @param {int} value to be padded.
