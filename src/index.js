@@ -621,7 +621,7 @@ const pumpOutput = (readingCurrent, readingLast, currentTime, lastTime, multipli
     : lastTime).getTime();
 
   const diffMinutes = (current - previous) / 1000 / 60;
-  const output = Math.round(diff / diffMinutes);
+  const output = diff / diffMinutes;
   return Number.isNaN(output) ? 0 : output;
 };
 

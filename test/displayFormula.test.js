@@ -754,7 +754,113 @@ describe('displayFormula function', () => {
       const expectedResult = 0;
       assert(result === expectedResult);
     });
+    
+    it('should also calculate flowRate correctly', () => {
+      const
+        formula = 'flowRate';
+      const multiplier = 1;
+      const precision = null;
+      const context = {};
+      const valueKey = 'A';
+      const epoch = 1663949598;
+      const readingCurrent = { A: 200, 132: epoch, date: '2020-01-01T00:20:00.000Z' };
+      const readingLast = { A: 100, 132: epoch - 10 * 60, date: '2020-01-01T00:10:00.000Z' };
+      const physical = { unitsPerPulse: 100 };
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical,
+      );
+
+      const expectedResult = 1000;
+      assert(result === expectedResult);
+    });
+    it('should also calculate flowRateLiters correctly', () => {
+      const
+        formula = 'flowRateLiters';
+      const multiplier = 1;
+      const precision = 2;
+      const context = {};
+      const valueKey = 'A';
+      const epoch = 1663949598;
+      const readingCurrent = { A: 200, 132: epoch, date: '2020-01-01T00:20:00.000Z' };
+      const readingLast = { A: 100, 132: epoch - 10 * 60, date: '2020-01-01T00:10:00.000Z' };
+      const physical = { unitsPerPulse: 100 };
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical,
+      );
+
+      const expectedResult = Math.round(1000 * 3.78541 * 100) / 100;
+      assert(result === expectedResult);
+    });
+    it('should also calculate flowCumulative correctly', () => {
+      const
+        formula = 'flowCumulative';
+      const multiplier = 1;
+      const precision = 2;
+      const context = {};
+      const valueKey = 'A';
+      const epoch = 1663949598;
+      const readingCurrent = { A: 200, 132: epoch, date: '2020-01-01T00:20:00.000Z' };
+      const readingLast = { A: 100, 132: epoch - 10 * 60, date: '2020-01-01T00:10:00.000Z' };
+      const physical = { unitsPerPulse: 100 };
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical,
+      );
+
+      const expectedResult = (readingCurrent.A - readingLast.A) * physical.unitsPerPulse;
+      assert(result === expectedResult);
+    });
+    it('should also calculate flowCumulativeLiters correctly', () => {
+      const
+        formula = 'flowCumulativeLiters';
+      const multiplier = 1;
+      const precision = 2;
+      const context = {};
+      const valueKey = 'A';
+      const epoch = 1663949598;
+      const readingCurrent = { A: 200, 132: epoch, date: '2020-01-01T00:20:00.000Z' };
+      const readingLast = { A: 100, 132: epoch - 10 * 60, date: '2020-01-01T00:10:00.000Z' };
+      const physical = { unitsPerPulse: 100 };
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical,
+      );
+
+      const expectedResult = ((readingCurrent.A - readingLast.A) * physical.unitsPerPulse) * 3.78541;
+      assert(result === expectedResult);
+    });
   });
+
 
   describe('rounding', () => {
     it('should generate the correct value no digits', () => {
