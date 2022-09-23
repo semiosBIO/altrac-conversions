@@ -427,8 +427,8 @@ const nextValveTime = function nextValveTime(valveTimeArr, valveNumber) {
         // nothing to do here
       } else if (
         valveTimeToValveNumber(valveTimeArr[i]) === valveNumberC
-          && valveTimeToValveNumber(valveTimeArr[i + 1]) === valveNumberC
-          && (valveTimeArr[i] < returnValue[0] || returnValue[0] === 0)
+        && valveTimeToValveNumber(valveTimeArr[i + 1]) === valveNumberC
+        && (valveTimeArr[i] < returnValue[0] || returnValue[0] === 0)
       ) {
         returnValue[0] = valveTimeArr[i];
         returnValue[1] = valveTimeArr[i + 1];
@@ -2025,6 +2025,49 @@ const displayFormula = function displayFormula(
   return returnValue;
 };
 
+const pressureFourToTwenty = (
+  valueKey,
+  value,
+  physical,
+) => {
+  let returnValue = 0;
+
+  if (value >= 1000 || value < 0) {
+    return 'ERR';
+  }
+
+  if (valueKey === 'R1F') {
+    returnValue = map(
+      value,
+      physical.r1FMin || 0,
+      physical.r1FMax || 100,
+      4,
+      20,
+    );
+  } else if (valueKey === 'R2F') {
+    returnValue = map(
+      value,
+      physical.r2FMin || 0,
+      physical.r2FMax || 100,
+      4,
+      20,
+    );
+  } else if (valueKey === '142' || valueKey === '143') {
+    returnValue = map(
+      value,
+      physical.r2FMin || 0,
+      physical.r2FMax || 100,
+      // 1953.125 is equal to 4mA for valve = (1953.125 / 10000) * 2.048 * 10 = 4
+      1953.125,
+      // 9765.625 is equal to 20mA for valve = (9765.625 / 10000) * 2.048 * 10 = 20
+      9765.625,
+    );
+  } else {
+    return 'ERR';
+  }
+
+  return returnValue;
+};
 /**
  * Pads a value with 0.
  * @param {int} value to be padded.
@@ -2400,6 +2443,7 @@ module.exports = {
   decodeScheduleUI,
   decodeTime,
   displayFormula,
+  pressureFourToTwenty,
   engineStateCalculator,
   flowMeterState,
   formatTime,
