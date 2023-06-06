@@ -1,12 +1,12 @@
 /* global describe, it */
 const assert = require('assert');
 
-const conversions = require('../lib/index.js');
+const conversions = require('../lib/index');
 
 describe('displayFormula function', () => {
   describe('valueKey', () => {
     it('Should generate an error for an invalid valueKey', () => {
-      console.log('put this log above it statement')
+      console.log('put this log above it statement');
       const formula = undefined;
       const multiplier = 1;
       const precision = 2;
@@ -755,7 +755,7 @@ describe('displayFormula function', () => {
       assert(result === expectedResult);
     });
 
-    it('should generate zero when invalid flow time ', () => {
+    it('should generate zero when misalignment between flow time and machine date', () => {
       const
         formula = 'flowRate';
       const multiplier = 1;
@@ -776,7 +776,6 @@ describe('displayFormula function', () => {
         readingLast,
         physical,
       );
-      console.log('~~~~~~', result)
 
       const expectedResult = 0;
       assert(result === expectedResult);
@@ -883,11 +882,11 @@ describe('displayFormula function', () => {
         physical,
       );
 
+      // eslint-disable-next-line max-len
       const expectedResult = ((readingCurrent.A - readingLast.A) * physical.unitsPerPulse) * 3.78541;
       assert(result === expectedResult);
     });
   });
-
 
   describe('rounding', () => {
     it('should generate the correct value no digits', () => {
