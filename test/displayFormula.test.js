@@ -729,7 +729,7 @@ describe('displayFormula function', () => {
       assert(result === expectedResult);
     });
 
-    it('should generate generate zero when an input value is invalid', () => {
+    it('should generate zero when an input value is invalid', () => {
       const
         formula = 'pumpOutput';
       const multiplier = 1;
@@ -754,7 +754,34 @@ describe('displayFormula function', () => {
       const expectedResult = 0;
       assert(result === expectedResult);
     });
-    
+
+    it('should generate zero when invalid flow time ', () => {
+      const
+        formula = 'flowRate';
+      const multiplier = 1;
+      const precision = null;
+      const context = {};
+      const valueKey = '132';
+      const readingCurrent = { A: 200, 132: 1685369367, date: '2023-05-29T14:09:29.000Z' };
+      const readingLast = { A: 100, 132: 1685193065, date: '2023-05-29T14:04:26.000Z' };
+      const physical = { unitsPerPulse: 100 };
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical,
+      );
+      console.log('~~~~~~', result)
+
+      const expectedResult = 0;
+      assert(result === expectedResult);
+    });
+
     it('should also calculate flowRate correctly', () => {
       const
         formula = 'flowRate';
