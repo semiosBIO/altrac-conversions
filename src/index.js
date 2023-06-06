@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 // index.js
 
 const round = function round(n, d) {
@@ -607,6 +608,39 @@ const pulseDiff = (readingCurrent, readingLast, currentTime, lastTime) => {
     return 0;
   }
   return diff;
+};
+
+const timePick = (readingCurrentFlowTime, readingCurrentDate, readingLastFlowTime, readingLastDate) => {
+  /*
+
+    If both readingCurrentFlowTime & readingLastFlowTime don't exist,
+    return date's values
+
+  */
+  if (!readingCurrentFlowTime && !readingLastFlowTime) {
+    return [readingCurrentDate, readingLastDate];
+  }
+
+  // compare time difference between these 2 sets of Datetime data
+  const timeDiffSecondsFlowTime = readingCurrentFlowTime - readingLastFlowTime;
+  const timeDiffDate = (new Date(readingCurrentDate).getTime() - new Date(readingLastDate).getTime()) / 1000;
+
+  /*
+
+    Normally the difference between these 2 time difference values will be less than
+    10 seconds.
+
+    If the difference of timestamp value from flow time key is greater than 60 seconds,
+    treat this as abnormal time value
+
+  */
+  if (timeDiffSecondsFlowTime > timeDiffDate && Math.abs(timeDiffSecondsFlowTime - timeDiffDate) > 60) {
+    // return same time to current and last reading time so the final calculation
+    //  will result as 0 in pumpOutput method
+    return [readingCurrentFlowTime, readingCurrentFlowTime];
+  }
+
+  return [readingCurrentFlowTime, readingLastFlowTime];
 };
 
 const pumpOutput = (readingCurrent, readingLast, currentTime, lastTime, multiplierValue) => {
@@ -1620,11 +1654,14 @@ const displayFormula = function displayFormula(
       if (physicalValue.flowTimestampKey) {
         flowTime = physicalValue.flowTimestampKey;
       }
+
+      const [currentTime, lastTime] = timePick(readingCurrent[flowTime], readingCurrent.date, readingLast[flowTime], readingLast.date);
+
       returnValue = pumpOutput(
         readingCurrent[valueKey],
         readingLast[valueKey],
-        readingCurrent[flowTime] || readingCurrent.date,
-        readingLast[flowTime] || readingLast.date,
+        currentTime,
+        lastTime,
         multiplierValue,
       );
     }
@@ -1639,11 +1676,14 @@ const displayFormula = function displayFormula(
       } else if (physicalValue.pulseMultiplier) {
         multiplierValue = Number(physicalValue.pulseMultiplier);
       }
+
+      const [currentTime, lastTime] = timePick(readingCurrent[flowTime], readingCurrent.date, readingLast[flowTime], readingLast.date);
+
       returnValue = pumpOutput(
         readingCurrent[valueKey],
         readingLast[valueKey],
-        readingCurrent[flowTime] || readingCurrent.date,
-        readingLast[flowTime] || readingLast.date,
+        currentTime,
+        lastTime,
         multiplierValue,
       );
     }
@@ -1666,11 +1706,14 @@ const displayFormula = function displayFormula(
       if (flowUnit === 'gallons') {
         multiplierValue /= 3.78541;
       }
+
+      const [currentTime, lastTime] = timePick(readingCurrent[flowTime], readingCurrent.date, readingLast[flowTime], readingLast.date);
+
       returnValue = pumpOutput(
         readingCurrent[valueKey],
         readingLast[valueKey],
-        readingCurrent[flowTime] || readingCurrent.date,
-        readingLast[flowTime] || readingLast.date,
+        currentTime,
+        lastTime,
         multiplierValue,
       );
     }
@@ -1685,11 +1728,14 @@ const displayFormula = function displayFormula(
       } else if (physicalValue.pulseMultiplier) {
         multiplierValue = 1 / Number(physicalValue.pulseMultiplier);
       }
+
+      const [currentTime, lastTime] = timePick(readingCurrent[flowTime], readingCurrent.date, readingLast[flowTime], readingLast.date);
+
       returnValue = pulseDiff(
         readingCurrent[valueKey],
         readingLast[valueKey],
-        readingCurrent[flowTime] || readingCurrent.date,
-        readingLast[flowTime] || readingLast.date,
+        currentTime,
+        lastTime,
       );
       returnValue *= multiplierValue;
     }
@@ -1712,11 +1758,14 @@ const displayFormula = function displayFormula(
       if (flowUnit === 'gallons') {
         multiplierValue *= 3.78541;
       }
+
+      const [currentTime, lastTime] = timePick(readingCurrent[flowTime], readingCurrent.date, readingLast[flowTime], readingLast.date);
+
       returnValue = pulseDiff(
         readingCurrent[valueKey],
         readingLast[valueKey],
-        readingCurrent[flowTime] || readingCurrent.date,
-        readingLast[flowTime] || readingLast.date,
+        currentTime,
+        lastTime,
       );
       returnValue *= multiplierValue;
     }
