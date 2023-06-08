@@ -755,7 +755,33 @@ describe('displayFormula function', () => {
       assert(result === expectedResult);
     });
 
-    it('should generate zero when misalignment between flow time and machine date', () => {
+    it('should generate zero when current and last flow time have the same value', () => {
+      const
+        formula = 'flowRate';
+      const multiplier = 1;
+      const precision = null;
+      const context = {};
+      const valueKey = '132';
+      const readingCurrent = { A: 200, 132: 1685193065, date: '2023-05-29T13:08:54.000Z' };
+      const readingLast = { A: 100, 132: 1685193065, date: '2023-05-29T13:03:51.000Z' };
+      const physical = { unitsPerPulse: 100 };
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical,
+      );
+
+      const expectedResult = 0;
+      assert(result === expectedResult);
+    });
+
+    it('should generate zero when time of data is out of sync between flow time and machine date', () => {
       const
         formula = 'flowRate';
       const multiplier = 1;
