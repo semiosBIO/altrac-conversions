@@ -4,18 +4,18 @@ on:
     branches:
       - hotfix/**
       - '!release/**'
-
+  workflow_dispatch:
 jobs:
   tag:
     if: contains(github.ref, 'hotfix')
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
       - name: Setup node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           registry-url: 'https://npm.pkg.github.com'
           scope: '@altracio'

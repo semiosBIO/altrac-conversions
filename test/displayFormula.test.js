@@ -1,12 +1,12 @@
 /* global describe, it */
 const assert = require('assert');
 
-const conversions = require('../lib/index.js');
+const conversions = require('../lib/index');
 
 describe('displayFormula function', () => {
   describe('valueKey', () => {
     it('Should generate an error for an invalid valueKey', () => {
-      console.log('put this log above it statement')
+      console.log('put this log above it statement');
       const formula = undefined;
       const multiplier = 1;
       const precision = 2;
@@ -729,7 +729,7 @@ describe('displayFormula function', () => {
       assert(result === expectedResult);
     });
 
-    it('should generate generate zero when an input value is invalid', () => {
+    it('should generate zero when an input value is invalid', () => {
       const
         formula = 'pumpOutput';
       const multiplier = 1;
@@ -754,7 +754,59 @@ describe('displayFormula function', () => {
       const expectedResult = 0;
       assert(result === expectedResult);
     });
-    
+
+    it('should generate zero when current and last flow time have the same value', () => {
+      const
+        formula = 'flowRate';
+      const multiplier = 1;
+      const precision = null;
+      const context = {};
+      const valueKey = '132';
+      const readingCurrent = { A: 200, 132: 1685193065, date: '2023-05-29T13:08:54.000Z' };
+      const readingLast = { A: 100, 132: 1685193065, date: '2023-05-29T13:03:51.000Z' };
+      const physical = { unitsPerPulse: 100 };
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical,
+      );
+
+      const expectedResult = 0;
+      assert(result === expectedResult);
+    });
+
+    it('should generate zero when time of data is out of sync between flow time and machine date', () => {
+      const
+        formula = 'flowRate';
+      const multiplier = 1;
+      const precision = null;
+      const context = {};
+      const valueKey = '132';
+      const readingCurrent = { A: 200, 132: 1685369367, date: '2023-05-29T14:09:29.000Z' };
+      const readingLast = { A: 100, 132: 1685193065, date: '2023-05-29T14:04:26.000Z' };
+      const physical = { unitsPerPulse: 100 };
+
+      const result = conversions.displayFormula(
+        formula,
+        multiplier,
+        precision,
+        context,
+        valueKey,
+        readingCurrent,
+        readingLast,
+        physical,
+      );
+
+      const expectedResult = 0;
+      assert(result === expectedResult);
+    });
+
     it('should also calculate flowRate correctly', () => {
       const
         formula = 'flowRate';
@@ -856,11 +908,11 @@ describe('displayFormula function', () => {
         physical,
       );
 
+      // eslint-disable-next-line max-len
       const expectedResult = ((readingCurrent.A - readingLast.A) * physical.unitsPerPulse) * 3.78541;
       assert(result === expectedResult);
     });
   });
-
 
   describe('rounding', () => {
     it('should generate the correct value no digits', () => {
