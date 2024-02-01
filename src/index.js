@@ -344,7 +344,7 @@ const cellSignalToBars = function cellSignalToBars(
 
 const fromC = function fromC(c, tempConv, precision) {
   let returnValue = null;
-  if (c <= 120 && c >= -50) {
+  if (c <= 120 && c >= -100) {
     if (tempConv === 'f') {
       returnValue = round(cToF(c), precision);
     } else if (tempConv === 'c') {
